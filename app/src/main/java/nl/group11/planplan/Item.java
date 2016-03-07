@@ -9,7 +9,7 @@ import java.util.Date;
 /**
  * Created by s140442 on 07/03/2016.
  */
-abstract public class Item {
+abstract public class Item implements View.OnClickListener{
 
     Enum type;
     Date userStartTime, userEndTime;
@@ -18,6 +18,9 @@ abstract public class Item {
 
     /**
      * Extracts data from the API and saves it in this object
+     *
+     * extracts:
+     * type
      */
     public Item() {
     }
