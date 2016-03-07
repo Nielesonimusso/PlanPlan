@@ -31,13 +31,54 @@ abstract public class Item implements View.OnClickListener{
     abstract public void update();
 
     /**
-     * extracts the price of the item if available.
-     * price is formatted in numerous ways when retrieved from the API.
-     * the String from the API must be converted to a float value containing just the price.
+     * retrieves the price of the item.
      *
-     * @return price of the item if available, else -1.
+     * @return price of the item
      */
-    abstract public Float extractPrice();
+    abstract public String getPrice();
+
+    /**
+     *
+     * @return Date object with start date of the item
+     */
+    abstract public Date getStartTime();
+
+    /**
+     *
+     * @return Date object with stop date of the item
+     */
+    abstract public Date getStopTime();
+
+    /**
+     *
+     * @return image of the item
+     */
+    abstract public String getImage();
+
+    /**
+     * @return id of item
+     */
+    abstract public String getID();
+
+    /**
+     * @return type of the item
+     */
+    abstract public Enum getType();
+
+    /**
+     * @return title of the item
+     */
+    abstract public String getTitle();
+
+    /**
+     * @return description of the item
+     */
+    abstract public String getDescription();
+
+    /**
+     * @return address of the item
+     */
+    abstract public String getAddress();
 
     /**
      * opens the details activity for this item
