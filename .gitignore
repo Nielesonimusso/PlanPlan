@@ -6,4 +6,10 @@
 .DS_Store
 /build
 /captures
+<<<<<<< HEAD
 .idea/misc.xml
+=======
+.idea/vcs.xml
+.idea/vcs.xml
+.idea/modules.xml
+>>>>>>> origin/master
