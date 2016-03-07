@@ -18,7 +18,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+<<<<<<< HEAD
         <activity android:name=".PlanningActivity"></activity>
+=======
+
+        <!-- google places API -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyA7f6zmrKtib0oeiKFIjQe81DO-dpi7m3P0" />
+
+>>>>>>> origin/master
     </application>
 
 </manifest>
