@@ -1,5 +1,6 @@
 package nl.group11.planplan;
 
+import android.content.Context;
 import android.view.View;
 
 import com.firebase.client.Firebase;
@@ -10,11 +11,9 @@ import java.util.Date;
  * Created by s140442 on 07/03/2016.
  */
 abstract public class Item implements View.OnClickListener{
-
-    Enum type;
     Date userStartTime, userEndTime;
     Firebase firebase;
-
+    Context context;
 
     /**
      * Extracts data from the API and saves it in this object
@@ -22,7 +21,11 @@ abstract public class Item implements View.OnClickListener{
      * extracts:
      * type
      */
-    public Item() {
+    public Item(Context c) {
+        context = c;
+    }
+    public Item(){
+    //Only for testing
     }
 
     /**
@@ -31,13 +34,67 @@ abstract public class Item implements View.OnClickListener{
     abstract public void update();
 
     /**
-     * extracts the price of the item if available.
-     * price is formatted in numerous ways when retrieved from the API.
-     * the String from the API must be converted to a float value containing just the price.
+     * retrieves the price of the item.
      *
-     * @return price of the item if available, else -1.
+     * @return price of the item
      */
-    abstract public Float extractPrice();
+    abstract public String getPrice();
+
+    /**
+     *
+     * @return Date object with start date of the item
+     */
+    abstract public Date getStartTime();
+
+        /**
+     *
+     * @return Date object with start date of the item set by the user
+     */
+    abstract public Date getUserStartTime();
+
+    /**
+     *
+     * @return Date object with stop date of the item
+     */
+    abstract public Date getEndTime();
+
+    /**
+     *
+     * @return Date object with end date of the item set by the user
+     */
+    abstract public Date getUserEndTime();
+
+
+    /**
+     *
+     * @return image of the item
+     */
+    abstract public String getImage();
+
+    /**
+     * @return id of item
+     */
+    abstract public String getID();
+
+    /**
+     * @return type of the item
+     */
+    abstract public Enum getType();
+
+    /**
+     * @return title of the item
+     */
+    abstract public String getTitle();
+
+    /**
+     * @return description of the item
+     */
+    abstract public String getDescription();
+
+    /**
+     * @return address of the item
+     */
+    abstract public String getAddress();
 
     /**
      * opens the details activity for this item
@@ -75,4 +132,12 @@ abstract public class Item implements View.OnClickListener{
      * @return whether the item is in the planning list
      */
     abstract public boolean checkItemInPlanning();
+
+    public void setUserStartTime(Date d) {
+        this.userStartTime = d;
+    }
+
+    public void setUserEndTime(Date d) {
+        this.userEndTime = d;
+    }
 }

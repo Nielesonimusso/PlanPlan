@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="nl.group11.planplan">
 
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -18,6 +19,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".PlanningActivity"></activity>
+
+        <!-- google places API -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyA7f6zmrKtib0oeiKFIjQe81DO-dpi7m3P0" />
     </application>
 
 </manifest>
