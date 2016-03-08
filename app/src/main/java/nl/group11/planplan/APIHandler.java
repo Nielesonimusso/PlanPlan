@@ -11,6 +11,7 @@ import com.evdb.javaapi.data.request.EventSearchRequest;
 import com.evdb.javaapi.operations.EventOperations;
 import com.evdb.javaapi.data.Event;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -48,7 +49,7 @@ public class APIHandler {
                 } catch(EVDBRuntimeException | EVDBAPIException var) {
                     System.err.println("Error while performing Eventful query");
                 }
-                return null;
+                return new ArrayList<Event>();
             }
 
             @Override
@@ -63,7 +64,6 @@ public class APIHandler {
         void callback(List<Event> events);
     }
 }
-
 
 class QueryParams {
 
