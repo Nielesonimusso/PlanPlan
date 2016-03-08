@@ -18,9 +18,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import com.evdb.javaapi.data.Event;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -62,6 +64,17 @@ public class HomeActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        /*
+        APIHandler.queryEventful("Eindhoven", 100, new APIHandler.EventCallback() {
+            @Override
+            public void callback(List<Event> events) {
+                ListIterator<Event> iterator = events.listIterator();
+                while(iterator.hasNext()) {
+                    System.out.println(iterator.next().getTitle());
+                }
+            }
+        });
+        */
     }
 
     @Override
