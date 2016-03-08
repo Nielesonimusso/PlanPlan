@@ -25,6 +25,12 @@ public class EventItem extends Item {
         this.event = event;
     }
 
+    public EventItem(com.evdb.javaapi.data.Event event) {
+        //only for testing
+        super();
+        this.event = event;
+    }
+
     @Override
     public void update() {
         //TODO implement method

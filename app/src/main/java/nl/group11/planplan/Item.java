@@ -24,6 +24,9 @@ abstract public class Item implements View.OnClickListener{
     public Item(Context c) {
         context = c;
     }
+    public Item(){
+    //Only for testing
+    }
 
     /**
      * updates the information in this item with the current information found in the respective API.
