@@ -19,7 +19,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".PlanningActivity"></activity>
+        <activity android:name=".PlanningActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
 
         <!-- google places API -->
         <meta-data
