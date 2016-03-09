@@ -1,14 +1,7 @@
 package nl.group11.planplan;
 
-import android.accounts.Account;
-import android.accounts.AccountManager;
 import android.content.Context;
 import android.view.View;
-
-import com.firebase.client.DataSnapshot;
-import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
-import com.firebase.client.ValueEventListener;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -100,6 +93,4 @@ public class EventItem extends Item {
         Calendar calendar = Calendar.getInstance(); //calendar gives current system time.
         return event.getStopTime().before(calendar.getTime());
     }
-
-
 }
