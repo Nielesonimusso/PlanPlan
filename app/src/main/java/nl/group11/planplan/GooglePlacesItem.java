@@ -59,15 +59,9 @@ abstract public class GooglePlacesItem extends Item {
     }
 
     @Override
-    abstract public String getImage();
-
-    @Override
     public String getID() {
         return place.getId();
     }
-
-    @Override
-    abstract public Enum getType();
 
     @Override
     public String getTitle() {
