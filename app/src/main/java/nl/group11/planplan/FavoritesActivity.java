@@ -4,8 +4,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -23,13 +21,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
 
-import com.evdb.javaapi.data.Event;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ListIterator;
 
-public class HomeActivity extends AppCompatActivity
+public class FavoritesActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         RestaurantsFragment.OnFragmentInteractionListener,
         EventsFragment.OnFragmentInteractionListener,
@@ -38,40 +33,30 @@ public class HomeActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setContentView(R.layout.activity_favorites);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_favorites);
         setSupportActionBar(toolbar);
 
         // Set status bar color
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            getWindow().setStatusBarColor(ContextCompat.getColor(getApplicationContext(),
-                    R.color.colorPrimaryDark));
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        getWindow().setStatusBarColor(ContextCompat.getColor(getApplicationContext(),
+                R.color.colorPrimaryDark));
         }
 
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
-        viewPagerAdapter.addFragment(new RestaurantsFragment(), "Restaurants");
-        viewPagerAdapter.addFragment(new EventsFragment(), "Events");
-        viewPagerAdapter.addFragment(new OtherFragment(), "Other");
+        viewPagerAdapter.addFragment(new RestaurantsFragmentFav(), "Restaurants");
+        viewPagerAdapter.addFragment(new EventsFragmentFav(), "Events");
+        viewPagerAdapter.addFragment(new OtherFragmentFav(), "Other");
         viewPager.setAdapter(viewPagerAdapter);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
 
-        // Floating action button
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_favorites);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
@@ -88,15 +73,15 @@ public class HomeActivity extends AppCompatActivity
             }
         });
         */
-    }
+        }
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_favorites);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
+        drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+        super.onBackPressed();
         }
     }
 
@@ -116,7 +101,7 @@ public class HomeActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_search) {
-            //show search fragment
+        //show search fragment
         }
 
         return super.onOptionsItemSelected(item);
@@ -129,18 +114,18 @@ public class HomeActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_home) {
-            // Go to home activity
-        } else if (id == R.id.nav_favorites) {
-            // Go to favorites activity
-            Intent intent = new Intent(this, FavoritesActivity.class);
+        // Go to home activity
+            Intent intent = new Intent(this, HomeActivity.class);
             startActivity(intent);
+        } else if (id == R.id.nav_favorites) {
+        // Go to favorites activity
         } else if (id == R.id.nav_planning) {
-            // Go to planning activity
+        // Go to planning activity
             Intent intent = new Intent(this, PlanningActivity.class);
             startActivity(intent);
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_favorites);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
