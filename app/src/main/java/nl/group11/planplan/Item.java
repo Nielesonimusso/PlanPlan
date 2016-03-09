@@ -55,7 +55,9 @@ abstract public class Item implements View.OnClickListener{
      *
      * @return Date object with start date of the item set by the user
      */
-    abstract public Date getUserStartTime();
+    public Date getUserStartTime() {
+        return userStartTime;
+    }
 
     /**
      *
@@ -67,7 +69,9 @@ abstract public class Item implements View.OnClickListener{
      *
      * @return Date object with end date of the item set by the user
      */
-    abstract public Date getUserEndTime();
+    public Date getUserEndTime() {
+        return userEndTime;
+    }
 
 
     /**

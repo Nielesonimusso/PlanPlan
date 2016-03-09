@@ -17,16 +17,16 @@ import java.util.Date;
 /**
  * Created by s140442 on 07/03/2016.
  */
-public class GooglePlacesItem extends Item {
+abstract public class GooglePlacesItem extends Item {
 
-    public GooglePlacesItem(Context c, com.google.android.gms.location.places.Place place;) {
+    public GooglePlacesItem(Context c, com.google.android.gms.location.places.Place place) {
         super(c);
     }
     com.google.android.gms.location.places.Place place;
 
     @Override
     public void update() {
-
+        //TODO implement method
     }
 
     @Override
@@ -54,24 +54,12 @@ public class GooglePlacesItem extends Item {
     }
 
     @Override
-    public Date getUserStartTime() {
-        return null;
-    }
-
-    @Override
     public Date getEndTime() {
         return null;
     }
 
     @Override
-    public Date getUserEndTime() {
-        return null;
-    }
-
-    @Override
-    public String getImage() {
-        return null;
-    }
+    abstract public String getImage();
 
     @Override
     public String getID() {
@@ -79,9 +67,7 @@ public class GooglePlacesItem extends Item {
     }
 
     @Override
-    public Enum getType() {
-        return null;
-    }
+    abstract public Enum getType();
 
     @Override
     public String getTitle() {
@@ -100,48 +86,11 @@ public class GooglePlacesItem extends Item {
 
     @Override
     public void onClick(View v) {
-
+        //TODO implement method
     }
 
     @Override
     public boolean hasPassed() {
-        return false;
-    }
-
-    @Override
-    public void addFavorite() {
-
-    }
-
-    @Override
-    public void addPlanning() {
-
-    }
-
-    private void addGeneric(Firebase eventRef) {
-        eventRef.child(Data.ID.toString()).setValue(getID());
-        eventRef.child(Data.TITLE.toString()).setValue(getTitle());
-        eventRef.child(Data.TYPE.toString()).setValue(getType());
-        eventRef.child(Data.ADDRESS.toString()).setValue(getAddress());
-        eventRef.child(Data.DESCRIPTION.toString()).setValue(getDescription());
-        eventRef.child(Data.STARTTIME.toString()).setValue(getStartTime());
-        eventRef.child(Data.ENDTIME.toString()).setValue(getEndTime());
-        eventRef.child(Data.IMAGE.toString()).setValue(getImage());
-        eventRef.child(Data.PRICE.toString()).setValue(getPrice());
-    }
-
-    private String getAccount() {
-        Account[] accounts = AccountManager.get(context).getAccountsByType("com.google");
-        return accounts[0].name;
-    }
-
-    @Override
-    public boolean checkItemInFavorites() {
-        return false;
-    }
-
-    @Override
-    public boolean checkItemInPlanning() {
         return false;
     }
 }
