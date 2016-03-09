@@ -39,18 +39,8 @@ public class EventItem extends Item {
     }
 
     @Override
-    public Date getUserStartTime() {
-        return userStartTime;
-    }
-
-    @Override
     public Date getEndTime() {
         return event.getStopTime();
-    }
-
-    @Override
-    public Date getUserEndTime() {
-        return userEndTime;
     }
 
     @Override
