@@ -23,11 +23,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
 
-import com.evdb.javaapi.data.Event;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ListIterator;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -77,17 +74,17 @@ public class HomeActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        /*
-        APIHandler.queryEventful("Eindhoven", 100, new APIHandler.EventCallback() {
+
+        APIHandler.queryEventful("Eindhoven", 100, new APIHandler.ListCallback<EventfulEvent>() {
             @Override
-            public void callback(List<Event> events) {
-                ListIterator<Event> iterator = events.listIterator();
-                while(iterator.hasNext()) {
-                    System.out.println(iterator.next().getTitle());
+            public void onList(List<EventfulEvent> results) {
+                System.out.println("printing eventful item title test");
+                for (EventfulEvent event : results) {
+                    System.out.println(event.getTitle());
                 }
+                System.out.println("end of printing test");
             }
-        });
-        */
+        }, 1);
     }
 
     @Override

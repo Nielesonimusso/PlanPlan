@@ -1,16 +1,19 @@
 package nl.group11.planplan;
 
-import android.app.DownloadManager;
 import android.os.AsyncTask;
 
-import com.evdb.javaapi.APIConfiguration;
-import com.evdb.javaapi.EVDBAPIException;
-import com.evdb.javaapi.EVDBRuntimeException;
-import com.evdb.javaapi.data.SearchResult;
-import com.evdb.javaapi.data.request.EventSearchRequest;
-import com.evdb.javaapi.operations.EventOperations;
-import com.evdb.javaapi.data.Event;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,59 +23,107 @@ import java.util.List;
 public class APIHandler {
 
     private static final String EVENTFULKEY = "KMFgPh35QqPkMgXw";
+    private static final String GOOGLEPLACESKEY = "AIzaSyDNrounxGt7hKmWqQftfYUniyd3BmXEmZA";
 
-    public static void queryEventful(String location, int radius, final EventCallback callback) {
-
-        new AsyncTask<QueryParams, Void, List<Event>>() {
-
-            @Override
-            protected List<Event> doInBackground(QueryParams... params) {
-                String location = params[0].location;
-                int radius = params[0].radius;
-                try {
-                    APIConfiguration.getApiKey();
-                } catch (EVDBRuntimeException ex) {
-                    APIConfiguration.setApiKey(EVENTFULKEY);
-                }
-
-                EventOperations eo = new EventOperations();
-                EventSearchRequest esr = new EventSearchRequest();
-
-                esr.setLocation(location);
-                esr.setLocationRadius(radius);
-                esr.setPageSize(20);
-                esr.setPageNumber(1);
-                SearchResult sr = null;
-                try {
-                    sr = eo.search(esr);
-                    return sr.getEvents();
-                } catch(EVDBRuntimeException | EVDBAPIException var) {
-                    System.err.println("Error while performing Eventful query");
-                }
-                return new ArrayList<Event>();
-            }
+    public static void queryEventful(final String location, final int radius, final ListCallback<EventfulEvent> callback, final int page) {
+        new AsyncTask<Void, Void, Void>() {
 
             @Override
-            protected void onPostExecute(List<Event> events) {
-                super.onPostExecute(events);
-                callback.callback(events);
+            protected Void doInBackground(Void... params) {
+                final List<EventfulEvent> events = new ArrayList<>();
+                try {
+                    URL requestUrl = new URL("http://api.eventful.com/json/events/search?" +
+                            "units=km" +
+                            "&within=" + radius +
+                            "&location=" + location +
+                            "&date=Future" +
+                            "&app_key=" + EVENTFULKEY +
+                            "&page_number=" + page);
+
+                    JSONHTTPRequest(requestUrl, new JSONCallback() {
+                        @Override
+                        public void onJSON(JSONObject result) {
+                            //System.out.println(result.toJSONString());
+                            JSONArray resultItems = (JSONArray) ((JSONObject) result.get("events")).get("event");
+                            for (Object event : resultItems) {
+                                JSONObject eventjson = (JSONObject) event;
+                                //System.out.println(eventjson.toJSONString());
+                                events.add(EventfulEvent.fromJSON(eventjson));
+                            }
+                            callback.onList(events);
+                        }
+                    });
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                }
+                return null;
             }
-        }.execute(new QueryParams(location, radius));
+        }.execute();
     }
 
-    interface EventCallback {
-        void callback(List<Event> events);
+    public static void queryGooglePlaces(String location, int radius, final ListCallback<GooglePlace> callback) {
+
+    }
+
+    private static void JSONHTTPRequest(URL url, final JSONCallback callback) {
+        new AsyncTask<URL, Void, JSONObject>() {
+
+            @Override
+            protected JSONObject doInBackground(URL... params) {
+                URL url = params[0];
+                try {
+                    HttpURLConnection http = (HttpURLConnection) url.openConnection();
+                    JSONObject json = (JSONObject) new JSONParser().parse(new BufferedReader(new InputStreamReader(http.getInputStream())));
+                    return json;
+                } catch (IOException | ParseException e) {
+                    e.printStackTrace();
+                    return new JSONObject();
+                }
+            }
+
+            @Override
+            protected void onPostExecute(JSONObject jsonObject) {
+                super.onPostExecute(jsonObject);
+                callback.onJSON(jsonObject);
+            }
+        }.execute(url);
+    }
+
+    interface ListCallback<T> {
+        void onList(List<T> results);
+    }
+
+    interface JSONCallback {
+        void onJSON(JSONObject result);
     }
 }
 
-class QueryParams {
+class GooglePlace {
 
-    String location;
-    int radius;
+    private JSONObject data;
 
-    QueryParams(String location, int radius) {
-        this.location = location;
-        this.radius = radius;
+    public static GooglePlace fromJSON(JSONObject json) {
+        GooglePlace googlePlace = new GooglePlace();
+        googlePlace.data = (JSONObject) json.clone();
+        return googlePlace;
     }
 
+    //TODO: create getter/setter methods to access data
+}
+
+class EventfulEvent {
+
+    private JSONObject data;
+
+    public static EventfulEvent fromJSON(JSONObject json) {
+        EventfulEvent eventfulEvent = new EventfulEvent();
+        eventfulEvent.data = (JSONObject) json.clone();
+        return eventfulEvent;
+    }
+
+    //TODO: create getter/setter methods to access data
+
+    public String getTitle() {
+        return data.get("title").toString();
+    }
 }
