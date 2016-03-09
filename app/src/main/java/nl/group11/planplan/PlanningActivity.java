@@ -89,6 +89,8 @@ public class PlanningActivity extends AppCompatActivity
             startActivity(intent);
         } else if (id == R.id.nav_favorites) {
             // Go to favorites activity
+            Intent intent = new Intent(this, FavoritesActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_planning) {
             // Go to planning activity
         }

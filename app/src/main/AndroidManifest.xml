@@ -29,6 +29,11 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyA7f6zmrKtib0oeiKFIjQe81DO-dpi7m3P0" />
+
+        <activity
+            android:name=".FavoritesActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
     </application>
 
 </manifest>
