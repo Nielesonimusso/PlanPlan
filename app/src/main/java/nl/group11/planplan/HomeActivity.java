@@ -1,6 +1,7 @@
 package nl.group11.planplan;
 
 import android.content.Intent;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -75,10 +76,13 @@ public class HomeActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        /*
+            EVENTFUL APIHandler TESTS
+         */
         //direct search test
-        APIHandler.queryEventful("Eindhoven", 100, 3, new APIHandler.ListCallback<EventfulEvent>() {
+        APIHandler.queryEventful("Eindhoven", 100, 3, new APIHandler.Callback<List<EventfulEvent>>() {
             @Override
-            public void onList(List<EventfulEvent> results) {
+            public void onItem(List<EventfulEvent> results) {
                 System.out.println("printing eventful item title test");
                 for (EventfulEvent event : results) {
                     System.out.println(event.getTitle());
@@ -92,6 +96,14 @@ public class HomeActivity extends AppCompatActivity
         dynamicSearch.addListener(this);
         EventfulEvent event = dynamicSearch.get(25);
         System.out.println("First get: " + event);
+
+        //latlong from string test
+        APIHandler.stringToLocation("Enschede", new APIHandler.Callback<Location>() {
+            @Override
+            public void onItem(Location result) {
+                System.out.println(result.getLongitude() + "," + result.getLatitude());
+            }
+        });
     }
 
     @Override

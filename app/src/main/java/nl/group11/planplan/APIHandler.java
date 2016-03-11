@@ -1,5 +1,6 @@
 package nl.group11.planplan;
 
+import android.location.Location;
 import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 
@@ -30,7 +31,7 @@ public class APIHandler {
     private static final String GOOGLEPLACESKEY = "AIzaSyDNrounxGt7hKmWqQftfYUniyd3BmXEmZA";
 
 
-    public static void queryEventful(final String location, final int radius, final int page, final ListCallback<EventfulEvent> callback) {
+    public static void queryEventful(final String location, final int radius, final int page, final Callback<List<EventfulEvent>> callback) {
 
         new AsyncTask<Void, Void, Void>() {
 
@@ -48,9 +49,9 @@ public class APIHandler {
                             "&page_number=" + page +
                             "&sort_order=date");
 
-                    JSONHTTPRequest(requestUrl, new JSONCallback() {
+                    JSONHTTPRequest(requestUrl, new Callback<JSONObject>() {
                         @Override
-                        public void onJSON(JSONObject result) {
+                        public void onItem(JSONObject result) {
                             //System.out.println(result.get("total_items").toString());
                             JSONArray resultItems = (JSONArray) ((JSONObject) result.get("events")).get("event");
                             for (Object event : resultItems) {
@@ -58,7 +59,7 @@ public class APIHandler {
                                 //System.out.println(eventjson.toJSONString());
                                 events.add(EventfulEvent.fromJSON(eventjson));
                             }
-                            callback.onList(events);
+                            callback.onItem(events);
                         }
                     });
                 } catch (MalformedURLException e) {
@@ -69,11 +70,11 @@ public class APIHandler {
         }.execute();
     }
 
-    public static void queryGooglePlaces(String location, int radius, final ListCallback<GooglePlace> callback) {
+    public static void queryGooglePlaces(String location, int radius, final Callback<GooglePlace> callback) {
 
     }
 
-    private static void JSONHTTPRequest(URL url, final JSONCallback callback) {
+    private static void JSONHTTPRequest(URL url, final Callback<JSONObject> callback) {
         new AsyncTask<URL, Void, JSONObject>() {
 
             @Override
@@ -92,17 +93,48 @@ public class APIHandler {
             @Override
             protected void onPostExecute(JSONObject jsonObject) {
                 super.onPostExecute(jsonObject);
-                callback.onJSON(jsonObject);
+                callback.onItem(jsonObject);
             }
         }.execute(url);
     }
 
-    interface ListCallback<T> {
-        void onList(List<T> results);
+    interface Callback<T> {
+        void onItem(T result);
     }
 
-    interface JSONCallback {
-        void onJSON(JSONObject result);
+    public static void stringToLocation(final String location, final Callback<Location> callback) {
+        new AsyncTask<Void, Void, Void>() {
+
+            @Override
+            protected Void doInBackground(Void... params) {
+                try {
+                    JSONHTTPRequest(new URL("http://api.eventful.com/json/venues/search?" +
+                            "location=" + location +
+                            "&app_key=" + EVENTFULKEY), new Callback<JSONObject>() {
+                        @Override
+                        public void onItem(JSONObject result) {
+                            JSONArray locations = (JSONArray) ((JSONObject) result.get("venues")).get("venue");
+                            String lng, lat;
+                            for (Object location : locations) {
+                                JSONObject locationjson = (JSONObject) location;
+                                if (locationjson.get("geocode_type").toString().equals("City Based GeoCodes")) {
+                                    lng = locationjson.get("longitude").toString();
+                                    lat = locationjson.get("latitude").toString();
+                                    Location locationObject = new Location("Eventful");
+                                    locationObject.setLongitude(Double.valueOf(lng));
+                                    locationObject.setLatitude(Double.valueOf(lat));
+                                    callback.onItem(locationObject);
+                                    return;
+                                }
+                            }
+                        }
+                    });
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+        }.execute();
     }
 }
 
@@ -200,9 +232,9 @@ class EventfulDynamicSearch extends DynamicSearch<EventfulEvent> {
     @Override
     void query(int i) {
         final int page = i / APIHandler.EVENTFUL_PAGE_SIZE;
-        APIHandler.queryEventful(location, radius, page + 1, new APIHandler.ListCallback<EventfulEvent>() {
+        APIHandler.queryEventful(location, radius, page + 1, new APIHandler.Callback<List<EventfulEvent>>() {
             @Override
-            public void onList(List<EventfulEvent> results) {
+            public void onItem(List<EventfulEvent> results) {
                 if (results.size() == 0) {
                     //somehow notify callee that there are no results
                 } else {
