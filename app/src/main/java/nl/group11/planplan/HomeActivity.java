@@ -30,7 +30,7 @@ public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         RestaurantsFragment.OnFragmentInteractionListener,
         EventsFragment.OnFragmentInteractionListener,
-        OtherFragment.OnFragmentInteractionListener {
+        OtherFragment.OnFragmentInteractionListener, DynamicSearch.SearchUpdateListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +75,8 @@ public class HomeActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        APIHandler.queryEventful("Eindhoven", 100, new APIHandler.ListCallback<EventfulEvent>() {
+        //direct search test
+        APIHandler.queryEventful("Eindhoven", 100, 3, new APIHandler.ListCallback<EventfulEvent>() {
             @Override
             public void onList(List<EventfulEvent> results) {
                 System.out.println("printing eventful item title test");
@@ -84,7 +85,13 @@ public class HomeActivity extends AppCompatActivity
                 }
                 System.out.println("end of printing test");
             }
-        }, 1);
+        });
+
+        //dynamic search test
+        EventfulDynamicSearch dynamicSearch = new EventfulDynamicSearch("Eindhoven", 100);
+        dynamicSearch.addListener(this);
+        EventfulEvent event = dynamicSearch.get(25);
+        System.out.println("First get: " + event);
     }
 
     @Override
@@ -145,6 +152,17 @@ public class HomeActivity extends AppCompatActivity
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    @Override
+    public void onUpdate(DynamicSearch self, int start, int end) {
+        System.out.println("Range from event:" + start + ", " + end);
+        if (start <= 25 && end >= 25) {
+            EventfulEvent event = ((DynamicSearch<EventfulEvent>) self).get(25);
+            System.out.println("Second get from event: " + event);
+        } else {
+            System.out.println("invalid range");
+        }
     }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {
