@@ -80,7 +80,7 @@ public class HomeActivity extends AppCompatActivity
             EVENTFUL APIHandler TESTS
          */
         //direct search test
-        APIHandler.queryEventful("Eindhoven", 100, 3, new APIHandler.Callback<List<EventfulEvent>>() {
+        APIHandler.queryEventful("Eindhoven", 50, 3, new APIHandler.Callback<List<EventfulEvent>>() {
             @Override
             public void onItem(List<EventfulEvent> results) {
                 System.out.println("printing eventful item title test");
@@ -92,18 +92,39 @@ public class HomeActivity extends AppCompatActivity
         });
 
         //dynamic search test
-        EventfulDynamicSearch dynamicSearch = new EventfulDynamicSearch("Eindhoven", 100);
+        EventfulDynamicSearch dynamicSearch = new EventfulDynamicSearch("Eindhoven", 50);
         dynamicSearch.addListener(this);
         EventfulEvent event = dynamicSearch.get(25);
         System.out.println("First get: " + event);
 
         //latlong from string test
-        APIHandler.stringToLocation("Enschede", new APIHandler.Callback<Location>() {
+        APIHandler.stringToLocation("Eindhoven", new APIHandler.Callback<Location>() {
             @Override
             public void onItem(Location result) {
-                System.out.println(result.getLongitude() + "," + result.getLatitude());
+                System.out.println(APIHandler.locationToLatLngString(result));
             }
         });
+
+        /*
+            GOOGLEPLACES APIHandler TESTS
+         */
+        //direct search test (including location query)
+        APIHandler.stringToLocation("Eindhoven", new APIHandler.Callback<Location>() {
+            @Override
+            public void onItem(Location result) {
+                APIHandler.queryGooglePlaces(APIHandler.locationToLatLngString(result), 50000, "restaurant", new APIHandler.Callback<List<GooglePlace>>() {
+                    @Override
+                    public void onItem(List<GooglePlace> result) {
+                        System.out.println("printing googleplaces item title test");
+                        for (GooglePlace place : result) {
+                            System.out.println(place);
+                        }
+                        System.out.println("end of printing test");
+                    }
+                });
+            }
+        });
+
     }
 
     @Override

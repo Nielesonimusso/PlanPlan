@@ -12,9 +12,11 @@ import org.json.simple.parser.ParseException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -30,7 +32,6 @@ public class APIHandler {
 
     private static final String GOOGLEPLACESKEY = "AIzaSyDNrounxGt7hKmWqQftfYUniyd3BmXEmZA";
 
-
     public static void queryEventful(final String location, final int radius, final int page, final Callback<List<EventfulEvent>> callback) {
 
         new AsyncTask<Void, Void, Void>() {
@@ -44,7 +45,7 @@ public class APIHandler {
                             "&page_size=" + EVENTFUL_PAGE_SIZE +
                             "&date=Future" +
                             "&within=" + radius +
-                            "&location=" + location +
+                            "&location=" + URLEncoder.encode(location, "UTF-8") +
                             "&app_key=" + EVENTFULKEY +
                             "&page_number=" + page +
                             "&sort_order=date");
@@ -62,7 +63,7 @@ public class APIHandler {
                             callback.onItem(events);
                         }
                     });
-                } catch (MalformedURLException e) {
+                } catch (MalformedURLException | UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
                 return null;
@@ -70,8 +71,35 @@ public class APIHandler {
         }.execute();
     }
 
-    public static void queryGooglePlaces(String location, int radius, final Callback<GooglePlace> callback) {
+    public static void queryGooglePlaces(final String location, final int radius, final String type, final Callback<List<GooglePlace>> callback) {
+        new AsyncTask<Void, Void, Void>() {
 
+            @Override
+            protected Void doInBackground(Void... params) {
+                final List<GooglePlace> places = new ArrayList<>();
+                try {
+                    URL requestUrl = new URL("https://maps.googleapis.com/maps/api/place/nearbysearch/json?" +
+                            "location=" + URLEncoder.encode(location, "UTF-8") +
+                            "&radius=" + radius +
+                            "&type=" + URLEncoder.encode(type, "UTF-8") +
+                            "&key=" + GOOGLEPLACESKEY);
+
+                    JSONHTTPRequest(requestUrl, new Callback<JSONObject>() {
+                        @Override
+                        public void onItem(JSONObject result) {
+                            JSONArray results = (JSONArray) result.get("results");
+                            for (Object item : results) {
+                                places.add(GooglePlace.fromJSON((JSONObject) item));
+                            }
+                            callback.onItem(places);
+                        }
+                    });
+                } catch (MalformedURLException | UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+        }.execute();
     }
 
     private static void JSONHTTPRequest(URL url, final Callback<JSONObject> callback) {
@@ -136,6 +164,10 @@ public class APIHandler {
             }
         }.execute();
     }
+
+    public static String locationToLatLngString(Location l) {
+        return l.getLatitude() + "," + l.getLongitude();
+    }
 }
 
 class GooglePlace {
@@ -149,6 +181,19 @@ class GooglePlace {
     }
 
     //TODO: create getter/setter methods to access data
+
+    public String getName() {
+        return data.get("name").toString();
+    }
+
+    public String getID() {
+        return data.get("place_id").toString();
+    }
+
+    @Override
+    public String toString() {
+        return getName();
+    }
 }
 
 class EventfulEvent {
