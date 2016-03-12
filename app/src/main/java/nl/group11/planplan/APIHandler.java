@@ -40,7 +40,7 @@ public class APIHandler {
             protected Void doInBackground(Void... params) {
                 final List<EventfulEvent> events = new ArrayList<>();
                 try {
-                    URL requestUrl = new URL("http://api.eventful.com/json/events/search?" +
+                    String requestUrl = "http://api.eventful.com/json/events/search?" +
                             "units=km" +
                             "&page_size=" + EVENTFUL_PAGE_SIZE +
                             "&date=Future" +
@@ -48,7 +48,7 @@ public class APIHandler {
                             "&location=" + URLEncoder.encode(location, "UTF-8") +
                             "&app_key=" + EVENTFULKEY +
                             "&page_number=" + page +
-                            "&sort_order=date");
+                            "&sort_order=date";
 
                     JSONHTTPRequest(requestUrl, new Callback<JSONObject>() {
                         @Override
@@ -63,7 +63,7 @@ public class APIHandler {
                             callback.onItem(events);
                         }
                     });
-                } catch (MalformedURLException | UnsupportedEncodingException e) {
+                } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
                 return null;
@@ -72,17 +72,27 @@ public class APIHandler {
     }
 
     public static void queryGooglePlaces(final String location, final int radius, final String type, final Callback<List<GooglePlace>> callback) {
+        queryGooglePlaces(location, radius, type, callback, "", new ArrayList<GooglePlace>());
+    }
+
+    public static void queryGooglePlaces(final String location, final int radius, final String type,
+                                         final Callback<List<GooglePlace>> callback, final String pagetoken, final List<GooglePlace> places) {
         new AsyncTask<Void, Void, Void>() {
 
             @Override
             protected Void doInBackground(Void... params) {
-                final List<GooglePlace> places = new ArrayList<>();
                 try {
-                    URL requestUrl = new URL("https://maps.googleapis.com/maps/api/place/nearbysearch/json?" +
-                            "location=" + URLEncoder.encode(location, "UTF-8") +
-                            "&radius=" + radius +
-                            "&type=" + URLEncoder.encode(type, "UTF-8") +
-                            "&key=" + GOOGLEPLACESKEY);
+                    String requestUrl = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?";
+                    if (pagetoken.isEmpty()) {
+                        requestUrl += "location=" + URLEncoder.encode(location, "UTF-8") +
+                                "&radius=" + radius +
+                                "&type=" + URLEncoder.encode(type, "UTF-8");
+                    } else {
+                        requestUrl += "pagetoken=" + pagetoken;
+                    }
+                    requestUrl += "&key=" + GOOGLEPLACESKEY;
+
+                    System.out.println(requestUrl);
 
                     JSONHTTPRequest(requestUrl, new Callback<JSONObject>() {
                         @Override
@@ -91,10 +101,22 @@ public class APIHandler {
                             for (Object item : results) {
                                 places.add(GooglePlace.fromJSON((JSONObject) item));
                             }
-                            callback.onItem(places);
+                            //query next page when there is one, otherwise return
+                            if (result.containsKey("next_page_token")) {
+                                System.out.println("GooglePlaces next page: " + result.get("next_page_token").toString());
+                                try {
+                                    Thread.sleep(2000);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                                queryGooglePlaces(location, radius, type, callback, result.get("next_page_token").toString(), places);
+                            } else {
+                                System.out.println("GooglePlaces no next page");
+                                callback.onItem(places);
+                            }
                         }
                     });
-                } catch (MalformedURLException | UnsupportedEncodingException e) {
+                } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
                 return null;
@@ -102,14 +124,14 @@ public class APIHandler {
         }.execute();
     }
 
-    private static void JSONHTTPRequest(URL url, final Callback<JSONObject> callback) {
-        new AsyncTask<URL, Void, JSONObject>() {
+    private static void JSONHTTPRequest(final String url, final Callback<JSONObject> callback) {
+        new AsyncTask<Void, Void, JSONObject>() {
 
             @Override
-            protected JSONObject doInBackground(URL... params) {
-                URL url = params[0];
+            protected JSONObject doInBackground(Void... params) {
                 try {
-                    HttpURLConnection http = (HttpURLConnection) url.openConnection();
+                    URL usableURL = new URL(url);
+                    HttpURLConnection http = (HttpURLConnection) usableURL.openConnection();
                     JSONObject json = (JSONObject) new JSONParser().parse(new BufferedReader(new InputStreamReader(http.getInputStream())));
                     return json;
                 } catch (IOException | ParseException e) {
@@ -123,7 +145,7 @@ public class APIHandler {
                 super.onPostExecute(jsonObject);
                 callback.onItem(jsonObject);
             }
-        }.execute(url);
+        }.execute();
     }
 
     interface Callback<T> {
@@ -135,31 +157,27 @@ public class APIHandler {
 
             @Override
             protected Void doInBackground(Void... params) {
-                try {
-                    JSONHTTPRequest(new URL("http://api.eventful.com/json/venues/search?" +
-                            "location=" + location +
-                            "&app_key=" + EVENTFULKEY), new Callback<JSONObject>() {
-                        @Override
-                        public void onItem(JSONObject result) {
-                            JSONArray locations = (JSONArray) ((JSONObject) result.get("venues")).get("venue");
-                            String lng, lat;
-                            for (Object location : locations) {
-                                JSONObject locationjson = (JSONObject) location;
-                                if (locationjson.get("geocode_type").toString().equals("City Based GeoCodes")) {
-                                    lng = locationjson.get("longitude").toString();
-                                    lat = locationjson.get("latitude").toString();
-                                    Location locationObject = new Location("Eventful");
-                                    locationObject.setLongitude(Double.valueOf(lng));
-                                    locationObject.setLatitude(Double.valueOf(lat));
-                                    callback.onItem(locationObject);
-                                    return;
-                                }
+                JSONHTTPRequest("http://api.eventful.com/json/venues/search?" +
+                        "location=" + location +
+                        "&app_key=" + EVENTFULKEY, new Callback<JSONObject>() {
+                    @Override
+                    public void onItem(JSONObject result) {
+                        JSONArray locations = (JSONArray) ((JSONObject) result.get("venues")).get("venue");
+                        String lng, lat;
+                        for (Object location : locations) {
+                            JSONObject locationjson = (JSONObject) location;
+                            if (locationjson.get("geocode_type").toString().equals("City Based GeoCodes")) {
+                                lng = locationjson.get("longitude").toString();
+                                lat = locationjson.get("latitude").toString();
+                                Location locationObject = new Location("Eventful");
+                                locationObject.setLongitude(Double.valueOf(lng));
+                                locationObject.setLatitude(Double.valueOf(lat));
+                                callback.onItem(locationObject);
+                                return;
                             }
                         }
-                    });
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                }
+                    }
+                });
                 return null;
             }
         }.execute();
