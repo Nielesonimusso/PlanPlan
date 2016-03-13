@@ -72,16 +72,17 @@ public class APIHandler {
     }
 
     public static void queryGooglePlaces(final String location, final int radius, final String type, final Callback<List<GooglePlace>> callback) {
-        queryGooglePlaces(location, radius, type, callback, "", new ArrayList<GooglePlace>());
+        queryGooglePlaces(location, radius, type, callback, "");
     }
 
     public static void queryGooglePlaces(final String location, final int radius, final String type,
-                                         final Callback<List<GooglePlace>> callback, final String pagetoken, final List<GooglePlace> places) {
+                                         final Callback<List<GooglePlace>> callback, final String pagetoken) {
         new AsyncTask<Void, Void, Void>() {
 
             @Override
             protected Void doInBackground(Void... params) {
                 try {
+                    final List<GooglePlace> places = new ArrayList<>();
                     String requestUrl = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?";
                     if (pagetoken.isEmpty()) {
                         requestUrl += "location=" + URLEncoder.encode(location, "UTF-8") +
@@ -101,6 +102,7 @@ public class APIHandler {
                             for (Object item : results) {
                                 places.add(GooglePlace.fromJSON((JSONObject) item));
                             }
+                            callback.onItem(places);
                             //query next page when there is one, otherwise return
                             if (result.containsKey("next_page_token")) {
                                 System.out.println("GooglePlaces next page: " + result.get("next_page_token").toString());
@@ -109,10 +111,9 @@ public class APIHandler {
                                 } catch (InterruptedException e) {
                                     e.printStackTrace();
                                 }
-                                queryGooglePlaces(location, radius, type, callback, result.get("next_page_token").toString(), places);
+                                queryGooglePlaces(location, radius, type, callback, result.get("next_page_token").toString());
                             } else {
                                 System.out.println("GooglePlaces no next page");
-                                callback.onItem(places);
                             }
                         }
                     });
