@@ -11,14 +11,14 @@ import java.util.Date;
  */
 public class EventItem extends Item {
 
-    com.evdb.javaapi.data.Event event;
+    EventfulEvent event;
 
-    public EventItem (Context c, com.evdb.javaapi.data.Event event) {
+    public EventItem (Context c, EventfulEvent event) {
         super(c);
         this.event = event;
     }
 
-    public EventItem(com.evdb.javaapi.data.Event event) {
+    public EventItem(EventfulEvent event) {
         //only for testing
         super();
         this.event = event;
@@ -45,12 +45,12 @@ public class EventItem extends Item {
 
     @Override
     public String getImage() {
-        return event.getImages().get(0).getUrl();
+        return event.getImage();
     }
 
     @Override
     public String getID() {
-        return event.getSeid();
+        return event.getID();
     }
 
     @Override
@@ -65,12 +65,12 @@ public class EventItem extends Item {
 
     @Override
     public String getDescription() {
-        return getDescription();
+        return event.getDescription();
     }
 
     @Override
     public String getAddress() {
-        return event.getVenueAddress();
+        return event.getAddress();
     }
 
     @Override

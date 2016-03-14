@@ -19,10 +19,10 @@ import java.util.Date;
  */
 abstract public class GooglePlacesItem extends Item {
 
-    public GooglePlacesItem(Context c, com.google.android.gms.location.places.Place place) {
+    public GooglePlacesItem(Context c, GooglePlace place) {
         super(c);
     }
-    com.google.android.gms.location.places.Place place;
+    GooglePlace place;
 
     @Override
     public void update() {
@@ -34,6 +34,8 @@ abstract public class GooglePlacesItem extends Item {
         int pricelevel = place.getPriceLevel();
         String price = null;
         switch (pricelevel){
+            case -1: price ="";
+                break;
             case 0: price = "Free";
                 break;
             case 1: price = "Inexpensive";
@@ -60,12 +62,12 @@ abstract public class GooglePlacesItem extends Item {
 
     @Override
     public String getID() {
-        return place.getId();
+        return place.getID();
     }
 
     @Override
     public String getTitle() {
-        return (String) place.getName();
+        return place.getName();
     }
 
     @Override
@@ -75,7 +77,7 @@ abstract public class GooglePlacesItem extends Item {
 
     @Override
     public String getAddress() {
-        return (String) place.getAddress();
+        return place.getAddress();
     }
 
     @Override
