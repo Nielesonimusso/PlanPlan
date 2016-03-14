@@ -85,13 +85,14 @@ public class EventsFragment extends android.support.v4.app.Fragment {
         }
     }
 
-    class BitmapCache {
-        Bitmap cached;
-    }
-
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        if (!(this instanceof EventsFragmentFav)) {
+            RecyclerView recyclerView = (RecyclerView) getActivity().findViewById(R.id.eventsRecycler);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+            recyclerView.setAdapter(new EventfulAdapter(new EventfulDynamicSearch("Eindhoven", 100)));
+        }
     }
 
     @Override

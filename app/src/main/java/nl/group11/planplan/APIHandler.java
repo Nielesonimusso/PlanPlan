@@ -28,11 +28,20 @@ import java.util.Map;
 public class APIHandler {
 
     private static final String EVENTFULKEY = "KMFgPh35QqPkMgXw";
-    static final int EVENTFUL_PAGE_SIZE = 10;
+    static final int EVENTFUL_PAGE_SIZE = 20;
 
     private static final String GOOGLEPLACESKEY = "AIzaSyDNrounxGt7hKmWqQftfYUniyd3BmXEmZA";
 
     public static void queryEventful(final String location, final int radius, final int page, final Callback<List<EventfulEvent>> callback) {
+        queryEventful(location, radius, page, callback, new Callback<JSONObject>() {
+            @Override
+            public void onItem(JSONObject result) {
+
+            }
+        });
+    }
+
+    public static void queryEventful(final String location, final int radius, final int page, final Callback<List<EventfulEvent>> callback, final Callback<JSONObject> miscCallback) {
 
         new AsyncTask<Void, Void, Void>() {
 
@@ -54,7 +63,9 @@ public class APIHandler {
                         @Override
                         public void onItem(JSONObject result) {
                             //System.out.println(result.get("total_items").toString());
-                            JSONArray resultItems = (JSONArray) ((JSONObject) result.get("events")).get("event");
+                            miscCallback.onItem(result);
+                            JSONArray resultItems = (JSONArray) ((JSONObject) result.get("events"))
+                                    .get("event");
                             for (Object event : resultItems) {
                                 JSONObject eventjson = (JSONObject) event;
                                 //System.out.println(eventjson.toJSONString());
@@ -244,6 +255,7 @@ abstract class DynamicSearch<T> {
 
     Map<Integer, T> searchCache;
     List<SearchUpdateListener> listeners;
+    int maxsize = 10;
 
     DynamicSearch() {
         searchCache = new HashMap<>();
@@ -251,15 +263,25 @@ abstract class DynamicSearch<T> {
     }
 
     @Nullable
-    public T get(int i) {
+    public synchronized T get(int i) {
         if (searchCache.containsKey(i)) {
             //return item from cache
             return searchCache.get(i);
         } else {
+            System.out.println("get called " + i);
+            //set map to null to prevent unnecessary requests
+            int page = i / APIHandler.EVENTFUL_PAGE_SIZE;
+            for (int x = page * APIHandler.EVENTFUL_PAGE_SIZE; x < page * APIHandler.EVENTFUL_PAGE_SIZE + APIHandler.EVENTFUL_PAGE_SIZE; x++) {
+                searchCache.put(x, null);
+            }
             //perform query and return null to indicate result is not yet available
             query(i);
             return null;
         }
+    }
+
+    public int size() {
+        return Math.min(searchCache.size() + 1, maxsize);
     }
 
     abstract void query(int i);
@@ -272,14 +294,15 @@ abstract class DynamicSearch<T> {
         listeners.remove(listener);
     }
 
-    public void notifyListeners(int start, int end) {
+    public void notifyListeners(int start, int count) {
+        System.out.println("notifying listeners " + start + " for " + count);
         for(SearchUpdateListener listener : listeners) {
-            listener.onUpdate(this, start, end);
+            listener.onUpdate(this, start, count);
         }
     }
 
     interface SearchUpdateListener {
-        void onUpdate(DynamicSearch self, int start, int end);
+        void onUpdate(DynamicSearch self, int start, int count);
     }
 }
 
@@ -305,9 +328,14 @@ class EventfulDynamicSearch extends DynamicSearch<EventfulEvent> {
                     for (int i = 0; i < results.size(); i++) {
                         searchCache.put(page * APIHandler.EVENTFUL_PAGE_SIZE + i, results.get(i));
                     }
-                    notifyListeners(page * APIHandler.EVENTFUL_PAGE_SIZE,
-                            page * APIHandler.EVENTFUL_PAGE_SIZE + results.size() - 1);
+                    notifyListeners(page * APIHandler.EVENTFUL_PAGE_SIZE, APIHandler.EVENTFUL_PAGE_SIZE);
                 }
+            }
+        }, new APIHandler.Callback<JSONObject>() {
+            @Override
+            public void onItem(JSONObject result) {
+                EventfulDynamicSearch.this.maxsize = Integer.valueOf(result.get("page_count").toString()) * APIHandler.EVENTFUL_PAGE_SIZE;
+                //System.out.println("result: " + result.toJSONString());
             }
         });
     }

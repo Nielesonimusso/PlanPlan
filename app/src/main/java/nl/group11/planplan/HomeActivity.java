@@ -78,7 +78,7 @@ public class HomeActivity extends AppCompatActivity
 
         /*
             EVENTFUL APIHandler TESTS
-         */
+         /
         //direct search test
         APIHandler.queryEventful("Eindhoven", 50, 3, new APIHandler.Callback<List<EventfulEvent>>() {
             @Override
@@ -107,7 +107,7 @@ public class HomeActivity extends AppCompatActivity
 
         /*
             GOOGLEPLACES APIHandler TESTS
-         */
+         /
         //direct search test (including location query)
         APIHandler.stringToLocation("Eindhoven", new APIHandler.Callback<Location>() {
             @Override
@@ -124,7 +124,7 @@ public class HomeActivity extends AppCompatActivity
                 });
             }
         });
-
+        //*/
     }
 
     @Override
