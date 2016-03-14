@@ -9,7 +9,7 @@ import com.google.android.gms.location.places.Place;
  */
 public class RestaurantItem extends GooglePlacesItem {
 
-    public RestaurantItem(Context c, Place place) {
+    public RestaurantItem(Context c, GooglePlace place) {
         super(c, place);
     }
 

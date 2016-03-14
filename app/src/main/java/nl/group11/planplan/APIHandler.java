@@ -1,9 +1,12 @@
 package nl.group11.planplan;
 
 import android.location.Location;
+import android.media.Image;
 import android.os.AsyncTask;
 import android.support.annotation.Nullable;
+import android.text.format.DateUtils;
 
+import org.joda.time.DateTime;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -17,9 +20,13 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -209,9 +216,32 @@ class GooglePlace {
         return data.get("place_id").toString();
     }
 
+    public int getPriceLevel() {
+        try {
+            return Integer.parseInt(data.get("price_level").toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
+
+    public String getAddress() {
+        return data.get("vicinity").toString();
+    }
+
     @Override
     public String toString() {
         return getName();
+    }
+
+    public Enum getType() {
+        String[] types = (String[]) data.get("types");
+        for(String s: types) {
+            if (s.equals("restaurant") || s.equals("food")) {
+                return Type.RESTAURANT;
+            }
+        }
+        return Type.OTHER;
     }
 }
 
@@ -225,13 +255,54 @@ class EventfulEvent {
         return eventfulEvent;
     }
 
-    //TODO: create getter/setter methods to access data
-
     public String getTitle() {
         return data.get("title").toString();
     }
     public String getID() {
         return data.get("id").toString();
+    }
+
+    public String getDescription() {
+        return data.get("description").toString();
+    }
+
+    public String getPrice() {
+        try {
+            return data.get("price").toString();
+        } catch (Exception e){
+            e.printStackTrace();
+            return "";
+        }
+    }
+
+    private Date makeDate(String dateString) {
+        int year = Integer.parseInt(dateString.substring(0,4));
+        int month = Integer.parseInt(dateString.substring(5,7));
+        int day = Integer.parseInt(dateString.substring(8,10));
+        int hour = Integer.parseInt(dateString.substring(11,13));
+        int minute = Integer.parseInt(dateString.substring(14,16));
+        int second = Integer.parseInt(dateString.substring(17,19));
+        return new DateTime(year,month,day,hour,minute,second).toDate();
+    }
+    public Date getStartTime() {
+        return makeDate(data.get("start_time").toString());
+    }
+
+    public Date getStopTime() {
+        return makeDate(data.get("stop_time").toString());
+    }
+
+    public String getImage() {
+        try {
+            return ((JSONObject) ((JSONObject) data.get("image")).get("medium")).get("url").toString();
+        } catch(Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public String getAddress() {
+        return data.get("venue_address").toString();
     }
 
     @Override

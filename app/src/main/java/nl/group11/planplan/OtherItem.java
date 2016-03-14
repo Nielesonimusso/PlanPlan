@@ -9,7 +9,7 @@ import com.google.android.gms.location.places.Place;
  */
 public class OtherItem extends GooglePlacesItem {
 
-    public OtherItem(Context c, Place place) {
+    public OtherItem(Context c, GooglePlace place) {
         super(c, place);
     }
 
