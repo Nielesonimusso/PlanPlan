@@ -67,7 +67,7 @@ abstract public class GooglePlacesItem extends Item {
 
     @Override
     public String getTitle() {
-        return (String) place.getName();
+        return place.getName();
     }
 
     @Override
@@ -77,7 +77,7 @@ abstract public class GooglePlacesItem extends Item {
 
     @Override
     public String getAddress() {
-        return (String) place.getAddress();
+        return place.getAddress();
     }
 
     @Override
