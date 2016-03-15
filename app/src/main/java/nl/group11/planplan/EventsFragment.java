@@ -91,7 +91,7 @@ public class EventsFragment extends android.support.v4.app.Fragment {
         if (!(this instanceof EventsFragmentFav)) {
             RecyclerView recyclerView = (RecyclerView) getActivity().findViewById(R.id.eventsRecycler);
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-            recyclerView.setAdapter(new EventfulAdapter(new EventfulDynamicSearch("Eindhoven", 100)));
+            recyclerView.setAdapter(new EventfulAdapter(getContext(), new EventfulDynamicSearch("Eindhoven", 100)));
         }
     }
 

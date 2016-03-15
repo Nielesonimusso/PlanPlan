@@ -1,5 +1,6 @@
 package nl.group11.planplan;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.CardView;
@@ -19,11 +20,11 @@ public class EventfulAdapter extends RecyclerView.Adapter<EventfulAdapter.ViewHo
     EventfulDynamicSearch searchSource;
     ImageCache imageCache;
 
-    EventfulAdapter(EventfulDynamicSearch search) {
+    EventfulAdapter(Context context, EventfulDynamicSearch search) {
         searchSource = search;
         searchSource.addListener(this);
 
-        imageCache = new ImageCache();
+        imageCache = new ImageCache(context);
     }
 
     @Override
@@ -46,7 +47,7 @@ public class EventfulAdapter extends RecyclerView.Adapter<EventfulAdapter.ViewHo
             holder.description.setText(Html.fromHtml(item.getDescription()));
             holder.price.setText(Html.fromHtml(item.getPrice()));
             holder.imgUrl = item.getImage();
-            holder.image.setImageBitmap(imageCache.setImageFromURL(holder.image.getContext(), item.getImage(), new APIHandler.Callback<Bitmap>() {
+            holder.image.setImageBitmap(imageCache.setImageFromURL(item.getImage(), new APIHandler.Callback<Bitmap>() {
                 @Override
                 public void onItem(Bitmap result) {
                     if (holder.imgUrl.equals(item.getImage())) {

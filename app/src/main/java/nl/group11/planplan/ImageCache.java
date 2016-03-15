@@ -23,8 +23,9 @@ import java.util.Map;
 public class ImageCache {
 
     LruCache<String, Bitmap> cache;
+    Bitmap fallback;
 
-    ImageCache() {
+    ImageCache(Context context) {
         int ram = (int) (Runtime.getRuntime().maxMemory() / 1024);
         int maxSize = ram / 4;
         cache = new LruCache<String, Bitmap>(maxSize) {
@@ -33,11 +34,12 @@ public class ImageCache {
                 return value.getByteCount() / 1024;
             }
         };
+        fallback = BitmapFactory.decodeResource(context.getResources(), R.drawable.imgnotfound);
     }
 
-    public Bitmap setImageFromURL(final Context context, final String url, final APIHandler.Callback<Bitmap> callback) {
+    public Bitmap setImageFromURL(final String url, final APIHandler.Callback<Bitmap> callback) {
         if (url == null) {
-            return BitmapFactory.decodeResource(context.getResources(), R.drawable.imgnotfound);
+            return fallback;
         } else if (cache.get(url) != null) { //use bitmap from cache
             return cache.get(url);
         } else { //request bitmap from URL and set in callback
@@ -52,7 +54,7 @@ public class ImageCache {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    return BitmapFactory.decodeResource(context.getResources(), R.drawable.imgnotfound);
+                    return fallback;
                 }
 
                 @Override
@@ -62,7 +64,7 @@ public class ImageCache {
                     callback.onItem(bitmap);
                 }
             }.execute();
-            return BitmapFactory.decodeResource(context.getResources(), R.drawable.imgnotfound);
+            return fallback;
         }
     }
 }
