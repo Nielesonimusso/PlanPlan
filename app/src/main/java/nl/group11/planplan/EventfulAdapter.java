@@ -56,6 +56,13 @@ public class EventfulAdapter extends RecyclerView.Adapter<EventfulAdapter.ViewHo
                 }
             }));
             holder.cardView.setOnClickListener(item);
+            holder.planningButton.setOnClickListener(item);
+            holder.favoritesButton.setOnClickListener(item);
+            /*
+            if (item.checkItemInFavorites()) {
+                holder.favoritesButtonLabel.setText("Remove from favorites");
+            }
+            */
         }
     }
 
@@ -71,8 +78,8 @@ public class EventfulAdapter extends RecyclerView.Adapter<EventfulAdapter.ViewHo
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
-        CardView cardView;
-        TextView title, description, price;
+        CardView cardView, planningButton, favoritesButton;
+        TextView title, description, price, planningButtonLabel, favoritesButtonLabel;
         ImageView image;
         String imgUrl;
 
@@ -84,6 +91,12 @@ public class EventfulAdapter extends RecyclerView.Adapter<EventfulAdapter.ViewHo
             title = (TextView) texts.getChildAt(1);
             price = (TextView) texts.getChildAt(2);
             description = (TextView) texts.getChildAt(3);
+
+            LinearLayout buttons = (LinearLayout) texts.getChildAt(4);
+            planningButton = (CardView) buttons.getChildAt(0);
+            planningButtonLabel = (TextView) planningButton.getChildAt(0);
+            favoritesButton = (CardView) buttons.getChildAt(2);
+            favoritesButtonLabel = (TextView) favoritesButton.getChildAt(0);
         }
     }
 }
