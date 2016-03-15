@@ -274,7 +274,8 @@ class EventfulEvent {
     }
 
     public String getDescription() {
-        return data.get("description").toString();
+        String desc = (String) data.get("description");
+        return desc != null ? data.get("description").toString() : "No description available";
     }
 
     public String getPrice() {
@@ -282,7 +283,7 @@ class EventfulEvent {
             return data.get("price").toString();
         } catch (Exception e){
             e.printStackTrace();
-            return "";
+            return "No price information available";
         }
     }
 
