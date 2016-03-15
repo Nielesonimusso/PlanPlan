@@ -1,5 +1,6 @@
 package nl.group11.planplan;
 
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.location.Location;
 import android.net.Uri;
@@ -144,6 +145,7 @@ public class HomeActivity extends AppCompatActivity
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_search) {
             //show search fragment
+            showSearchDialog();
         }
 
         return super.onOptionsItemSelected(item);
@@ -186,6 +188,12 @@ public class HomeActivity extends AppCompatActivity
         } else {
             System.out.println("invalid range");
         }
+    }
+
+    void showSearchDialog() {
+        FragmentTransaction trans = getFragmentManager().beginTransaction();
+        SearchDialog newSearchDialog = SearchDialog.newInstance();
+        newSearchDialog.show(trans, "search");
     }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {
