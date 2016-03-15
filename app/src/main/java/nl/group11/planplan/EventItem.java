@@ -1,6 +1,7 @@
 package nl.group11.planplan;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.View;
 
 import java.util.Calendar;
@@ -75,7 +76,9 @@ public class EventItem extends Item {
 
     @Override
     public void onClick(View v) {
-
+        System.out.println("Clicked item with title " + getTitle());
+        Intent intent = new Intent(v.getContext(), DetailsActivity.class);
+        v.getContext().startActivity(intent);
     }
 
     @Override

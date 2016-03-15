@@ -40,8 +40,7 @@
             android:layout_margin="10dp"
             android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
             android:lines="3"
-            android:ellipsize="marquee"
-            android:fadingEdge="horizontal|vertical"
+            android:ellipsize="end"
             android:text="description"/>
     </LinearLayout>
 

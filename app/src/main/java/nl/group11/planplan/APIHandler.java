@@ -35,7 +35,7 @@ import java.util.Map;
 public class APIHandler {
 
     private static final String EVENTFULKEY = "KMFgPh35QqPkMgXw";
-    static final int EVENTFUL_PAGE_SIZE = 20;
+    static final int EVENTFUL_PAGE_SIZE = 10;
 
     private static final String GOOGLEPLACESKEY = "AIzaSyDNrounxGt7hKmWqQftfYUniyd3BmXEmZA";
 
@@ -205,6 +205,10 @@ public class APIHandler {
     public static String locationToLatLngString(Location l) {
         return l.getLatitude() + "," + l.getLongitude();
     }
+
+    public static Object altIfNull(Object check, Object alt) {
+        return check != null ? check : alt;
+    }
 }
 
 class GooglePlace {
@@ -274,17 +278,13 @@ class EventfulEvent {
     }
 
     public String getDescription() {
-        String desc = (String) data.get("description");
-        return desc != null ? data.get("description").toString() : "No description available";
+        Object desc = (String) data.get("description");
+        return (String) APIHandler.altIfNull(desc, "No description available");
     }
 
     public String getPrice() {
-        try {
-            return data.get("price").toString();
-        } catch (Exception e){
-            e.printStackTrace();
-            return "No price information available";
-        }
+        Object price = data.get("price");
+        return (String) APIHandler.altIfNull(price, "No price information available");
     }
 
     private Date makeDate(String dateString) {
@@ -305,10 +305,10 @@ class EventfulEvent {
     }
 
     public String getImage() {
-        try {
-            return ((JSONObject) ((JSONObject) data.get("image")).get("medium")).get("url").toString();
-        } catch(Exception e) {
-            e.printStackTrace();
+        JSONObject imgJSON = (JSONObject) data.get("image");
+        if (imgJSON != null) {
+            return ((JSONObject) imgJSON.get("medium")).get("url").toString();
+        } else {
             return null;
         }
     }

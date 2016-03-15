@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.util.LruCache;
 import android.widget.ImageView;
 
 import java.io.IOException;
@@ -21,10 +22,23 @@ import java.util.Map;
  */
 public class ImageCache {
 
-    Map<String, Bitmap> cache = new HashMap<>();
+    LruCache<String, Bitmap> cache;
+
+    ImageCache() {
+        int ram = (int) (Runtime.getRuntime().maxMemory() / 1024);
+        int maxSize = ram / 4;
+        cache = new LruCache<String, Bitmap>(maxSize) {
+            @Override
+            protected int sizeOf(String key, Bitmap value) {
+                return value.getByteCount() / 1024;
+            }
+        };
+    }
 
     public Bitmap setImageFromURL(final Context context, final String url, final APIHandler.Callback<Bitmap> callback) {
-        if (cache.containsKey(url)) { //use bitmap from cache
+        if (url == null) {
+            return BitmapFactory.decodeResource(context.getResources(), R.drawable.imgnotfound);
+        } else if (cache.get(url) != null) { //use bitmap from cache
             return cache.get(url);
         } else { //request bitmap from URL and set in callback
             new AsyncTask<Void, Void, Bitmap>() {

@@ -35,7 +35,7 @@ public class EventfulAdapter extends RecyclerView.Adapter<EventfulAdapter.ViewHo
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         EventfulEvent event = searchSource.get(position);
-        EventItem item = new EventItem(holder.cardView.getContext(), event);
+        final EventItem item = new EventItem(holder.cardView.getContext(), event);
         if (event == null) {
             holder.title.setText("Loading...");
             holder.description.setText("");
@@ -45,13 +45,16 @@ public class EventfulAdapter extends RecyclerView.Adapter<EventfulAdapter.ViewHo
             holder.title.setText(item.getTitle());
             holder.description.setText(Html.fromHtml(item.getDescription()));
             holder.price.setText(Html.fromHtml(item.getPrice()));
+            holder.imgUrl = item.getImage();
             holder.image.setImageBitmap(imageCache.setImageFromURL(holder.image.getContext(), item.getImage(), new APIHandler.Callback<Bitmap>() {
                 @Override
                 public void onItem(Bitmap result) {
-                    holder.image.setImageBitmap(result);
+                    if (holder.imgUrl.equals(item.getImage())) {
+                        holder.image.setImageBitmap(result);
+                    }
                 }
             }));
-
+            holder.cardView.setOnClickListener(item);
         }
     }
 
@@ -70,6 +73,7 @@ public class EventfulAdapter extends RecyclerView.Adapter<EventfulAdapter.ViewHo
         CardView cardView;
         TextView title, description, price;
         ImageView image;
+        String imgUrl;
 
         public ViewHolder(CardView cardView) {
             super(cardView);
