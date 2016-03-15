@@ -1,16 +1,15 @@
 package nl.group11.planplan;
 
 import android.app.AlertDialog;
-import android.content.Context;
+import android.app.Dialog;
+import android.app.DialogFragment;
+import android.content.DialogInterface;
 import android.location.Location;
-import android.view.View;
+import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.SearchView;
+import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,84 +18,66 @@ import java.util.List;
 /**
  * Created by s140442 on 09/03/2016.
  */
-public class SearchDialog extends AlertDialog {
+public class SearchDialog extends DialogFragment {
 
-    //main layout
-    LinearLayout layout;
-    //layout for the search bar
-    LinearLayout searchLayout;
-    SearchView searchBar;
-    TextView searchText;
-    //layout for the options
-    LinearLayout optionsLayout;
-    TextView optionsSpinnerText;
-    TextView optionsCheckboxText;
+
+    EditText searchBar;
     Spinner optionsSpinner;
     CheckBox optionsCheckbox;
-    ImageButton searchButton;
     GPSTracker gps;
 
-    public SearchDialog(Context context, int themeResId, GPSTracker gps) {
-        super(context, themeResId);
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Search")
+                .setPositiveButton("Search", new DialogInterface.OnClickListener() {
+                    Location location;
+                    int range;
+                    String locationString;
 
-        createUIElements(context); //initialize ui elements
-        addSearchView(); //configure search bar layout
-        addOptionsView(context); //configure search options
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
 
-        setView(layout);
+                        range = Integer.parseInt(optionsSpinner.getSelectedItem().toString().replace(" km", ""));
+                        if (optionsCheckbox.isChecked()) {
+                            location = gps.getLocation();
+                            callAPIs();
+                        } else {
+                            locationString = searchBar.getText().toString();
+                            APIHandler.stringToLocation(locationString, new APIHandler.Callback<Location>() {
+                                @Override
+                                public void onItem(Location result) {
+                                    location = result;
+                                    callAPIs();
+                                }
+                            });
+                        }
+                    }
+
+                    public void callAPIs() {
+                        //TODO api calls
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                //TODO .setView()
+        createUIElements();
+        addOptionsView();
+        return builder.create();
     }
 
-    public void createUIElements(Context context) {
-        //main layout
-        layout = new LinearLayout(context);
-        //layout for the search bar
-        searchLayout = new LinearLayout(context);
-        searchBar = new SearchView(context);
-        searchText = new TextView(context);
-        //layout for the options
-        optionsLayout = new LinearLayout(context);
-        optionsSpinnerText = new TextView(context);
-        optionsCheckboxText = new TextView(context);
+    public void createUIElements() {
+        //TODO find elements from view xml
+        /*searchBar = new SearchView(context);
         optionsSpinner = new Spinner(context);
-        optionsCheckbox = new CheckBox(context);
-        searchButton = new ImageButton(context);
-        this.gps = gps;
-
-        layout.setOrientation(LinearLayout.VERTICAL);
+        optionsCheckbox = new CheckBox(context);*/
     }
 
-    public void addSearchView() {
-        searchText.setText("Location: ");
-        //TODO searchButton.setImage
-        searchButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int range;
-                Location location;
-                if(optionsCheckbox.isChecked()) {
-                    location = gps.getLocation();
-                } else {
-                   String locString = (String) searchBar.getQuery();
-                    //TODO get Location with eventful
-                }
-                range = Integer.parseInt(optionsSpinner.getSelectedItem().toString().replace(" km",""));
-
-                //TODO make search request to API
-            }
-        });
-
-        searchLayout.addView(searchText, 0);
-        searchLayout.addView(searchBar, 1);
-        searchLayout.addView(searchButton,2);
-
-        layout.addView(searchLayout, 0);
-    }
-
-    public void addOptionsView(Context context) {
-        //configure options bar layout
-        optionsSpinnerText.setText("Range: ");
-        optionsCheckboxText.setText("Use current location");
-
+    private void addOptionsView() {
         //list with range options
         List list = new ArrayList<String>();
         list.add("5 km");
@@ -104,12 +85,8 @@ public class SearchDialog extends AlertDialog {
         list.add("20 km");
         list.add("50 km");
 
-        ArrayAdapter<String> spinnerOptions = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, list);
+        ArrayAdapter<String> spinnerOptions = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, list);
         spinnerOptions.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         optionsSpinner.setAdapter(spinnerOptions);
-        optionsLayout.addView(optionsSpinnerText,0);
-        optionsLayout.addView(optionsSpinner,1);
-        optionsLayout.addView(optionsCheckboxText,2);
-        optionsLayout.addView(optionsCheckboxText, 3);
     }
 }
