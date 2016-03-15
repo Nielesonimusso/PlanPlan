@@ -1,11 +1,16 @@
 package nl.group11.planplan;
 
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -25,7 +30,14 @@ public class SearchDialog extends DialogFragment {
     Spinner optionsSpinner;
     CheckBox optionsCheckbox;
     GPSTracker gps;
+    View currentView;
 
+    static SearchDialog newInstance() {
+        SearchDialog searchDialog = new SearchDialog();
+        return searchDialog;
+    }
+
+    @TargetApi(Build.VERSION_CODES.M)
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -56,6 +68,9 @@ public class SearchDialog extends DialogFragment {
 
                     public void callAPIs() {
                         //TODO api calls
+                        // Als je hier voor de UI elements hun inhoud nodig hebt,
+                        // bijv. je wil de ingevoerde locatie en range gebruiken,
+                        // moet je dan niet createUIElements() eerder aanroepen?
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -65,6 +80,12 @@ public class SearchDialog extends DialogFragment {
                     }
                 });
                 //TODO .setView()
+                // Dit heeft Anne gedaan, dus misschien is het fout. :)
+                LayoutInflater inflater = LayoutInflater.from(this.getActivity());
+                View searchView = inflater.inflate(R.layout.dialog_search, null);
+                builder.setView(searchView);
+
+        //currentView = getView();
         createUIElements();
         addOptionsView();
         return builder.create();
@@ -75,6 +96,14 @@ public class SearchDialog extends DialogFragment {
         /*searchBar = new SearchView(context);
         optionsSpinner = new Spinner(context);
         optionsCheckbox = new CheckBox(context);*/
+        currentView = getView();
+        if (getView() == null) {
+            throw new NullPointerException("currentView is null");
+        }
+        searchBar = (EditText) currentView.findViewById(R.id.searchbar);
+        optionsSpinner = (Spinner) currentView.findViewById(R.id.rangeSpinner);
+        optionsCheckbox = (CheckBox) currentView.findViewById(R.id.locationCheckBox);
+
     }
 
     private void addOptionsView() {
