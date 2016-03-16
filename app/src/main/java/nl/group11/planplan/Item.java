@@ -30,6 +30,7 @@ abstract public class Item implements View.OnClickListener{
 
         context = c;
         firebase = new Firebase("https://planplan.firebaseio.com/");
+
     }
     public Item(){
     //Only for testing
