@@ -24,6 +24,7 @@
         </activity>
         <activity
             android:name=".PlanningActivity"
+            android:label="Current Planning"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <!-- google places API -->
@@ -33,10 +34,11 @@
 
         <activity
             android:name=".FavoritesActivity"
+            android:label="Favourites"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".DetailsActivity"
-            android:label="@string/title_activity_details"
+            android:label="Details"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
