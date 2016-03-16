@@ -1,5 +1,6 @@
 package nl.group11.planplan;
 
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.location.Location;
 import android.net.Uri;
@@ -56,16 +57,6 @@ public class HomeActivity extends AppCompatActivity
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
-
-        // Floating action button
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -154,6 +145,7 @@ public class HomeActivity extends AppCompatActivity
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_search) {
             //show search fragment
+            showSearchDialog();
         }
 
         return super.onOptionsItemSelected(item);
@@ -196,6 +188,12 @@ public class HomeActivity extends AppCompatActivity
         } else {
             System.out.println("invalid range");
         }
+    }
+
+    void showSearchDialog() {
+        FragmentTransaction trans = getFragmentManager().beginTransaction();
+        SearchDialog newSearchDialog = SearchDialog.newInstance();
+        newSearchDialog.show(trans, "search");
     }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {

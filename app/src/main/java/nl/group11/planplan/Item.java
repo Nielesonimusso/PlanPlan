@@ -177,7 +177,7 @@ abstract public class Item implements View.OnClickListener{
 
     private String getAccount() {
         Account[] accounts = AccountManager.get(context).getAccountsByType("com.google");
-        return accounts[0].name;
+        return accounts[0].name.replace('.', '*');//replace dots with stars to prevent dots in firebase key
     }
 
     public boolean checkItemInFavorites() {

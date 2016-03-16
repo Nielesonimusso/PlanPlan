@@ -85,10 +85,6 @@ public class OtherFragment extends android.support.v4.app.Fragment {
         }
     }
 
-    class BitmapCache {
-        Bitmap cached;
-    }
-
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
