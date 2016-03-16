@@ -85,6 +85,10 @@ abstract public class GooglePlacesItem extends Item {
         //TODO implement method
     }
 
+    public String getImage() {
+        return place.getImage();
+    }
+
     @Override
     public boolean hasPassed() {
         return false;

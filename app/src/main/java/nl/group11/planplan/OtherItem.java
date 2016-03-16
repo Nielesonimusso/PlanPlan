@@ -14,11 +14,6 @@ public class OtherItem extends GooglePlacesItem {
     }
 
     @Override
-    public String getImage() {
-        return "https://cdn4.iconfinder.com/data/icons/tralel-and-recreation/32/vacation_26-512.png";
-    }
-
-    @Override
     public Enum getType() {
         return Type.OTHER;
     }

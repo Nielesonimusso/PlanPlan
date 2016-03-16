@@ -14,11 +14,6 @@ public class RestaurantItem extends GooglePlacesItem {
     }
 
     @Override
-    public String getImage() {
-        return "http://i.imgur.com/ZPRu8He.png";
-    }
-
-    @Override
     public Enum getType() {
         return Type.RESTAURANT;
     }

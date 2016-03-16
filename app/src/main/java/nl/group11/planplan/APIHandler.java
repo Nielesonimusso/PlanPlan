@@ -258,6 +258,11 @@ class GooglePlace {
         }
         return Type.OTHER;
     }
+
+    public String getImage() {
+        return data.get("icon").toString();
+    }
+
 }
 
 class EventfulEvent {

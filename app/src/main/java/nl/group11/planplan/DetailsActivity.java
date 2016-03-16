@@ -61,6 +61,9 @@ public class DetailsActivity extends AppCompatActivity
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_search) {
             //show search fragment
+            Intent intent = new Intent(this, HomeActivity.class);
+            intent.putExtra("showDialog", true);
+            startActivity(intent);
 
         }
 
