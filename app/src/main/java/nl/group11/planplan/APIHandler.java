@@ -28,6 +28,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Created by s132054 on 7-3-2016.
@@ -115,7 +117,7 @@ public class APIHandler {
 
                     JSONHTTPRequest(requestUrl, new Callback<JSONObject>() {
                         @Override
-                        public void onItem(JSONObject result) {
+                        public void onItem(final JSONObject result) {
                             JSONArray results = (JSONArray) result.get("results");
                             for (Object item : results) {
                                 places.add(GooglePlace.fromJSON((JSONObject) item));
@@ -124,12 +126,12 @@ public class APIHandler {
                             //query next page when there is one, otherwise return
                             if (result.containsKey("next_page_token")) {
                                 System.out.println("GooglePlaces next page: " + result.get("next_page_token").toString());
-                                try {
-                                    Thread.sleep(2000);
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
-                                }
-                                queryGooglePlaces(location, radius, type, callback, result.get("next_page_token").toString());
+                                new Timer().schedule(new TimerTask() {
+                                    @Override
+                                    public void run() {
+                                        queryGooglePlaces(location, radius, type, callback, result.get("next_page_token").toString());
+                                    }
+                                }, 2000);
                             } else {
                                 System.out.println("GooglePlaces no next page");
                             }
@@ -232,10 +234,9 @@ class GooglePlace {
     }
 
     public int getPriceLevel() {
-        try {
+        if (data.containsKey("price_level")) {
             return Integer.parseInt(data.get("price_level").toString());
-        } catch (Exception e) {
-            e.printStackTrace();
+        } else {
             return -1;
         }
     }
@@ -250,8 +251,9 @@ class GooglePlace {
     }
 
     public Enum getType() {
-        String[] types = (String[]) data.get("types");
-        for(String s: types) {
+        JSONArray types = (JSONArray) data.get("types");
+        for(Object type: types) {
+            String s = (String) type;
             if (s.equals("restaurant") || s.equals("food")) {
                 return Type.RESTAURANT;
             }
@@ -273,6 +275,10 @@ class EventfulEvent {
         EventfulEvent eventfulEvent = new EventfulEvent();
         eventfulEvent.data = (JSONObject) json.clone();
         return eventfulEvent;
+    }
+
+    public String JSON() {
+        return data.toJSONString();
     }
 
     public String getTitle() {
@@ -376,6 +382,12 @@ abstract class DynamicSearch<T> {
         for(SearchUpdateListener listener : listeners) {
             listener.onUpdate(this, start, count);
         }
+    }
+
+    public void reset() {
+        int oldSize = size();
+        searchCache = new HashMap<>();
+        notifyListeners(0, oldSize);
     }
 
     interface SearchUpdateListener {

@@ -2,6 +2,7 @@ package nl.group11.planplan;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.View;
 
 import java.util.Calendar;
@@ -81,6 +82,7 @@ public class EventItem extends Item {
             case "details":
                 System.out.println("Clicked item with title " + getTitle());
                 Intent intent = new Intent(v.getContext(), DetailsActivity.class);
+                intent.putExtra("item", event.JSON());
                 v.getContext().startActivity(intent);
                 break;
             case "addPlanning":

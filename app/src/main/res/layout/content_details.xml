@@ -27,7 +27,7 @@
                 android:layout_gravity="center"
                 android:scaleType="centerCrop"
                 android:src="@drawable/imgnotfound"
-                android:id="@+id/itemImage"
+                android:id="@+id/image"
                 android:contentDescription="@null" />
             <TextView
                 android:layout_width="wrap_content"
@@ -35,50 +35,66 @@
                 android:layout_marginTop="10dp"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textStyle="bold"
-                android:id="@+id/itemTitle"
-                android:text="Test Title"/>
+                android:id="@+id/title"
+                android:text="Title"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:id="@+id/startEndTime"
-                android:text="17-02-16 19:00:00 ~ 17-02-17 05:00:00"/>
+                android:text="Start and End time"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:id="@+id/description"
-                android:text="test description bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla."/>
+                android:text="Description"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:id="@+id/price"
-                android:text="Price: your pitiful soul"/>
+                android:text="Price"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:id="@+id/address"
-                android:text="Address: in de achtertuin"/>
+                android:text="Address"/>
         </LinearLayout>
     </ScrollView>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:layout_gravity="bottom">
-        <ImageButton
+        <android.support.v7.widget.CardView
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:layout_height="60dp"
-            android:layout_margin="10dp"/>
-        <ImageButton
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:foreground="?android:attr/selectableItemBackground">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:tag="addFavorites"
+                android:text="Add to favorites"
+                android:layout_gravity="center"/>
+        </android.support.v7.widget.CardView>
+        <android.support.v7.widget.CardView
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:layout_height="60dp"
-            android:layout_margin="10dp"/>
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:foreground="?android:attr/selectableItemBackground">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:tag="addPlanning"
+                android:text="Add to planning"
+                android:layout_gravity="center"/>
+        </android.support.v7.widget.CardView>
     </LinearLayout>
 </LinearLayout>

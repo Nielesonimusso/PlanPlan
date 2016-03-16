@@ -21,6 +21,7 @@ abstract public class GooglePlacesItem extends Item {
 
     public GooglePlacesItem(Context c, GooglePlace place) {
         super(c);
+        this.place = place;
     }
     GooglePlace place;
 
@@ -72,7 +73,7 @@ abstract public class GooglePlacesItem extends Item {
 
     @Override
     public String getDescription() {
-        return null;
+        return "";
     }
 
     @Override

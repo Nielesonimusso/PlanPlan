@@ -14,6 +14,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
 public class DetailsActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -32,6 +36,16 @@ public class DetailsActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        //insert content
+        String itemjsonstring = getIntent().getExtras().getString("item");
+        try {
+            JSONObject itemjson = (JSONObject) new JSONParser().parse(itemjsonstring);
+            
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Override

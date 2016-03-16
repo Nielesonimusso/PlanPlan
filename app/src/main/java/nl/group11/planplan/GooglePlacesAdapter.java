@@ -12,38 +12,58 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
- * Created by s132054 on 14-3-2016.
+ * Created by s132054 on 16-3-2016.
  */
-public class EventfulAdapter extends RecyclerView.Adapter<EventfulAdapter.ViewHolder> implements DynamicSearch.SearchUpdateListener, SearchAdapter {
+public class GooglePlacesAdapter extends RecyclerView.Adapter<GooglePlacesAdapter.ViewHolder> implements APIHandler.Callback<List<GooglePlace>>, SearchAdapter {
 
-    EventfulDynamicSearch searchSource;
+    List<GooglePlace> places;
     ImageCache imageCache;
+    String type;
 
-    EventfulAdapter(Context context, EventfulDynamicSearch search) {
-        searchSource = search;
-        searchSource.addListener(this);
-
+    GooglePlacesAdapter(Context context, String location, int radius, String type) {
         imageCache = new ImageCache(context);
+        places = new ArrayList<>();
+        this.type = type;
+        performQuery(location, radius);
+    }
+
+    public void performQuery(String location, int radius) {
+        APIHandler.queryGooglePlaces(location, radius, type, this);
+    }
+
+    @Override
+    public void updateSearch(String location, int radius) {
+        places = new ArrayList<>();
+        notifyDataSetChanged();
+        performQuery(location, radius);
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        CardView cardView = (CardView) LayoutInflater.from(parent.getContext()).inflate(R.layout.item, parent, false);
+        CardView cardView = (CardView) LayoutInflater.from(parent.getContext()).inflate(R.layout.item_place, parent, false);
         return new ViewHolder(cardView);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        EventfulEvent event = searchSource.get(position);
-        final EventItem item = new EventItem(holder.cardView.getContext(), event);
-        if (event == null) {
+        GooglePlace place = position < places.size() ? places.get(position) : null;
+        if (place == null) {
             holder.title.setText("Loading...");
             holder.description.setText("");
             holder.price.setText("");
             holder.image.setImageResource(R.drawable.imgnotfound);
             holder.buttons.setVisibility(View.GONE);
         } else {
+            final GooglePlacesItem item;
+            if (place.getType().equals(Type.RESTAURANT)) {
+                item = new RestaurantItem(holder.cardView.getContext(), place);
+            } else {
+                item = new OtherItem(holder.cardView.getContext(), place);
+            }
             holder.buttons.setVisibility(View.VISIBLE);
             holder.title.setText(item.getTitle());
             holder.description.setText(Html.fromHtml(item.getDescription()));
@@ -52,9 +72,9 @@ public class EventfulAdapter extends RecyclerView.Adapter<EventfulAdapter.ViewHo
             holder.image.setImageBitmap(imageCache.setImageFromURL(item.getImage(), new APIHandler.Callback<Bitmap>() {
                 @Override
                 public void onItem(Bitmap result) {
-                if (holder.imgUrl != null && holder.imgUrl.equals(item.getImage())) {
-                    holder.image.setImageBitmap(result);
-                }
+                    if (holder.imgUrl != null && holder.imgUrl.equals(item.getImage())) {
+                        holder.image.setImageBitmap(result);
+                    }
                 }
             }));
             holder.cardView.setOnClickListener(item);
@@ -70,19 +90,15 @@ public class EventfulAdapter extends RecyclerView.Adapter<EventfulAdapter.ViewHo
 
     @Override
     public int getItemCount() {
-        return searchSource.size();
+        return places.size();
     }
 
     @Override
-    public void onUpdate(DynamicSearch self, int start, int count) {
-        notifyItemRangeChanged(start, count);
-    }
-
-    @Override
-    public void updateSearch(String location, int radius) {
-        searchSource.location = location;
-        searchSource.radius = radius;
-        searchSource.reset();
+    public void onItem(List<GooglePlace> result) {
+        int oldSize = places.size();
+        int newLength = result.size();
+        places.addAll(result);
+        notifyItemRangeInserted(oldSize, newLength);
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
