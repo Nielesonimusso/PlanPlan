@@ -10,6 +10,8 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
+import org.json.simple.JSONObject;
+
 import java.util.Date;
 
 /**
@@ -32,7 +34,7 @@ abstract public class Item implements View.OnClickListener{
         firebase = new Firebase("https://planplan.firebaseio.com/");
 
     }
-    public Item(){
+    public Item(JSONObject json){
     //Only for testing
     }
 
@@ -227,4 +229,6 @@ abstract public class Item implements View.OnClickListener{
     public void setUserEndTime(Date d) {
         this.userEndTime = d;
     }
+
+    abstract public JSONObject toJSON();
 }

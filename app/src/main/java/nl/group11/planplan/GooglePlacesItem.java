@@ -12,6 +12,8 @@ import com.firebase.client.ValueEventListener;
 
 import com.google.android.gms.location.places.Place;
 
+import org.json.simple.JSONObject;
+
 import java.util.Date;
 
 /**
@@ -19,10 +21,17 @@ import java.util.Date;
  */
 abstract public class GooglePlacesItem extends Item {
 
+    GooglePlace place;
+
     public GooglePlacesItem(Context c, GooglePlace place) {
         super(c);
     }
-    GooglePlace place;
+    public GooglePlacesItem(JSONObject json) {
+        //only for testing
+        super(json);
+        this.place = GooglePlace.fromJSON(json);
+    }
+
 
     @Override
     public void update() {
@@ -93,4 +102,19 @@ abstract public class GooglePlacesItem extends Item {
     public boolean hasPassed() {
         return false;
     }
+
+    @Override
+    public JSONObject toJSON() {
+        JSONObject json = new JSONObject();
+        json.put("place_id", getID());
+        json.put("name", getTitle());
+        json.put("type",getType());
+        json.put("price_level", getPrice());
+        json.put("user_start_time", getUserStartTime());
+        json.put("user_end_time", getUserEndTime());
+        ((JSONObject)json.get("image")).put("medium", getImage());
+        json.put("vicinity",getAddress());
+        return json;
+    }
+
 }
