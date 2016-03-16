@@ -27,11 +27,13 @@ public class SearchDialog extends DialogFragment {
     Spinner optionsSpinner;
     CheckBox optionsCheckbox;
     GPSTracker gps;
+    LinearLayout layout;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater li = getActivity().getLayoutInflater();;
+        layout = (LinearLayout) li.inflate(R.layout.dialog_search, null);
         builder.setTitle("Search")
                 .setPositiveButton("Search", new DialogInterface.OnClickListener() {
                     Location location;
@@ -67,17 +69,19 @@ public class SearchDialog extends DialogFragment {
                         dialog.cancel();
                     }
                 })
-                .setView(li.inflate(R.layout.dialog_search, null));
-
-        createUIElements();
+                .setView(layout);
+        referenceUIElements();
         addOptionsView();
         return builder.create();
     }
 
-    public void createUIElements() {
-        searchBar = (EditText)((LinearLayout) ((LinearLayout) this.getView()).getChildAt(0)).getChildAt(1);
-        optionsSpinner = (Spinner)((LinearLayout) ((LinearLayout) this.getView()).getChildAt(1)).getChildAt(1);
-        optionsCheckbox = (CheckBox)((LinearLayout) ((LinearLayout) this.getView()).getChildAt(1)).getChildAt(3);
+    public void referenceUIElements() {
+        //TODO needs testing
+        searchBar = (EditText) getActivity().findViewById(R.id.searchbar);
+        optionsSpinner = (Spinner) getActivity().findViewById(R.id.rangeSpinner);
+        optionsCheckbox = (CheckBox) getActivity().findViewById(R.id.searchCheckbox);
+        /*optionsSpinner = (Spinner)((LinearLayout) ((LinearLayout) this.getView()).getChildAt(1)).getChildAt(1);
+        optionsCheckbox = (CheckBox)((LinearLayout) ((LinearLayout) this.getView()).getChildAt(1)).getChildAt(3);*/
     }
 
     private void addOptionsView() {
