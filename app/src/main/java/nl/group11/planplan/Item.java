@@ -27,7 +27,9 @@ abstract public class Item implements View.OnClickListener{
      * type
      */
     public Item(Context c) {
+
         context = c;
+        firebase = new Firebase("https://planplan.firebaseio.com/");
     }
     public Item(){
     //Only for testing
@@ -138,6 +140,7 @@ abstract public class Item implements View.OnClickListener{
         //create a new reference at the location of the new item entry
         Firebase eventRef = firebase.child(id).child("planning").child(getID());
 
+
         //set new data
         addGeneric(eventRef);
         eventRef.child(Data.USERSTARTTIME.toString()).setValue(getUserStartTime());
@@ -159,6 +162,17 @@ abstract public class Item implements View.OnClickListener{
         eventRef.child(Data.ENDTIME.toString()).setValue(getEndTime());
         eventRef.child(Data.IMAGE.toString()).setValue(getImage());
         eventRef.child(Data.PRICE.toString()).setValue(getPrice());
+    }
+
+    public void removeFavorite() {
+
+        String id = getAccount();
+        firebase.child(id).child("favorites").child(getID()).removeValue();
+    }
+
+    public void removePlanning() {
+        String id = getAccount();
+        firebase.child(id).child("planning").child(getID()).removeValue();
     }
 
     private String getAccount() {
