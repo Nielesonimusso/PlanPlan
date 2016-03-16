@@ -192,7 +192,7 @@ public class HomeActivity extends AppCompatActivity
 
     void showSearchDialog() {
         FragmentTransaction trans = getFragmentManager().beginTransaction();
-        SearchDialog newSearchDialog = SearchDialog.newInstance();
+        SearchDialog newSearchDialog = new SearchDialog();
         newSearchDialog.show(trans, "search");
     }
 
