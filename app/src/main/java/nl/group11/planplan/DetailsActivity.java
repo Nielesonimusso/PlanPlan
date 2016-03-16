@@ -1,6 +1,10 @@
 package nl.group11.planplan;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -20,6 +24,8 @@ import android.widget.TextView;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
@@ -76,7 +82,31 @@ public class DetailsActivity extends AppCompatActivity
         descriptionText.setText(Html.fromHtml(i.getDescription()));
         priceText.setText(i.getPrice());
         addressText.setText(i.getAddress());
-        //TODO set image
+
+        final String imgUrl = i.getImage();
+        imgView.setImageResource(R.drawable.imgnotfound);
+        new AsyncTask<Void, Void, Bitmap>() {
+
+            @Override
+            protected Bitmap doInBackground(Void... params) {
+                try {
+                    System.out.println("Loading image with url " + imgUrl);
+                    URL url = new URL(imgUrl);
+                    return BitmapFactory.decodeStream(url.openStream());
+                } catch (java.io.IOException e) {
+                    e.printStackTrace();
+                    return null;
+                }
+            }
+
+            @Override
+            protected void onPostExecute(Bitmap bitmap) {
+                super.onPostExecute(bitmap);
+                if (bitmap != null) {
+                    imgView.setImageBitmap(bitmap);
+                }
+            }
+        }.execute();
     }
 
     @Override

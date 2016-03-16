@@ -22,12 +22,15 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -210,154 +213,6 @@ public class APIHandler {
 
     public static Object altIfNull(Object check, Object alt) {
         return check != null ? check : alt;
-    }
-}
-
-class GooglePlace {
-
-    private JSONObject data;
-
-    public static GooglePlace fromJSON(JSONObject json) {
-        GooglePlace googlePlace = new GooglePlace();
-        googlePlace.data = (JSONObject) json.clone();
-        return googlePlace;
-    }
-
-    //TODO: create getter/setter methods to access data
-
-    public String getName() {
-        return data.get("name").toString();
-    }
-
-    public String getID() {
-        return data.get("place_id").toString();
-    }
-
-    public int getPriceLevel() {
-        if (data.containsKey("price_level")) {
-            return Integer.parseInt(data.get("price_level").toString());
-        } else {
-            return -1;
-        }
-    }
-
-    public String getAddress() {
-        return data.get("vicinity").toString();
-    }
-
-    @Override
-    public String toString() {
-        return getName();
-    }
-
-    public Enum getType() {
-        JSONArray types = (JSONArray) data.get("types");
-        for(Object type: types) {
-            String s = (String) type;
-            if (s.equals("restaurant") || s.equals("food")) {
-                return Type.RESTAURANT;
-            }
-        }
-        return Type.OTHER;
-    }
-
-    public String getImage() {
-        return data.get("icon").toString();
-    }
-
-    public Date getUserStartTime() {
-        return new Date(Long.parseLong(data.get("user_start_time").toString()));
-    }
-
-    public Date getUserStopTime() {
-        return new Date(Long.parseLong(data.get("user_stop_time").toString()));
-    }
-
-}
-
-class EventfulEvent {
-
-    private JSONObject data;
-
-    public static EventfulEvent fromJSON(JSONObject json) {
-        EventfulEvent eventfulEvent = new EventfulEvent();
-        eventfulEvent.data = (JSONObject) json.clone();
-        return eventfulEvent;
-    }
-
-    public String JSON() {
-        return data.toJSONString();
-    }
-
-    public String getTitle() {
-        return data.get("title").toString();
-    }
-    public String getID() {
-        return data.get("id").toString();
-    }
-
-    public String getDescription() {
-        Object desc = (String) data.get("description");
-        return (String) APIHandler.altIfNull(desc, "No description available");
-    }
-    public String getPrice() {
-        Object price = data.get("price");
-        return (String) APIHandler.altIfNull(price, "No price information available");
-    }
-
-    private Date makeDate(String dateString) {
-        int year = Integer.parseInt(dateString.substring(0,4));
-        int month = Integer.parseInt(dateString.substring(5,7));
-        int day = Integer.parseInt(dateString.substring(8,10));
-        int hour = Integer.parseInt(dateString.substring(11,13));
-        int minute = Integer.parseInt(dateString.substring(14,16));
-        int second = Integer.parseInt(dateString.substring(17, 19));
-        return new DateTime(year,month,day,hour,minute,second).toDate();
-    }
-    public Date getStartTime() {
-        if (data.get("start_time").toString().contains("-")) {
-            Date newStart = makeDate(data.get("start_time").toString());
-            data.put("start_time", newStart.getTime());
-        }
-        return new Date(Long.parseLong(data.get("start_time").toString()));
-    }
-
-    public Date getUserStartTime() {
-        return new Date(Long.parseLong(data.get("user_start_time").toString()));
-    }
-
-    public Date getStopTime() {
-        if (data.get("stop_time").toString().contains("-")) {
-            Date newStop = makeDate(data.get("stop_time").toString());
-            data.put("stop_time", newStop.getTime());
-        }
-        return new Date(Long.parseLong(data.get("stop_time").toString()));
-    }
-
-    public Date getUserStopTime() {
-        return new Date(Long.parseLong(data.get("user_stop_time").toString()));
-    }
-
-    public String getImage() {
-        JSONObject imgJSON = (JSONObject) data.get("image");
-        if (imgJSON != null) {
-            return ((JSONObject) imgJSON.get("medium")).get("url").toString();
-        } else {
-            return null;
-        }
-    }
-
-    public String getAddress() {
-        return data.get("venue_address").toString();
-    }
-
-    public String getType() {
-        return data.get("type").toString();
-    }
-
-    @Override
-    public String toString() {
-        return getTitle();
     }
 }
 
