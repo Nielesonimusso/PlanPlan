@@ -40,7 +40,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
-            android:lines="3"
+            android:lines="0"
             android:ellipsize="end"
             android:text="description"/>
         <LinearLayout

@@ -47,12 +47,12 @@ public class DetailsActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        titleText = (TextView) findViewById(R.id.itemTitle);
+        titleText = (TextView) findViewById(R.id.title);
         dateText = (TextView) findViewById(R.id.startEndTime);
         descriptionText = (TextView) findViewById(R.id.description);
         priceText = (TextView) findViewById(R.id.price);
         addressText = (TextView) findViewById(R.id.address);
-        imgView = (ImageView) findViewById(R.id.itemImage);
+        imgView = (ImageView) findViewById(R.id.image);
 
         JSONParser parser = new JSONParser();
         try {

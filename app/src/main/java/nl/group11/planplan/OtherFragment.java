@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Location;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -88,6 +89,17 @@ public class OtherFragment extends android.support.v4.app.Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        if (!(this instanceof OtherFragmentFav)) {
+            final RecyclerView recyclerView = (RecyclerView) getActivity().findViewById(R.id.otherRecycler);
+            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+            APIHandler.stringToLocation("Eindhoven", new APIHandler.Callback<Location>() {
+                @Override
+                public void onItem(Location result) {
+                    recyclerView.setAdapter(new GooglePlacesAdapter(getContext(), APIHandler.locationToLatLngString(result), 10000, "night_club"));
+                }
+            });
+
+        }
     }
 
     @Override
