@@ -2,8 +2,10 @@ package nl.group11.planplan;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.view.View;
+
+import org.json.JSONException;
+import org.json.simple.JSONObject;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -20,10 +22,10 @@ public class EventItem extends Item {
         this.event = event;
     }
 
-    public EventItem(EventfulEvent event) {
+    public EventItem(JSONObject json) {
         //only for testing
-        super();
-        this.event = event;
+        super(json);
+        this.event = EventfulEvent.fromJSON(json);
     }
 
     @Override
@@ -82,7 +84,7 @@ public class EventItem extends Item {
             case "details":
                 System.out.println("Clicked item with title " + getTitle());
                 Intent intent = new Intent(v.getContext(), DetailsActivity.class);
-                intent.putExtra("item", event.JSON());
+                intent.putExtra("json",toJSON().toString());
                 v.getContext().startActivity(intent);
                 break;
             case "addPlanning":
@@ -110,5 +112,24 @@ public class EventItem extends Item {
     public boolean hasPassed() {
         Calendar calendar = Calendar.getInstance(); //calendar gives current system time.
         return event.getStopTime().before(calendar.getTime());
+    }
+
+    @Override
+    public JSONObject toJSON() {
+        JSONObject json = new JSONObject();
+        json.put("id", getID());
+        json.put("title", getTitle());
+        json.put("type", getType().toString());
+        json.put("price", getPrice());
+        json.put("start_time", getStartTime().getTime());
+        json.put("stop_time", getEndTime().getTime());
+        json.put("user_start_time", getUserStartTime());
+        json.put("user_end_time", getUserEndTime());
+        org.json.simple.JSONObject imgJSON = new org.json.simple.JSONObject();
+        imgJSON.put("medium", getImage());
+        json.put("image",imgJSON);
+        json.put("description", getDescription());
+        json.put("venue_address",getAddress());
+        return json;
     }
 }

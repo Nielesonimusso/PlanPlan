@@ -265,6 +265,14 @@ class GooglePlace {
         return data.get("icon").toString();
     }
 
+    public Date getUserStartTime() {
+        return new Date(Long.parseLong(data.get("user_start_time").toString()));
+    }
+
+    public Date getUserStopTime() {
+        return new Date(Long.parseLong(data.get("user_stop_time").toString()));
+    }
+
 }
 
 class EventfulEvent {
@@ -292,7 +300,6 @@ class EventfulEvent {
         Object desc = (String) data.get("description");
         return (String) APIHandler.altIfNull(desc, "No description available");
     }
-
     public String getPrice() {
         Object price = data.get("price");
         return (String) APIHandler.altIfNull(price, "No price information available");
@@ -304,15 +311,31 @@ class EventfulEvent {
         int day = Integer.parseInt(dateString.substring(8,10));
         int hour = Integer.parseInt(dateString.substring(11,13));
         int minute = Integer.parseInt(dateString.substring(14,16));
-        int second = Integer.parseInt(dateString.substring(17,19));
+        int second = Integer.parseInt(dateString.substring(17, 19));
         return new DateTime(year,month,day,hour,minute,second).toDate();
     }
     public Date getStartTime() {
-        return makeDate(data.get("start_time").toString());
+        if (data.get("start_time").toString().contains("-")) {
+            Date newStart = makeDate(data.get("start_time").toString());
+            data.put("start_time", newStart.getTime());
+        }
+        return new Date(Long.parseLong(data.get("start_time").toString()));
+    }
+
+    public Date getUserStartTime() {
+        return new Date(Long.parseLong(data.get("user_start_time").toString()));
     }
 
     public Date getStopTime() {
-        return makeDate(data.get("stop_time").toString());
+        if (data.get("stop_time").toString().contains("-")) {
+            Date newStop = makeDate(data.get("stop_time").toString());
+            data.put("stop_time", newStop.getTime());
+        }
+        return new Date(Long.parseLong(data.get("stop_time").toString()));
+    }
+
+    public Date getUserStopTime() {
+        return new Date(Long.parseLong(data.get("user_stop_time").toString()));
     }
 
     public String getImage() {
@@ -326,6 +349,10 @@ class EventfulEvent {
 
     public String getAddress() {
         return data.get("venue_address").toString();
+    }
+
+    public String getType() {
+        return data.get("type").toString();
     }
 
     @Override
