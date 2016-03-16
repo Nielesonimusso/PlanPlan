@@ -99,6 +99,10 @@ class EventfulEvent {
         }
     }
 
+    public JSONObject getImagesObject() {
+        return (JSONObject) data.get("image");
+    }
+
     public String getAddress() {
         Object address = data.get("venue_address");
         if (address != null) {

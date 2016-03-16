@@ -125,9 +125,7 @@ public class EventItem extends Item {
         json.put("stop_time", getEndTime().getTime());
         json.put("user_start_time", getUserStartTime());
         json.put("user_end_time", getUserEndTime());
-        org.json.simple.JSONObject imgJSON = new org.json.simple.JSONObject();
-        imgJSON.put("medium", getImage());
-        json.put("image",imgJSON);
+        json.put("image", event.getImagesObject());
         json.put("description", getDescription());
         json.put("venue_address",getAddress());
         return json;
