@@ -46,16 +46,23 @@ public class SearchDialog extends DialogFragment {
                         range = Integer.parseInt(optionsSpinner.getSelectedItem().toString().replace(" km", ""));
                         if (optionsCheckbox.isChecked()) {
                             location = gps.getLocation();
-                            callAPIs();
+                            if (!gps.canGetLocation() || location == null) {
+                                gps.showSettingsAlert();
+                            } else {
+                                System.out.println("latlong: (" + location.getLatitude() + ", " + location.getLongitude() + ")");
+                                callAPIs();
+                            }
                         } else {
                             locationString = searchBar.getText().toString();
-                            APIHandler.stringToLocation(locationString, new APIHandler.Callback<Location>() {
-                                @Override
-                                public void onItem(Location result) {
-                                    location = result;
-                                    callAPIs();
-                                }
-                            });
+                            if (!locationString.isEmpty()) {
+                                APIHandler.stringToLocation(locationString, new APIHandler.Callback<Location>() {
+                                    @Override
+                                    public void onItem(Location result) {
+                                        location = result;
+                                        callAPIs();
+                                    }
+                                });
+                            }
                         }
                     }
 
@@ -81,7 +88,7 @@ public class SearchDialog extends DialogFragment {
         optionsSpinner = (Spinner) getActivity().findViewById(R.id.rangeSpinner);
         optionsCheckbox = (CheckBox) getActivity().findViewById(R.id.searchCheckbox);*/
 
-        searchBar = (EditText)((LinearLayout) layout.getChildAt(0)).getChildAt(1);
+        searchBar = (EditText)((LinearLayout) layout.getChildAt(0)).getChildAt(0);
         optionsSpinner = (Spinner)((LinearLayout) layout.getChildAt(1)).getChildAt(1);
         optionsCheckbox = (CheckBox)((LinearLayout) layout.getChildAt(1)).getChildAt(3);
     }
@@ -97,5 +104,10 @@ public class SearchDialog extends DialogFragment {
         ArrayAdapter<String> spinnerOptions = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, list);
         spinnerOptions.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         optionsSpinner.setAdapter(spinnerOptions);
+
+    }
+
+    public void setGPS(GPSTracker gps) {
+        this.gps = gps;
     }
 }

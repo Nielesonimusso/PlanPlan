@@ -36,11 +36,14 @@ public class HomeActivity extends AppCompatActivity
         EventsFragment.OnFragmentInteractionListener,
         OtherFragment.OnFragmentInteractionListener, DynamicSearch.SearchUpdateListener {
 
+    GPSTracker gps;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Firebase.setAndroidContext(this);
         setContentView(R.layout.activity_home);
+        gps = new GPSTracker(this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -196,6 +199,7 @@ public class HomeActivity extends AppCompatActivity
     void showSearchDialog() {
         FragmentTransaction trans = getFragmentManager().beginTransaction();
         SearchDialog newSearchDialog = new SearchDialog();
+        newSearchDialog.setGPS(gps);
         newSearchDialog.show(trans, "search");
     }
 

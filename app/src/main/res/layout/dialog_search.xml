@@ -8,20 +8,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginLeft="20dp"
-            android:layout_weight="13"
-            android:textAppearance="?android:attr/textAppearanceMediumInverse"
-            android:text="Location: " />
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginRight="20dp"
+            android:layout_marginLeft="20dp"
             android:layout_weight="5"
-            android:id="@+id/searchbar"/>
+            android:id="@+id/searchbar"
+            android:hint="Enter location"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
