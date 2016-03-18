@@ -83,6 +83,8 @@ public class DetailsActivity extends AppCompatActivity
 
         titleText.setText(i.getTitle());
 
+        setTitle(i.getTitle());
+
         if (i.getStartTime() == null || i.getEndTime() == null) {
             layout.removeView(dateText);
         } else {
