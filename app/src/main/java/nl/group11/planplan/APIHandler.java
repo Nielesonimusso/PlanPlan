@@ -182,27 +182,33 @@ public class APIHandler {
 
             @Override
             protected Void doInBackground(Void... params) {
-                JSONHTTPRequest("http://api.eventful.com/json/venues/search?" +
-                        "location=" + location +
-                        "&app_key=" + EVENTFULKEY, new Callback<JSONObject>() {
-                    @Override
-                    public void onItem(JSONObject result) {
-                        JSONArray locations = (JSONArray) ((JSONObject) result.get("venues")).get("venue");
-                        String lng, lat;
-                        for (Object location : locations) {
-                            JSONObject locationjson = (JSONObject) location;
-                            if (locationjson.get("geocode_type").toString().equals("City Based GeoCodes")) {
-                                lng = locationjson.get("longitude").toString();
-                                lat = locationjson.get("latitude").toString();
-                                Location locationObject = new Location("Eventful");
-                                locationObject.setLongitude(Double.valueOf(lng));
-                                locationObject.setLatitude(Double.valueOf(lat));
-                                callback.onItem(locationObject);
-                                return;
+                try {
+                    JSONHTTPRequest("http://api.eventful.com/json/venues/search?" +
+                            "location=" + URLEncoder.encode(location, "UTF-8") +
+                            "&app_key=" + EVENTFULKEY, new Callback<JSONObject>() {
+                        @Override
+                        public void onItem(JSONObject result) {
+                            if (result.get("venues") != null) {
+                                JSONArray locations = (JSONArray) ((JSONObject) result.get("venues")).get("venue");
+                                String lng, lat;
+                                for (Object location : locations) {
+                                    JSONObject locationjson = (JSONObject) location;
+                                    if (locationjson.get("geocode_type").toString().equals("City Based GeoCodes")) {
+                                        lng = locationjson.get("longitude").toString();
+                                        lat = locationjson.get("latitude").toString();
+                                        Location locationObject = new Location("Eventful");
+                                        locationObject.setLongitude(Double.valueOf(lng));
+                                        locationObject.setLatitude(Double.valueOf(lat));
+                                        callback.onItem(locationObject);
+                                        return;
+                                    }
+                                }
                             }
                         }
-                    }
-                });
+                    });
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
                 return null;
             }
         }.execute();
