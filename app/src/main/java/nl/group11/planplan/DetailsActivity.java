@@ -19,6 +19,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.json.simple.JSONObject;
@@ -35,6 +36,7 @@ public class DetailsActivity extends AppCompatActivity
     JSONObject json;
     TextView titleText, dateText, descriptionText, priceText, addressText;
     ImageView imgView;
+    LinearLayout layout;
     Item i;
 
     @Override
@@ -59,6 +61,7 @@ public class DetailsActivity extends AppCompatActivity
         priceText = (TextView) findViewById(R.id.price);
         addressText = (TextView) findViewById(R.id.address);
         imgView = (ImageView) findViewById(R.id.image);
+        layout = (LinearLayout) findViewById(R.id.infoLayout);
 
         JSONParser parser = new JSONParser();
         try {
@@ -66,6 +69,7 @@ public class DetailsActivity extends AppCompatActivity
         } catch (Exception e) {
 
         }
+        json.toString();
 
         if (json.toString().contains(Type.EVENT.toString())) {
             i = new EventItem(json);
@@ -78,8 +82,17 @@ public class DetailsActivity extends AppCompatActivity
         }
 
         titleText.setText(i.getTitle());
-        dateText.setText(df.format(i.getStartTime())+ " till " + df.format(i.getEndTime()));
-        descriptionText.setText(Html.fromHtml(i.getDescription()));
+
+        if (i.getStartTime() == null || i.getEndTime() == null) {
+            layout.removeView(dateText);
+        } else {
+            dateText.setText(df.format(i.getStartTime()) + " till " + df.format(i.getEndTime()));
+        }
+        if (i.getType().equals(Type.EVENT)){
+            descriptionText.setText(Html.fromHtml(i.getDescription()));
+        } else {
+            layout.removeView(descriptionText);
+        }
         priceText.setText(i.getPrice());
         addressText.setText(i.getAddress());
 
