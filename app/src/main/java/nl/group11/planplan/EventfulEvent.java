@@ -89,7 +89,7 @@ class EventfulEvent {
             }
             return new Date(Long.parseLong(data.get("stop_time").toString()));
         }
-        return new Date(0L);//TODO verander naar wat niels begeert.
+        return getStartTime();//TODO verander naar wat niels begeert.
 
     }
 
