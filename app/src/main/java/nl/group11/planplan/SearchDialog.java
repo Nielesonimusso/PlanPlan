@@ -21,6 +21,7 @@ import java.util.List;
 /**
  * Created by s140442 on 09/03/2016.
  */
+@SuppressLint("ValidFragment")
 public class SearchDialog extends DialogFragment {
 
 

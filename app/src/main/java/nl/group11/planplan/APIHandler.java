@@ -191,18 +191,15 @@ public class APIHandler {
                             if (result.get("venues") != null) {
                                 JSONArray locations = (JSONArray) ((JSONObject) result.get("venues")).get("venue");
                                 String lng, lat;
-                                for (Object location : locations) {
-                                    JSONObject locationjson = (JSONObject) location;
-                                    if (locationjson.get("geocode_type").toString().equals("City Based GeoCodes")) {
-                                        lng = locationjson.get("longitude").toString();
-                                        lat = locationjson.get("latitude").toString();
-                                        Location locationObject = new Location("Eventful");
-                                        locationObject.setLongitude(Double.valueOf(lng));
-                                        locationObject.setLatitude(Double.valueOf(lat));
-                                        callback.onItem(locationObject);
-                                        return;
-                                    }
-                                }
+                                Object location = locations.get(0);
+                                JSONObject locationjson = (JSONObject) location;
+                                lng = locationjson.get("longitude").toString();
+                                lat = locationjson.get("latitude").toString();
+                                Location locationObject = new Location("Eventful");
+                                locationObject.setLongitude(Double.valueOf(lng));
+                                locationObject.setLatitude(Double.valueOf(lat));
+                                callback.onItem(locationObject);
+                                return;
                             }
                         }
                     });
