@@ -83,8 +83,12 @@ public class DetailsActivity extends AppCompatActivity
 
         titleText.setText(i.getTitle());
 
+        setTitle(i.getTitle());
+
         if (i.getStartTime() == null || i.getEndTime() == null) {
             layout.removeView(dateText);
+        } else if (i.getStartTime().equals(i.getEndTime())) {
+            dateText.setText(df.format(i.getStartTime()));
         } else {
             dateText.setText(df.format(i.getStartTime()) + " till " + df.format(i.getEndTime()));
         }

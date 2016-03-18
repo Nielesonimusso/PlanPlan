@@ -101,7 +101,11 @@ public class FavoritesActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_search) {
-        //show search fragment
+            //show search fragment
+            Intent intent = new Intent(this, HomeActivity.class);
+            intent.putExtra("showDialog", true);
+            startActivity(intent);
+
         }
 
         return super.onOptionsItemSelected(item);
