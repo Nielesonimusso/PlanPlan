@@ -20,10 +20,6 @@ class EventfulEvent {
         return eventfulEvent;
     }
 
-    public String JSON() {
-        return data.toJSONString();
-    }
-
     public String getTitle() {
         Object title = data.get("title");
 
@@ -104,14 +100,14 @@ class EventfulEvent {
     public String getImage() {
         JSONObject imgJSON = (JSONObject) data.get("image");
         if (imgJSON != null) {
-            System.out.println("getting image url for event " + getTitle());
-            System.out.println(imgJSON.toJSONString());
+            //System.out.println("getting image url for event " + getTitle());
+            //System.out.println(imgJSON.toJSONString());
             String biggestUrl = "";
             int biggestDim = 0;
-            System.out.println("-- checking keys --");
+            //System.out.println("-- checking keys --");
             for (Object o : imgJSON.entrySet()) {
                 Map.Entry<String, Object> entry = (Map.Entry<String, Object>) o;
-                System.out.println(entry.getKey().toString());
+                //System.out.println(entry.getKey().toString());
                 if (entry.getKey().equals("url")) {
                     biggestUrl = Integer.valueOf(imgJSON.get("width").toString()) > biggestDim ? entry.getValue().toString() : biggestUrl;
                     biggestDim = Math.max(biggestDim, Integer.valueOf(imgJSON.get("width").toString()));

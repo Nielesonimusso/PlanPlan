@@ -62,7 +62,7 @@ public class APIHandler {
             protected Void doInBackground(Void... params) {
                 final List<EventfulEvent> events = new ArrayList<>();
                 try {
-                    String requestUrl = "http://api.eventful.com/json/events/search?" +
+                    final String requestUrl = "http://api.eventful.com/json/events/search?" +
                             "units=km" +
                             "&page_size=" + EVENTFUL_PAGE_SIZE +
                             "&date=Future" +
@@ -75,14 +75,19 @@ public class APIHandler {
                     JSONHTTPRequest(requestUrl, new Callback<JSONObject>() {
                         @Override
                         public void onItem(JSONObject result) {
-                            //System.out.println(result.get("total_items").toString());
+                            System.out.println(requestUrl);
                             miscCallback.onItem(result);
-                            JSONArray resultItems = (JSONArray) ((JSONObject) result.get("events"))
-                                    .get("event");
-                            for (Object event : resultItems) {
-                                JSONObject eventjson = (JSONObject) event;
-                                //System.out.println(eventjson.toJSONString());
-                                events.add(EventfulEvent.fromJSON(eventjson));
+                            Object resultItemsObj = ((JSONObject) result.get("events")).get("event");
+                            if (resultItemsObj instanceof JSONArray) {
+                                JSONArray resultItems = (JSONArray) resultItemsObj;
+                                for (Object event : resultItems) {
+                                    JSONObject eventjson = (JSONObject) event;
+                                    //System.out.println(eventjson.toJSONString());
+                                    events.add(EventfulEvent.fromJSON(eventjson));
+                                }
+                            } else if (resultItemsObj instanceof JSONObject) {
+                                JSONObject resultItem = (JSONObject) resultItemsObj;
+                                events.add(EventfulEvent.fromJSON(resultItem));
                             }
                             callback.onItem(events);
                         }
@@ -123,8 +128,10 @@ public class APIHandler {
                         @Override
                         public void onItem(final JSONObject result) {
                             JSONArray results = (JSONArray) result.get("results");
-                            for (Object item : results) {
-                                places.add(GooglePlace.fromJSON((JSONObject) item));
+                            if (results != null) {
+                                for (Object item : results) {
+                                    places.add(GooglePlace.fromJSON((JSONObject) item));
+                                }
                             }
                             callback.onItem(places);
                             //query next page when there is one, otherwise return
@@ -305,6 +312,15 @@ class EventfulDynamicSearch extends DynamicSearch<EventfulEvent> {
                     for (int i = 0; i < results.size(); i++) {
                         searchCache.put(page * APIHandler.EVENTFUL_PAGE_SIZE + i, results.get(i));
                     }
+                    /* remove items out of range; for later use
+                    if (results.size() < APIHandler.EVENTFUL_PAGE_SIZE) {
+                        for (Iterator<Integer> iterator = searchCache.keySet().iterator(); iterator.hasNext();) {
+                            if (iterator.next() >= results.size()) {
+                                iterator.remove();
+                            }
+                        }
+                    }
+                    */
                     notifyListeners(page * APIHandler.EVENTFUL_PAGE_SIZE, APIHandler.EVENTFUL_PAGE_SIZE);
                 }
             }

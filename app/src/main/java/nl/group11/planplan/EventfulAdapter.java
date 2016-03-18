@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,6 +48,7 @@ public class EventfulAdapter extends RecyclerView.Adapter<EventfulAdapter.ViewHo
             holder.buttons.setVisibility(View.VISIBLE);
             holder.title.setText(item.getTitle());
             holder.description.setText(Html.fromHtml(item.getDescription()));
+            //holder.description.setMovementMethod(LinkMovementMethod.getInstance());
             holder.price.setText(Html.fromHtml(item.getPrice()));
             holder.imgUrl = item.getImage();
             holder.image.setImageBitmap(imageCache.setImageFromURL(item.getImage(), new APIHandler.Callback<Bitmap>() {
