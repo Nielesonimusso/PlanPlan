@@ -87,7 +87,7 @@ class EventfulEvent {
                 Date newStop = makeDate(stopTime.toString());
                 data.put("stop_time", newStop.getTime());
             }
-            return new Date(Long.parseLong(data.get("start_time").toString()));
+            return new Date(Long.parseLong(data.get("stop_time").toString()));
         }
         return new Date(0L);//TODO verander naar wat niels begeert.
 
