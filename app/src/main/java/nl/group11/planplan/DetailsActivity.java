@@ -19,6 +19,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.json.simple.JSONObject;
@@ -66,6 +67,7 @@ public class DetailsActivity extends AppCompatActivity
         } catch (Exception e) {
 
         }
+        json.toString();
 
         if (json.toString().contains(Type.EVENT.toString())) {
             i = new EventItem(json);
@@ -78,9 +80,23 @@ public class DetailsActivity extends AppCompatActivity
         }
 
         titleText.setText(i.getTitle());
-        dateText.setText(df.format(i.getStartTime())+ " till " + df.format(i.getEndTime()));
-        descriptionText.setText(Html.fromHtml(i.getDescription()));
-        priceText.setText(i.getPrice());
+        if (i.getStartTime() == null || i.getEndTime() == null) {
+            dateText.setText("");
+        } else {
+            dateText.setText(df.format(i.getStartTime()) + " till " + df.format(i.getEndTime()));
+        }
+        if (Html.fromHtml(i.getDescription()).equals("")){
+            descriptionText.setText("");
+            descriptionText.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
+        } else {
+            descriptionText.setText(Html.fromHtml(i.getDescription()));
+        }
+        if (i.getPrice().equals("")) {
+            priceText.setText("");
+            priceText.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
+        } else {
+            priceText.setText(i.getPrice());
+        }
         addressText.setText(i.getAddress());
 
         final String imgUrl = i.getImage();

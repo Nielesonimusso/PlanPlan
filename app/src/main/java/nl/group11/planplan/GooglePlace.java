@@ -37,11 +37,12 @@ class GooglePlace {
     }
 
     public int getPriceLevel() {
-        if (data.containsKey("price_level")) {
-            return Integer.parseInt(data.get("price_level").toString());
-        } else {
-            return -1;
+        if (data.get("price_level") != null) {
+            if (data.get("price_level").toString() != "") {
+                return Integer.parseInt(data.get("price_level").toString());
+            }
         }
+        return -1;
     }
 
     public String getAddress() {
