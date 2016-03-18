@@ -68,7 +68,7 @@ class EventfulEvent {
             }
             return new Date(Long.parseLong(data.get("start_time").toString()));
         }
-        return null;
+        return new Date(0L);
     }
 
     public Date getUserStartTime() {
@@ -76,7 +76,7 @@ class EventfulEvent {
         if (userStartTime != null) {
             return new Date(Long.parseLong(userStartTime.toString()));
         }
-        return null; //TODO verander naar wat Niels begeert.
+        return new Date(Long.parseLong(data.get("start_time").toString())); //TODO verander naar wat Niels begeert.
     }
 
 
@@ -89,7 +89,7 @@ class EventfulEvent {
             }
             return new Date(Long.parseLong(data.get("start_time").toString()));
         }
-        return null;//TODO verander naar wat niels begeert.
+        return new Date(0L);//TODO verander naar wat niels begeert.
 
     }
 
@@ -98,7 +98,7 @@ class EventfulEvent {
         if (userStopTime != null) {
             return new Date(Long.parseLong(userStopTime.toString()));
         }
-        return null; //TODO verander naar wat niels begeert.
+        return new Date(Long.parseLong(data.get("stop_time").toString()));
     }
 
     public String getImage() {

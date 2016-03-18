@@ -80,7 +80,7 @@ class GooglePlace {
     public Date getUserStartTime() {
         Object userStartTime = data.get("user_start_time");
         if (userStartTime == null) {
-            return null;
+            return new Date();
         }
         return new Date(Long.parseLong(userStartTime.toString()));
     }
@@ -88,7 +88,7 @@ class GooglePlace {
     public Date getUserStopTime() {
         Object userStopTime = data.get("user_start_time");
         if (userStopTime == null) {
-            return null;
+            return new Date();
         }
         return new Date(Long.parseLong(userStopTime.toString()));
     }
