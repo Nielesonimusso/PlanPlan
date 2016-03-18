@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -86,9 +87,11 @@ public class SearchDialog extends DialogFragment {
                 .setView(layout);
         referenceUIElements();
         addOptionsView();
+        addCheckBoxListener();
         return builder.create();
     }
 
+    /* Sets references to UI elements. */
     public void referenceUIElements() {
         //TODO needs testing
         /*searchBar = (EditText) getActivity().findViewById(R.id.searchbar);
@@ -100,8 +103,13 @@ public class SearchDialog extends DialogFragment {
         optionsCheckbox = (CheckBox)((LinearLayout) layout.getChildAt(1)).getChildAt(3);
     }
 
+    /* Adds checkbox listener for current location checkbox. */
+    private void addCheckBoxListener() {
+        optionsCheckbox.setOnCheckedChangeListener(new checkBoxChangeListener());
+    }
+
+    /* Adds the options for range. */
     private void addOptionsView() {
-        //list with range options
         List list = new ArrayList<String>();
         list.add("5 km");
         list.add("10 km");
@@ -112,6 +120,20 @@ public class SearchDialog extends DialogFragment {
         spinnerOptions.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         optionsSpinner.setAdapter(spinnerOptions);
 
+    }
+
+    /* Listener for the checkbox.
+     * Disables the location search bar if "current location" is enabled.
+     */
+    class checkBoxChangeListener implements CheckBox.OnCheckedChangeListener {
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            if(isChecked) {
+                searchBar.setEnabled(false);
+            } else {
+                searchBar.setEnabled(true);
+            }
+        }
     }
 
     public void setGPS(GPSTracker gps) {
