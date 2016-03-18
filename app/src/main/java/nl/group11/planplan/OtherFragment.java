@@ -31,14 +31,8 @@ import java.util.List;
  */
 public class OtherFragment extends android.support.v4.app.Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    static String location = "51.441642,5.469722";
+    static int radius = 5;
 
     private OnFragmentInteractionListener mListener;
 
@@ -54,9 +48,11 @@ public class OtherFragment extends android.support.v4.app.Fragment {
     public static OtherFragment newInstance(String param1, String param2) {
         OtherFragment fragment = new OtherFragment();
         Bundle args = new Bundle();
+        /*
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
+        */
         return fragment;
     }
     public OtherFragment() {
@@ -67,8 +63,10 @@ public class OtherFragment extends android.support.v4.app.Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
+            /*
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
+            */
         }
     }
 
@@ -92,12 +90,7 @@ public class OtherFragment extends android.support.v4.app.Fragment {
         if (!(this instanceof OtherFragmentFav)) {
             final RecyclerView recyclerView = (RecyclerView) getActivity().findViewById(R.id.otherRecycler);
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-            APIHandler.stringToLocation("Eindhoven", new APIHandler.Callback<Location>() {
-                @Override
-                public void onItem(Location result) {
-                    recyclerView.setAdapter(new GooglePlacesAdapter(getContext(), APIHandler.locationToLatLngString(result), 10000, "night_club"));
-                }
-            });
+            recyclerView.setAdapter(new GooglePlacesAdapter(getContext(), location, radius * 1000, "night_club"));
 
         }
     }

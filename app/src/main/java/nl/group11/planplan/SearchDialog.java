@@ -1,5 +1,6 @@
 package nl.group11.planplan;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -28,6 +29,12 @@ public class SearchDialog extends DialogFragment {
     CheckBox optionsCheckbox;
     GPSTracker gps;
     LinearLayout layout;
+    SearchListener listener;
+
+    @SuppressLint("ValidFragment")
+    SearchDialog(SearchListener listener) {
+        this.listener = listener;
+    }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -67,7 +74,7 @@ public class SearchDialog extends DialogFragment {
                     }
 
                     public void callAPIs() {
-                        //TODO api calls
+                        SearchDialog.this.listener.onSearch(APIHandler.locationToLatLngString(location), range);
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -109,5 +116,9 @@ public class SearchDialog extends DialogFragment {
 
     public void setGPS(GPSTracker gps) {
         this.gps = gps;
+    }
+
+    interface SearchListener {
+        void onSearch(String location, int radius);
     }
 }

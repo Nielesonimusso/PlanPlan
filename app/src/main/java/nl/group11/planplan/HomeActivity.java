@@ -14,6 +14,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -34,7 +36,7 @@ public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         RestaurantsFragment.OnFragmentInteractionListener,
         EventsFragment.OnFragmentInteractionListener,
-        OtherFragment.OnFragmentInteractionListener, DynamicSearch.SearchUpdateListener {
+        OtherFragment.OnFragmentInteractionListener, DynamicSearch.SearchUpdateListener, SearchDialog.SearchListener {
 
     GPSTracker gps;
 
@@ -203,9 +205,41 @@ public class HomeActivity extends AppCompatActivity
 
     void showSearchDialog() {
         FragmentTransaction trans = getFragmentManager().beginTransaction();
-        SearchDialog newSearchDialog = new SearchDialog();
+        SearchDialog newSearchDialog = new SearchDialog(this);
         newSearchDialog.setGPS(gps);
         newSearchDialog.show(trans, "search");
+    }
+
+    @Override
+    public void onSearch(String location, int radius) {
+        //update event view
+        RecyclerView eventsView = (RecyclerView) findViewById(R.id.eventsRecycler);
+        if (eventsView != null) {
+            eventsView.setLayoutManager(new LinearLayoutManager(this));
+            eventsView.setAdapter(new EventfulAdapter(this, new EventfulDynamicSearch(location, radius)));
+        }
+        EventsFragment.location = location;
+        EventsFragment.radius = radius;
+
+        //update restaurant view
+        final RecyclerView restaurantView = (RecyclerView) findViewById(R.id.restaurantsRecycler);
+        if (restaurantView != null) {
+            restaurantView.setLayoutManager(new LinearLayoutManager(this));
+            restaurantView.setAdapter(new GooglePlacesAdapter(this, location, radius * 1000, "restaurant"));
+        }
+
+        RestaurantsFragment.location = location;
+        RestaurantsFragment.radius = radius;
+
+        //update other view
+        final RecyclerView otherView = (RecyclerView) findViewById(R.id.otherRecycler);
+        if (otherView != null) {
+            otherView.setLayoutManager(new LinearLayoutManager(this));
+            otherView.setAdapter(new GooglePlacesAdapter(this, location, radius * 1000, "night_club"));
+        }
+
+        OtherFragment.location = location;
+        OtherFragment.radius = radius;
     }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {

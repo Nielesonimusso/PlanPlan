@@ -43,6 +43,7 @@ public class APIHandler {
     static final int EVENTFUL_PAGE_SIZE = 10;
 
     private static final String GOOGLEPLACESKEY = "AIzaSyDNrounxGt7hKmWqQftfYUniyd3BmXEmZA";
+    static final int GOOGLEPLACES_PAGE_SIZE = 20;
 
     public static void queryEventful(final String location, final int radius, final int page, final Callback<List<EventfulEvent>> callback) {
         queryEventful(location, radius, page, callback, new Callback<JSONObject>() {
@@ -220,7 +221,8 @@ abstract class DynamicSearch<T> {
 
     Map<Integer, T> searchCache;
     List<SearchUpdateListener> listeners;
-    int maxsize = 10;
+    int maxsize = 1;
+    int pagesize;
 
     DynamicSearch() {
         searchCache = new HashMap<>();
@@ -235,8 +237,8 @@ abstract class DynamicSearch<T> {
         } else {
             System.out.println("get called " + i);
             //set map to null to prevent unnecessary requests
-            int page = i / APIHandler.EVENTFUL_PAGE_SIZE;
-            for (int x = page * APIHandler.EVENTFUL_PAGE_SIZE; x < page * APIHandler.EVENTFUL_PAGE_SIZE + APIHandler.EVENTFUL_PAGE_SIZE; x++) {
+            int page = i / pagesize;
+            for (int x = page * pagesize; x < page * pagesize + pagesize; x++) {
                 searchCache.put(x, null);
             }
             //perform query and return null to indicate result is not yet available
@@ -285,6 +287,7 @@ class EventfulDynamicSearch extends DynamicSearch<EventfulEvent> {
     EventfulDynamicSearch(String location, int radius) {
         this.location = location;
         this.radius = radius;
+        pagesize = APIHandler.EVENTFUL_PAGE_SIZE;
     }
 
     @Override

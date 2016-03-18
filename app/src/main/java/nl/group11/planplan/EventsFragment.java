@@ -30,14 +30,8 @@ import java.util.List;
  */
 public class EventsFragment extends android.support.v4.app.Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    static String location = "51.441642,5.469722";
+    static int radius = 5;
 
     private OnFragmentInteractionListener mListener;
 
@@ -53,9 +47,11 @@ public class EventsFragment extends android.support.v4.app.Fragment {
     public static EventsFragment newInstance(String param1, String param2) {
         EventsFragment fragment = new EventsFragment();
         Bundle args = new Bundle();
+        /*
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
+        */
         return fragment;
     }
     public EventsFragment() {
@@ -66,8 +62,10 @@ public class EventsFragment extends android.support.v4.app.Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
+            /*
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
+            */
         }
     }
 
@@ -91,7 +89,7 @@ public class EventsFragment extends android.support.v4.app.Fragment {
         if (!(this instanceof EventsFragmentFav)) {
             RecyclerView recyclerView = (RecyclerView) getActivity().findViewById(R.id.eventsRecycler);
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-            recyclerView.setAdapter(new EventfulAdapter(getContext(), new EventfulDynamicSearch("Eindhoven", 100)));
+            recyclerView.setAdapter(new EventfulAdapter(getContext(), new EventfulDynamicSearch(location, radius)));
         }
     }
 
