@@ -36,6 +36,7 @@ public class DetailsActivity extends AppCompatActivity
     JSONObject json;
     TextView titleText, dateText, descriptionText, priceText, addressText;
     ImageView imgView;
+    LinearLayout layout;
     Item i;
 
     @Override
@@ -60,6 +61,7 @@ public class DetailsActivity extends AppCompatActivity
         priceText = (TextView) findViewById(R.id.price);
         addressText = (TextView) findViewById(R.id.address);
         imgView = (ImageView) findViewById(R.id.image);
+        layout = (LinearLayout) findViewById(R.id.infoLayout);
 
         JSONParser parser = new JSONParser();
         try {
@@ -80,23 +82,18 @@ public class DetailsActivity extends AppCompatActivity
         }
 
         titleText.setText(i.getTitle());
+
         if (i.getStartTime() == null || i.getEndTime() == null) {
-            dateText.setText("");
+            layout.removeView(dateText);
         } else {
             dateText.setText(df.format(i.getStartTime()) + " till " + df.format(i.getEndTime()));
         }
-        if (Html.fromHtml(i.getDescription()).equals("")){
-            descriptionText.setText("");
-            descriptionText.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
-        } else {
+        if (i.getType().equals(Type.EVENT)){
             descriptionText.setText(Html.fromHtml(i.getDescription()));
-        }
-        if (i.getPrice().equals("")) {
-            priceText.setText("");
-            priceText.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
         } else {
-            priceText.setText(i.getPrice());
+            layout.removeView(descriptionText);
         }
+        priceText.setText(i.getPrice());
         addressText.setText(i.getAddress());
 
         final String imgUrl = i.getImage();

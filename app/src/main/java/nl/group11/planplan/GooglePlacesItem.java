@@ -44,7 +44,7 @@ abstract public class GooglePlacesItem extends Item {
         int pricelevel = place.getPriceLevel();
         String price = null;
         switch (pricelevel){
-            case -1: price ="";
+            case -1: price ="No price information available";
                 break;
             case 0: price = "Free";
                 break;
@@ -136,7 +136,7 @@ abstract public class GooglePlacesItem extends Item {
         json.put("place_id", getID());
         json.put("name", getTitle());
         json.put("type",getType().toString());
-        json.put("price_level", getPrice());
+        json.put("price_level", place.getPriceLevel());
         json.put("user_start_time", getUserStartTime());
         json.put("user_end_time", getUserEndTime());
         json.put("icon", getImage());
