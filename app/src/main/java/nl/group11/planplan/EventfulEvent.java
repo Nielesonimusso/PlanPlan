@@ -25,10 +25,20 @@ class EventfulEvent {
     }
 
     public String getTitle() {
-        return data.get("title").toString();
+        Object title = data.get("title");
+
+        if(title == null) {
+           return "No title available";//TODO verander naar wat Niels begeert.
+        }
+        return title.toString();
     }
     public String getID() {
-        return data.get("id").toString();
+        Object idString = data.get("id");
+
+        if (idString == null) {
+            return "dit kan helemaal niet"; //TODO verander naar wat Niels begeert.
+        }
+        return idString.toString();
     }
 
     public String getDescription() {
@@ -50,27 +60,45 @@ class EventfulEvent {
         return new DateTime(year,month,day,hour,minute,second).toDate();
     }
     public Date getStartTime() {
-        if (data.get("start_time").toString().contains("-")) {
-            Date newStart = makeDate(data.get("start_time").toString());
-            data.put("start_time", newStart.getTime());
+        Object startTime = data.get("start_time");
+        if (startTime != null) {
+            if (startTime.toString().contains("-")) {
+                Date newStart = makeDate(startTime.toString());
+                data.put("start_time", newStart.getTime());
+            }
+            return new Date(Long.parseLong(data.get("start_time").toString()));
         }
-        return new Date(Long.parseLong(data.get("start_time").toString()));
+        return null;
     }
 
     public Date getUserStartTime() {
-        return new Date(Long.parseLong(data.get("user_start_time").toString()));
+        Object userStartTime = data.get("user_start_time");
+        if (userStartTime != null) {
+            return new Date(Long.parseLong(userStartTime.toString()));
+        }
+        return null; //TODO verander naar wat Niels begeert.
     }
 
+
     public Date getStopTime() {
-        if (data.get("stop_time").toString().contains("-")) {
-            Date newStop = makeDate(data.get("stop_time").toString());
-            data.put("stop_time", newStop.getTime());
+        Object stopTime = data.get("stop_time");
+        if (stopTime != null) {
+            if (stopTime.toString().contains("-")) {
+                Date newStop = makeDate(stopTime.toString());
+                data.put("stop_time", newStop.getTime());
+            }
+            return new Date(Long.parseLong(data.get("start_time").toString()));
         }
-        return new Date(Long.parseLong(data.get("stop_time").toString()));
+        return null;//TODO verander naar wat niels begeert.
+
     }
 
     public Date getUserStopTime() {
-        return new Date(Long.parseLong(data.get("user_stop_time").toString()));
+        Object userStopTime = data.get("user_stop_time");
+        if (userStopTime != null) {
+            return new Date(Long.parseLong(userStopTime.toString()));
+        }
+        return null; //TODO verander naar wat niels begeert.
     }
 
     public String getImage() {
@@ -113,7 +141,11 @@ class EventfulEvent {
     }
 
     public String getType() {
-        return data.get("type").toString();
+        Object type = data.get("type");
+        if (type == null) {
+            return "type not available";
+        }
+        return type.toString();
     }
 
     @Override

@@ -21,11 +21,19 @@ class GooglePlace {
     //TODO: create getter/setter methods to access data
 
     public String getName() {
-        return data.get("name").toString();
+        Object name = data.get("name");
+        if (name == null) {
+            return "No title available";
+        }
+        return name.toString();
     }
 
     public String getID() {
-        return data.get("place_id").toString();
+        Object id = data.get("place_id");
+        if(id == null) {
+            return "Dit kan helemaal niet";
+        }
+        return id.toString();
     }
 
     public int getPriceLevel() {
@@ -37,7 +45,11 @@ class GooglePlace {
     }
 
     public String getAddress() {
-        return data.get("vicinity").toString();
+        Object address = data.get("vicinity");
+        if (address == null) {
+            return "No address available";
+        }
+        return address.toString();
     }
 
     @Override
@@ -57,15 +69,27 @@ class GooglePlace {
     }
 
     public String getImage() {
-        return data.get("icon").toString();
+        Object image = data.get("icon");
+        if (image == null) {
+            return null;
+        }
+        return image.toString();
     }
 
     public Date getUserStartTime() {
-        return new Date(Long.parseLong(data.get("user_start_time").toString()));
+        Object userStartTime = data.get("user_start_time");
+        if (userStartTime == null) {
+            return null;
+        }
+        return new Date(Long.parseLong(userStartTime.toString()));
     }
 
     public Date getUserStopTime() {
-        return new Date(Long.parseLong(data.get("user_stop_time").toString()));
+        Object userStopTime = data.get("user_start_time");
+        if (userStopTime == null) {
+            return null;
+        }
+        return new Date(Long.parseLong(userStopTime.toString()));
     }
 
 }
