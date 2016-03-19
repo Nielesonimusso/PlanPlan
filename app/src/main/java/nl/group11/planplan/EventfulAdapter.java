@@ -77,7 +77,11 @@ public class EventfulAdapter extends RecyclerView.Adapter<EventfulAdapter.ViewHo
 
     @Override
     public void onUpdate(DynamicSearch self, int start, int count) {
-        notifyItemRangeChanged(start, count);
+        /*
+        notifyItemChanged(start);
+        notifyItemRangeInserted(start + 1, count - 1);
+        */
+        notifyDataSetChanged();
     }
 
     @Override

@@ -306,28 +306,29 @@ class EventfulDynamicSearch extends DynamicSearch<EventfulEvent> {
         APIHandler.queryEventful(location, radius, page + 1, new APIHandler.Callback<List<EventfulEvent>>() {
             @Override
             public void onItem(List<EventfulEvent> results) {
-                if (results.size() == 0) {
-                    //somehow notify callee that there are no results
-                } else {
+                if (results.size() > 0) {
                     for (int i = 0; i < results.size(); i++) {
                         searchCache.put(page * APIHandler.EVENTFUL_PAGE_SIZE + i, results.get(i));
                     }
-                    /* remove items out of range; for later use
-                    if (results.size() < APIHandler.EVENTFUL_PAGE_SIZE) {
-                        for (Iterator<Integer> iterator = searchCache.keySet().iterator(); iterator.hasNext();) {
-                            if (iterator.next() >= results.size()) {
-                                iterator.remove();
-                            }
+                }
+                /* remove items out of range */
+                if (results.size() < APIHandler.EVENTFUL_PAGE_SIZE) {
+                    for (Iterator<Integer> iterator = searchCache.keySet().iterator(); iterator.hasNext();) {
+                        if (iterator.next() >= results.size() + page * APIHandler.EVENTFUL_PAGE_SIZE) {
+                            iterator.remove();
                         }
                     }
-                    */
-                    notifyListeners(page * APIHandler.EVENTFUL_PAGE_SIZE, APIHandler.EVENTFUL_PAGE_SIZE);
                 }
+                System.out.println(size());
+                //*/
+                notifyListeners(page * APIHandler.EVENTFUL_PAGE_SIZE, results.size());
             }
         }, new APIHandler.Callback<JSONObject>() {
             @Override
             public void onItem(JSONObject result) {
-                EventfulDynamicSearch.this.maxsize = Integer.valueOf(result.get("page_count").toString()) * APIHandler.EVENTFUL_PAGE_SIZE;
+                int pagesize = Integer.valueOf(result.get("page_count").toString());
+                int itemsize = Integer.valueOf(result.get("total_items").toString());
+                EventfulDynamicSearch.this.maxsize = itemsize > pagesize * APIHandler.EVENTFUL_PAGE_SIZE ? pagesize * APIHandler.EVENTFUL_PAGE_SIZE : itemsize;
                 //System.out.println("result: " + result.toJSONString());
             }
         });

@@ -97,10 +97,12 @@ public class GooglePlacesAdapter extends RecyclerView.Adapter<GooglePlacesAdapte
 
     @Override
     public void onItem(List<GooglePlace> result) {
+
         int oldSize = places.size();
         int newLength = result.size();
         places.addAll(result);
-        notifyItemRangeInserted(oldSize, newLength);
+        //notifyItemRangeInserted(oldSize, newLength);
+        notifyDataSetChanged();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
