@@ -94,11 +94,6 @@ public class SearchDialog extends DialogFragment {
 
     /* Sets references to UI elements. */
     public void referenceUIElements() {
-        //TODO needs testing
-        /*searchBar = (EditText) getActivity().findViewById(R.id.searchbar);
-        optionsSpinner = (Spinner) getActivity().findViewById(R.id.rangeSpinner);
-        optionsCheckbox = (CheckBox) getActivity().findViewById(R.id.searchCheckbox);*/
-
         searchBar = (EditText)((LinearLayout) layout.getChildAt(0)).getChildAt(0);
         optionsSpinner = (Spinner)((LinearLayout) layout.getChildAt(1)).getChildAt(1);
         optionsCheckbox = (CheckBox)((LinearLayout) layout.getChildAt(1)).getChildAt(3);
