@@ -76,18 +76,20 @@ public class APIHandler {
                         @Override
                         public void onItem(JSONObject result) {
                             System.out.println(requestUrl);
-                            miscCallback.onItem(result);
-                            Object resultItemsObj = ((JSONObject) result.get("events")).get("event");
-                            if (resultItemsObj instanceof JSONArray) {
-                                JSONArray resultItems = (JSONArray) resultItemsObj;
-                                for (Object event : resultItems) {
-                                    JSONObject eventjson = (JSONObject) event;
-                                    //System.out.println(eventjson.toJSONString());
-                                    events.add(EventfulEvent.fromJSON(eventjson));
+                            if (!result.containsKey("no_connection")) {
+                                miscCallback.onItem(result);
+                                Object resultItemsObj = ((JSONObject) result.get("events")).get("event");
+                                if (resultItemsObj instanceof JSONArray) {
+                                    JSONArray resultItems = (JSONArray) resultItemsObj;
+                                    for (Object event : resultItems) {
+                                        JSONObject eventjson = (JSONObject) event;
+                                        //System.out.println(eventjson.toJSONString());
+                                        events.add(EventfulEvent.fromJSON(eventjson));
+                                    }
+                                } else if (resultItemsObj instanceof JSONObject) {
+                                    JSONObject resultItem = (JSONObject) resultItemsObj;
+                                    events.add(EventfulEvent.fromJSON(resultItem));
                                 }
-                            } else if (resultItemsObj instanceof JSONObject) {
-                                JSONObject resultItem = (JSONObject) resultItemsObj;
-                                events.add(EventfulEvent.fromJSON(resultItem));
                             }
                             callback.onItem(events);
                         }
@@ -168,7 +170,9 @@ public class APIHandler {
                     return json;
                 } catch (IOException | ParseException e) {
                     e.printStackTrace();
-                    return new JSONObject();
+                    JSONObject noConnection = new JSONObject();
+                    noConnection.put("no_connection", "no internet connection");
+                    return noConnection;
                 }
             }
 

@@ -13,6 +13,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
+
 /**
  * Created by s132054 on 14-3-2016.
  */
@@ -20,12 +22,14 @@ public class EventfulAdapter extends RecyclerView.Adapter<EventfulAdapter.ViewHo
 
     EventfulDynamicSearch searchSource;
     ImageCache imageCache;
+    SimpleDateFormat df;
 
     EventfulAdapter(Context context, EventfulDynamicSearch search) {
         searchSource = search;
         searchSource.addListener(this);
 
         imageCache = new ImageCache(context);
+        df = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
     }
 
     @Override
@@ -40,15 +44,25 @@ public class EventfulAdapter extends RecyclerView.Adapter<EventfulAdapter.ViewHo
         final EventItem item = new EventItem(holder.cardView.getContext(), event);
         if (event == null) {
             holder.title.setText("Loading...");
-            holder.description.setText("");
-            holder.price.setText("");
+            holder.description.setVisibility(View.GONE);
+            holder.time.setVisibility(View.GONE);
+            holder.price.setVisibility(View.GONE);
             holder.image.setImageResource(R.drawable.imgnotfound);
             holder.buttons.setVisibility(View.GONE);
         } else {
             holder.buttons.setVisibility(View.VISIBLE);
             holder.title.setText(item.getTitle());
+            holder.description.setVisibility(View.VISIBLE);
             holder.description.setText(Html.fromHtml(item.getDescription()));
-            //holder.description.setMovementMethod(LinkMovementMethod.getInstance());
+            holder.time.setVisibility(View.VISIBLE);
+            if (item.getStartTime() == null || item.getEndTime() == null) {
+                holder.time.setVisibility(View.GONE);
+            } else if (item.getStartTime().equals(item.getEndTime())) {
+                holder.time.setText(df.format(item.getStartTime()));
+            } else {
+                holder.time.setText(df.format(item.getStartTime()) + " till " + df.format(item.getEndTime()));
+            }
+            holder.price.setVisibility(View.VISIBLE);
             holder.price.setText(Html.fromHtml(item.getPrice()));
             holder.imgUrl = item.getImage();
             holder.image.setImageBitmap(imageCache.setImageFromURL(item.getImage(), new APIHandler.Callback<Bitmap>() {
@@ -94,7 +108,7 @@ public class EventfulAdapter extends RecyclerView.Adapter<EventfulAdapter.ViewHo
     class ViewHolder extends RecyclerView.ViewHolder {
 
         CardView cardView, planningButton, favoritesButton;
-        TextView title, description, price, planningButtonLabel, favoritesButtonLabel;
+        TextView title, description, price, planningButtonLabel, favoritesButtonLabel, time;
         ImageView image;
         String imgUrl;
         LinearLayout buttons;
@@ -105,10 +119,11 @@ public class EventfulAdapter extends RecyclerView.Adapter<EventfulAdapter.ViewHo
             LinearLayout texts = (LinearLayout) cardView.getChildAt(0);
             image = (ImageView) texts.getChildAt(0);
             title = (TextView) texts.getChildAt(1);
-            price = (TextView) texts.getChildAt(2);
-            description = (TextView) texts.getChildAt(3);
+            time = (TextView) texts.getChildAt(2);
+            price = (TextView) texts.getChildAt(3);
+            description = (TextView) texts.getChildAt(4);
 
-            buttons = (LinearLayout) texts.getChildAt(4);
+            buttons = (LinearLayout) texts.getChildAt(5);
             planningButton = (CardView) buttons.getChildAt(0);
             planningButtonLabel = (TextView) planningButton.getChildAt(0);
             favoritesButton = (CardView) buttons.getChildAt(2);
