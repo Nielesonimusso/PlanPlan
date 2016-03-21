@@ -5,6 +5,7 @@ import android.accounts.AccountManager;
 import android.content.Context;
 import android.content.Intent;
 import android.renderscript.Sampler;
+import android.support.v7.widget.AppCompatTextView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -15,6 +16,7 @@ import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
 import org.json.simple.JSONObject;
+import org.w3c.dom.Text;
 
 import java.util.Date;
 
@@ -128,17 +130,15 @@ abstract public class Item implements View.OnClickListener{
                 break;
             case "addPlanning":
                 System.out.println("Clicked planning button of item " + getTitle());
+                System.out.println("clicked " + v.getClass() + " - " + (v instanceof AppCompatTextView));
 
-                if (v instanceof TextView) {
-                    addRemovePlanning((TextView) v);
-                }
+                addRemoveFavorites((TextView)((ViewGroup) v).getChildAt(0));
                 break;
             case "addFavorites":
                 System.out.println("Clicked favorites button of item " + getTitle());
+                System.out.println("clicked " + v.getClass() + " - " + (v instanceof AppCompatTextView));
 
-                if (v instanceof  TextView) {
-                    addRemovePlanning((TextView) v);
-                }
+                addRemovePlanning((TextView)((ViewGroup) v).getChildAt(0));
                 break;
         }
     }
