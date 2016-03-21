@@ -51,15 +51,17 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:tag="addPlanning"
+                android:tag="addFavorites"
                 android:clickable="true"
                 android:foreground="?android:attr/selectableItemBackground">
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center|center"
-                    android:text="Add to planning"
-                    android:layout_margin="10dp"/>
+                    android:text="Add to favorites"
+                    android:gravity="center|center"
+                    android:padding="10dp"
+                    android:tag="addFavorites"/>
             </android.support.v7.widget.CardView>
             <View
                 android:layout_width="1dp"
@@ -69,15 +71,17 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:tag="addFavorites"
+                android:tag="addPlanning"
                 android:clickable="true"
                 android:foreground="?android:attr/selectableItemBackground">
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center|center"
-                    android:text="Add to favorites"
-                    android:layout_margin="10dp"/>
+                    android:text="Add to planning"
+                    android:gravity="center|center"
+                    android:padding="10dp"
+                    android:tag="addPlanning"/>
             </android.support.v7.widget.CardView>
         </LinearLayout>
     </LinearLayout>

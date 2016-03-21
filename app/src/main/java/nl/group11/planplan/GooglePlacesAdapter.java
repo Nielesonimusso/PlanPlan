@@ -123,10 +123,10 @@ public class GooglePlacesAdapter extends RecyclerView.Adapter<GooglePlacesAdapte
             description = (TextView) texts.getChildAt(3);
 
             buttons = (LinearLayout) texts.getChildAt(4);
-            planningButton = (CardView) buttons.getChildAt(0);
-            planningButtonLabel = (TextView) planningButton.getChildAt(0);
-            favoritesButton = (CardView) buttons.getChildAt(2);
+            favoritesButton = (CardView) buttons.getChildAt(0);
             favoritesButtonLabel = (TextView) favoritesButton.getChildAt(0);
+            planningButton = (CardView) buttons.getChildAt(2);
+            planningButtonLabel = (TextView) planningButton.getChildAt(0);
         }
     }
 }

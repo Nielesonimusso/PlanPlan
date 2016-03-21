@@ -124,10 +124,10 @@ public class EventfulAdapter extends RecyclerView.Adapter<EventfulAdapter.ViewHo
             description = (TextView) texts.getChildAt(4);
 
             buttons = (LinearLayout) texts.getChildAt(5);
-            planningButton = (CardView) buttons.getChildAt(0);
-            planningButtonLabel = (TextView) planningButton.getChildAt(0);
-            favoritesButton = (CardView) buttons.getChildAt(2);
+            favoritesButton = (CardView) buttons.getChildAt(0);
             favoritesButtonLabel = (TextView) favoritesButton.getChildAt(0);
+            planningButton = (CardView) buttons.getChildAt(2);
+            planningButtonLabel = (TextView) planningButton.getChildAt(0);
         }
     }
 }
