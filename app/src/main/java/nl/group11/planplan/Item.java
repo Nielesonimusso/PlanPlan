@@ -132,13 +132,13 @@ abstract public class Item implements View.OnClickListener{
                 System.out.println("Clicked planning button of item " + getTitle());
                 System.out.println("clicked " + v.getClass() + " - " + (v instanceof AppCompatTextView));
 
-                addRemoveFavorites((TextView)((ViewGroup) v).getChildAt(0));
+                addRemovePlanning((TextView)((ViewGroup) v).getChildAt(0));
                 break;
             case "addFavorites":
                 System.out.println("Clicked favorites button of item " + getTitle());
                 System.out.println("clicked " + v.getClass() + " - " + (v instanceof AppCompatTextView));
 
-                addRemovePlanning((TextView)((ViewGroup) v).getChildAt(0));
+                addRemoveFavorites((TextView)((ViewGroup) v).getChildAt(0));
                 break;
         }
     }
