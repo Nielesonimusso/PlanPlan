@@ -90,37 +90,6 @@ abstract public class GooglePlacesItem extends Item {
         return place.getAddress();
     }
 
-    @Override
-    public void onClick(View v) {
-        String tag = (String) v.getTag();
-        switch (tag) {
-            case "details":
-                System.out.println("Clicked item with title " + getTitle());
-                Intent intent = new Intent(v.getContext(), DetailsActivity.class);
-                intent.putExtra("json",toJSON().toString());
-                v.getContext().startActivity(intent);
-                break;
-            case "addPlanning":
-                System.out.println("Clicked planning button of item " + getTitle());
-                /*
-                if (!checkItemInPlanning()) {
-                    addPlanning();
-                }
-                */
-                break;
-            case "addFavorites":
-                System.out.println("Clicked favorites button of item " + getTitle());
-                /*
-                if (!checkItemInFavorites()) {
-                    addFavorite();
-                } else {
-                    removeFavorite();
-                }
-                */
-                break;
-        }
-    }
-
     public String getImage() {
         return place.getImage();
     }

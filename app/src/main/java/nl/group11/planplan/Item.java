@@ -3,7 +3,11 @@ package nl.group11.planplan;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.Context;
+import android.content.Intent;
+import android.renderscript.Sampler;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -29,13 +33,11 @@ abstract public class Item implements View.OnClickListener{
      * type
      */
     public Item(Context c) {
-
         context = c;
         firebase = new Firebase("https://planplan.firebaseio.com/");
-
     }
     public Item(JSONObject json){
-    //Only for testing
+
     }
 
     /**
@@ -115,7 +117,31 @@ abstract public class Item implements View.OnClickListener{
      *
      * @param v View
      */
-    abstract public void onClick(View v);
+    public void onClick(View v) {
+        String tag = (String) v.getTag();
+        switch (tag) {
+            case "details":
+                System.out.println("Clicked item with title " + getTitle());
+                Intent intent = new Intent(v.getContext(), DetailsActivity.class);
+                intent.putExtra("json",toJSON().toString());
+                v.getContext().startActivity(intent);
+                break;
+            case "addPlanning":
+                System.out.println("Clicked planning button of item " + getTitle());
+
+                if (v instanceof TextView) {
+                    addRemovePlanning((TextView) v);
+                }
+                break;
+            case "addFavorites":
+                System.out.println("Clicked favorites button of item " + getTitle());
+
+                if (v instanceof  TextView) {
+                    addRemovePlanning((TextView) v);
+                }
+                break;
+        }
+    }
 
     /**
      * Checks whether the item has already passed
@@ -130,7 +156,7 @@ abstract public class Item implements View.OnClickListener{
         String id = getAccount();
 
         //create a new reference at the location of the new item entry
-        Firebase eventRef = firebase.child(id).child("favorites").child(getID());
+        Firebase eventRef = firebase.child(id).child("favorites").child(getType().toString()).child(getID());
 
         //set new data
         addGeneric(eventRef);
@@ -170,7 +196,7 @@ abstract public class Item implements View.OnClickListener{
     public void removeFavorite() {
 
         String id = getAccount();
-        firebase.child(id).child("favorites").child(getID()).removeValue();
+        firebase.child(id).child("favorites").child(getType().toString()).child(getID()).removeValue();
     }
 
     public void removePlanning() {
@@ -183,28 +209,74 @@ abstract public class Item implements View.OnClickListener{
         return accounts[0].name.replace('.', '*');//replace dots with stars to prevent dots in firebase key
     }
 
-    public boolean checkItemInFavorites() {
-        return checkInGeneric("favorites");
+    public void addRemoveFavorites(final TextView v) {
+        databaseGeneric("favorites", true, new APIHandler.Callback<Boolean>() {
+            @Override
+            public void onItem(Boolean result) {
+                if (v != null) {
+                    if (result) {
+                        v.setText("Add to favorites");
+                    } else {
+                        v.setText("Remove from favorites");
+                    }
+                }
+            }
+        });
 
     }
 
-    public boolean checkItemInPlanning() {
-        return checkInGeneric("planning");
+    public void addRemovePlanning(final TextView v) {
+        databaseGeneric("planning", true, new APIHandler.Callback<Boolean>() {
+            @Override
+            public void onItem(Boolean result) {
+                if (v != null) {
+                    if (result) {
+                        v.setText("Add to planning");
+                    } else {
+                        v.setText("Remove from planning");
+                    }
+                }
+            }
+        });
+    }
+
+    public void checkInFavorites(boolean updateButtons) {
+        databaseGeneric("favorites", false, new APIHandler.Callback<Boolean>() {
+            @Override
+            public void onItem(Boolean result) {
+
+            }
+        });
+    }
+
+    public void checkInPlanning() {
+        databaseGeneric("planning", false, new APIHandler.Callback<Boolean>() {
+            @Override
+            public void onItem(Boolean result) {
+
+            }
+        });
     }
 
     /**
      * @param location location of item (either "favorites" or "planning")
      * @return whether the item exists at the given location
      */
-    private boolean checkInGeneric(String location) {
+    private void databaseGeneric(final String location, final boolean add, final APIHandler.Callback<Boolean> callback) {
         //get user account
-        String id = getAccount();
+        String account = getAccount();
 
         //whether it is in the favorites (this syntax is used because we have to set it inside onDataChange)
         final boolean[] inGeneric = {false};
+        Firebase ref;
 
         //create a reference to the location of this item in the favorites(if it exists in the database)
-        Firebase ref = firebase.child(id).child(location).child(getID());
+        if (location.equals("favorites")) {
+            ref = firebase.child(account).child(location).child(getType().toString()).child(getID());
+        } else {
+            ref = firebase.child(account).child(location).child(getID());
+
+        }
 
         //Listen for this reference once, then remove the listener
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -212,14 +284,32 @@ abstract public class Item implements View.OnClickListener{
             public void onDataChange(DataSnapshot dataSnapshot) {
                 //check whether the item exists
                 inGeneric[0] = dataSnapshot.child(Data.ID.toString()).exists();
+                System.out.println("in database: getItem: " + inGeneric[0] + " - " + dataSnapshot.child(Data.ID.toString()));
+                callback.onItem(inGeneric[0]);
+
+                //add if add
+                if (add) {
+                    if (inGeneric[0]) {
+                        if (location.equals("favorites")) {
+                            removeFavorite();
+                        } else {
+                            removePlanning();
+                        }
+                    } else {
+                        if (location.equals("favorites")) {
+                            addFavorite();
+                        } else {
+                            addPlanning();
+                        }
+                    }
+                }
             }
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
-                //Do nothing
+                System.out.println("in database: " + firebaseError.toString());
             }
         });
-        return inGeneric[0];
     }
 
     public void setUserStartTime(Date d) {
