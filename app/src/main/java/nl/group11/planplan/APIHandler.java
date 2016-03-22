@@ -1,10 +1,18 @@
 package nl.group11.planplan;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
+import android.content.Context;
 import android.location.Location;
 import android.media.Image;
 import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 import android.text.format.DateUtils;
+
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 
 import org.joda.time.DateTime;
 import org.json.simple.JSONArray;
@@ -229,6 +237,48 @@ public class APIHandler {
     public static Object altIfNull(Object check, Object alt) {
         return check != null ? check : alt;
     }
+
+    public static String getAccount(Context context) {
+        Account[] accounts = AccountManager.get(context).getAccountsByType("com.google");
+        return accounts[0].name.replace('.', '*');//replace dots with stars to prevent dots in firebase key
+    }
+
+    /*public static void getDatabaseFavorites(Enum type, Firebase firebase, Context context, APIHandler.Callback<Map<String,Item>> callback) {
+        Firebase ref;
+        String account;
+
+        account = APIHandler.getAccount(context);
+        ref = firebase.child(account).child("favorites").child(type.toString());
+        getDatabase(ref,callback);
+    }
+
+    public static void getDatabasePlanning(Enum type, Firebase firebase, Context context, APIHandler.Callback<Map<String,Item>> callback) {
+        Firebase ref;
+        String account;
+
+        account = APIHandler.getAccount(context);
+        ref = firebase.child(account).child("planning");
+        getDatabase(ref,callback);
+    }
+
+    private static void getDatabase(Firebase ref, APIHandler.Callback<Map<String,Item>> callback) {
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Map<String,Item> itemMap = new HashMap<String, Item>();
+
+                for(DataSnapshot key : dataSnapshot.getChildren()) {
+                    JSONObject json = new JSONObject();
+                    json.put(key.get)
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+    }*/
 }
 
 abstract class DynamicSearch<T> {

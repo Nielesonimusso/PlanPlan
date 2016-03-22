@@ -22,9 +22,9 @@ public class EventItem extends Item {
         this.event = event;
     }
 
-    public EventItem(JSONObject json) {
+    public EventItem(JSONObject json, Context c) {
         //only for testing
-        super(json);
+        super(json, c);
         this.event = EventfulEvent.fromJSON(json);
     }
 

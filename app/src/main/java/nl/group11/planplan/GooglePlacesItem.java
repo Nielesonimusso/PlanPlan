@@ -28,9 +28,9 @@ abstract public class GooglePlacesItem extends Item {
         super(c);
         this.place = place;
     }
-    public GooglePlacesItem(JSONObject json) {
+    public GooglePlacesItem(JSONObject json, Context c) {
         //only for testing
-        super(json);
+        super(json, c);
         this.place = GooglePlace.fromJSON(json);
     }
 

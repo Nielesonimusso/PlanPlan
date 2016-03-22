@@ -15,8 +15,8 @@ public class OtherItem extends GooglePlacesItem {
         super(c, place);
     }
 
-    public OtherItem(JSONObject json) {
-        super(json);
+    public OtherItem(JSONObject json, Context c) {
+        super(json, c);
     }
 
     @Override

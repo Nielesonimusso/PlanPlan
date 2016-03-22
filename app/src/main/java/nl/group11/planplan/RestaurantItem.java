@@ -15,8 +15,8 @@ public class RestaurantItem extends GooglePlacesItem {
         super(c, place);
     }
 
-    public RestaurantItem(JSONObject json) {
-        super(json);
+    public RestaurantItem(JSONObject json, Context c) {
+        super(json, c);
     }
 
     @Override

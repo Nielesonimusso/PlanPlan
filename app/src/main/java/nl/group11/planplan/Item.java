@@ -4,8 +4,8 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.Context;
 import android.content.Intent;
-import android.renderscript.Sampler;
 import android.support.v7.widget.AppCompatTextView;
+import android.telecom.Call;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -16,9 +16,10 @@ import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
 import org.json.simple.JSONObject;
-import org.w3c.dom.Text;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Map;
 
 /**
  * Created by s140442 on 07/03/2016.
@@ -38,7 +39,7 @@ abstract public class Item implements View.OnClickListener{
         context = c;
         firebase = new Firebase("https://planplan.firebaseio.com/");
     }
-    public Item(JSONObject json){
+    public Item(JSONObject json, Context c){
 
     }
 
@@ -153,7 +154,7 @@ abstract public class Item implements View.OnClickListener{
     public void addFavorite() {
 
         //get account
-        String id = getAccount();
+        String id = APIHandler.getAccount(context);
 
         //create a new reference at the location of the new item entry
         Firebase eventRef = firebase.child(id).child("favorites").child(getType().toString()).child(getID());
@@ -164,7 +165,7 @@ abstract public class Item implements View.OnClickListener{
 
     public void addPlanning() {
         //get account
-        String id = getAccount();
+        String id = APIHandler.getAccount(context);
 
         //create a new reference at the location of the new item entry
         Firebase eventRef = firebase.child(id).child("planning").child(getID());
@@ -195,19 +196,16 @@ abstract public class Item implements View.OnClickListener{
 
     public void removeFavorite() {
 
-        String id = getAccount();
+        String id = APIHandler.getAccount(context);
         firebase.child(id).child("favorites").child(getType().toString()).child(getID()).removeValue();
     }
 
     public void removePlanning() {
-        String id = getAccount();
+        String id = APIHandler.getAccount(context);
         firebase.child(id).child("planning").child(getID()).removeValue();
     }
 
-    private String getAccount() {
-        Account[] accounts = AccountManager.get(context).getAccountsByType("com.google");
-        return accounts[0].name.replace('.', '*');//replace dots with stars to prevent dots in firebase key
-    }
+    
 
     public void addRemoveFavorites(final TextView v) {
         databaseGeneric("favorites", true, new APIHandler.Callback<Boolean>() {
@@ -264,7 +262,7 @@ abstract public class Item implements View.OnClickListener{
      */
     private void databaseGeneric(final String location, final boolean add, final APIHandler.Callback<Boolean> callback) {
         //get user account
-        String account = getAccount();
+        String account = APIHandler.getAccount(context);
 
         //whether it is in the favorites (this syntax is used because we have to set it inside onDataChange)
         final boolean[] inGeneric = {false};
@@ -321,4 +319,5 @@ abstract public class Item implements View.OnClickListener{
     }
 
     abstract public JSONObject toJSON();
+
 }

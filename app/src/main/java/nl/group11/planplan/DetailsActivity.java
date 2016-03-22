@@ -82,12 +82,12 @@ public class DetailsActivity extends AppCompatActivity
         json.toString();
 
         if (json.toString().contains(Type.EVENT.toString())) {
-            i = new EventItem(json);
+            i = new EventItem(json,this);
         } else {
             if (json.toString().contains(Type.RESTAURANT.toString())) {
-                i = new RestaurantItem(json);
+                i = new RestaurantItem(json, this);
             } else {
-                i = new OtherItem(json);
+                i = new OtherItem(json, this);
             }
         }
 
