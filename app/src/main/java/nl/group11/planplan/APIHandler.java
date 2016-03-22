@@ -252,7 +252,7 @@ public class APIHandler {
         getDatabase(ref, context, callback);
     }
 
-    public static void getDatabasePlanning(Enum type, Firebase firebase, final Context context, final APIHandler.Callback<Map<String,Item>> callback) {
+    public static void getDatabasePlanning(Firebase firebase, final Context context, final APIHandler.Callback<Map<String,Item>> callback) {
         Firebase ref;
         String account;
 
