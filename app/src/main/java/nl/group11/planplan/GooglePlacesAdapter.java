@@ -54,6 +54,7 @@ public class GooglePlacesAdapter extends RecyclerView.Adapter<GooglePlacesAdapte
     public int posOfID(String ID) {
         for (int i = 0; i < places.size(); i++) {
             if (places.get(i).getID().equals(ID)) {
+                System.out.println("Request for update on ID " + ID + " with pos " + i);
                 return i;
             }
         }
@@ -97,11 +98,16 @@ public class GooglePlacesAdapter extends RecyclerView.Adapter<GooglePlacesAdapte
             holder.cardView.setOnClickListener(item);
             holder.planningButton.setOnClickListener(item);
             holder.favoritesButton.setOnClickListener(item);
-            /*
-            if (item.checkItemInFavorites()) {
-                holder.favoritesButtonLabel.setText("Remove from favorites");
-            }
-            */
+            item.checkInFavorites(new APIHandler.Callback<Boolean>() {
+                @Override
+                public void onItem(Boolean result) {
+                    if (result) {
+                        ((TextView) holder.favoritesButton.getChildAt(0)).setText("Remove from favorites");
+                    } else {
+                        ((TextView) holder.favoritesButton.getChildAt(0)).setText("Add to favorites");
+                    }
+                }
+            });
         }
     }
 

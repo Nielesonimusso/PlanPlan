@@ -1,30 +1,13 @@
 package nl.group11.planplan;
 
-import android.app.Fragment;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.location.Location;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
 
 /**
  * Created by Anne on 07/03/2016.
@@ -32,7 +15,7 @@ import java.util.List;
 public class OtherFragment extends android.support.v4.app.Fragment implements SingleItemUpdateListener {
 
     private OnFragmentInteractionListener mListener;
-    GooglePlacesAdapter night_club;
+    GooglePlacesAdapter adapter;
 
     /**
      * Use this factory method to create a new instance of
@@ -88,8 +71,8 @@ public class OtherFragment extends android.support.v4.app.Fragment implements Si
         if (!(this instanceof OtherFragmentFav)) {
             final RecyclerView recyclerView = (RecyclerView) getActivity().findViewById(R.id.otherRecycler);
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-            night_club = new GooglePlacesAdapter(getActivity(), HomeActivity.location, HomeActivity.radius * 1000, "night_club");
-            recyclerView.setAdapter(night_club);
+            adapter = new GooglePlacesAdapter(getActivity(), HomeActivity.location, HomeActivity.radius * 1000, "night_club");
+            recyclerView.setAdapter(adapter);
         }
     }
 
@@ -112,7 +95,7 @@ public class OtherFragment extends android.support.v4.app.Fragment implements Si
 
     @Override
     public void singleItemUpdated(String ID) {
-        night_club.notifyItemChanged(night_club.posOfID(ID));
+        adapter.notifyItemChanged(adapter.posOfID(ID));
     }
 
     /**

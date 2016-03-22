@@ -43,7 +43,9 @@ public class EventfulAdapter extends RecyclerView.Adapter<EventfulAdapter.ViewHo
     }
 
     public int posOfID(String ID) {
-        return searchSource.posOfID(ID);
+        int result = searchSource.posOfID(ID);
+        System.out.println("Request for update on ID " + ID + " with pos " + result);
+        return result;
     }
 
     protected void buildView(final ViewHolder holder, EventfulEvent event) {

@@ -6,7 +6,6 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -16,7 +15,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -44,6 +42,9 @@ public class HomeActivity extends AppCompatActivity
 
     ViewPagerAdapter viewPagerAdapter;
     ViewPager viewPager;
+    EventsFragment eventsFragment;
+    RestaurantsFragment restaurantsFragment;
+    OtherFragment otherFragment;
     Snackbar noLocation;
 
     @Override
@@ -65,9 +66,12 @@ public class HomeActivity extends AppCompatActivity
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
         if (!gps.canGetLocation()) { //directly add tabs and notify about location
-            viewPagerAdapter.addFragment(new RestaurantsFragment(), "Restaurants");
-            viewPagerAdapter.addFragment(new EventsFragment(), "Events");
-            viewPagerAdapter.addFragment(new OtherFragment(), "Other");
+            restaurantsFragment = new RestaurantsFragment();
+            viewPagerAdapter.addFragment(restaurantsFragment, "Restaurants");
+            EventsFragment eventsFragment = new EventsFragment();
+            viewPagerAdapter.addFragment(eventsFragment, "Events");
+            OtherFragment otherFragment = new OtherFragment();
+            viewPagerAdapter.addFragment(otherFragment, "Other");
             gps.showSettingsAlert();
         } else {
             gps.addListener(this);
@@ -102,9 +106,12 @@ public class HomeActivity extends AppCompatActivity
             noLocation.dismiss();
         }
         HomeActivity.location = APIHandler.locationToLatLngString(location);
-        viewPagerAdapter.addFragment(new RestaurantsFragment(), "Restaurants");
-        viewPagerAdapter.addFragment(new EventsFragment(), "Events");
-        viewPagerAdapter.addFragment(new OtherFragment(), "Other");
+        restaurantsFragment = new RestaurantsFragment();
+        viewPagerAdapter.addFragment(restaurantsFragment, "Restaurants");
+        eventsFragment = new EventsFragment();
+        viewPagerAdapter.addFragment(eventsFragment, "Events");
+        otherFragment = new OtherFragment();
+        viewPagerAdapter.addFragment(otherFragment, "Other");
     }
 
     @Override
@@ -196,21 +203,24 @@ public class HomeActivity extends AppCompatActivity
         RecyclerView eventsView = (RecyclerView) findViewById(R.id.eventsRecycler);
         if (eventsView != null) {
             eventsView.setLayoutManager(new LinearLayoutManager(this));
-            eventsView.setAdapter(new EventfulAdapter(this, new EventfulDynamicSearch(location, radius)));
+            eventsFragment.adapter = new EventfulAdapter(this, new EventfulDynamicSearch(location, radius));
+            eventsView.setAdapter(eventsFragment.adapter);
         }
 
         //update restaurant view
         final RecyclerView restaurantView = (RecyclerView) findViewById(R.id.restaurantsRecycler);
         if (restaurantView != null) {
             restaurantView.setLayoutManager(new LinearLayoutManager(this));
-            restaurantView.setAdapter(new GooglePlacesAdapter(this, location, radius * 1000, "restaurant"));
+            restaurantsFragment.adapter = new GooglePlacesAdapter(this, location, radius * 1000, "restaurant");
+            restaurantView.setAdapter(restaurantsFragment.adapter);
         }
 
         //update other view
         final RecyclerView otherView = (RecyclerView) findViewById(R.id.otherRecycler);
         if (otherView != null) {
             otherView.setLayoutManager(new LinearLayoutManager(this));
-            otherView.setAdapter(new GooglePlacesAdapter(this, location, radius * 1000, "night_club"));
+            otherFragment.adapter = new GooglePlacesAdapter(this, location, radius * 1000, "night_club");
+            otherView.setAdapter(otherFragment.adapter);
         }
     }
 
