@@ -86,7 +86,7 @@ public class EventfulAdapter extends RecyclerView.Adapter<EventfulAdapter.ViewHo
             } else {
                 holder.cardView.setCardBackgroundColor(ContextCompat.getColor(holder.cardView.getContext(), R.color.cardview_light_background));
                 holder.planningButton.setCardBackgroundColor(ContextCompat.getColor(holder.cardView.getContext(), R.color.cardview_light_background));
-                holder.planningButton.setCardBackgroundColor(ContextCompat.getColor(holder.cardView.getContext(), R.color.cardview_light_background));
+                holder.favoritesButton.setCardBackgroundColor(ContextCompat.getColor(holder.cardView.getContext(), R.color.cardview_light_background));
                 holder.planningButton.setOnClickListener(item);
                 holder.favoritesButton.setOnClickListener(item);
             }
