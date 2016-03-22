@@ -1,7 +1,10 @@
 package nl.group11.planplan;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
@@ -68,14 +71,25 @@ public class EventfulAdapter extends RecyclerView.Adapter<EventfulAdapter.ViewHo
             holder.image.setImageBitmap(imageCache.setImageFromURL(item.getImage(), new APIHandler.Callback<Bitmap>() {
                 @Override
                 public void onItem(Bitmap result) {
-                if (holder.imgUrl != null && holder.imgUrl.equals(item.getImage())) {
-                    holder.image.setImageBitmap(result);
-                }
+                    if (holder.imgUrl != null && holder.imgUrl.equals(item.getImage())) {
+                        holder.image.setImageBitmap(result);
+                    }
                 }
             }));
             holder.cardView.setOnClickListener(item);
-            holder.planningButton.setOnClickListener(item);
-            holder.favoritesButton.setOnClickListener(item);
+            if(item.hasPassed()) {
+                holder.cardView.setCardBackgroundColor(ContextCompat.getColor(holder.cardView.getContext(), R.color.colorGrayedOut));
+                holder.planningButton.setCardBackgroundColor(ContextCompat.getColor(holder.cardView.getContext(), R.color.colorGrayedOut));
+                holder.favoritesButton.setCardBackgroundColor(ContextCompat.getColor(holder.cardView.getContext(), R.color.colorGrayedOut));
+                holder.planningButton.setOnClickListener(null);
+                holder.favoritesButton.setOnClickListener(null);
+            } else {
+                holder.cardView.setCardBackgroundColor(ContextCompat.getColor(holder.cardView.getContext(), R.color.cardview_light_background));
+                holder.planningButton.setCardBackgroundColor(ContextCompat.getColor(holder.cardView.getContext(), R.color.cardview_light_background));
+                holder.planningButton.setCardBackgroundColor(ContextCompat.getColor(holder.cardView.getContext(), R.color.cardview_light_background));
+                holder.planningButton.setOnClickListener(item);
+                holder.favoritesButton.setOnClickListener(item);
+            }
             /*
             if (item.checkItemInFavorites()) {
                 holder.favoritesButtonLabel.setText("Remove from favorites");
