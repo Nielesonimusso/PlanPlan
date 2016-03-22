@@ -116,7 +116,9 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:clickable="true"
-                    android:foreground="?android:attr/selectableItemBackground">
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:tag="addFavorites"
+                    android:id="@+id/addFavoritesButtonDetails">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -131,7 +133,9 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:clickable="true"
-                    android:foreground="?android:attr/selectableItemBackground">
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:tag="addPlanning"
+                    android:id="@+id/addPlanningButtonDetails">
 
                     <TextView
                         android:layout_width="wrap_content"

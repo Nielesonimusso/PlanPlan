@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.CardView;
 import android.text.Html;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -38,6 +39,7 @@ public class DetailsActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     JSONObject json;
     TextView titleText, dateText, descriptionText, priceText, addressText;
+    CardView favoritesButton, planningButton;
     ImageView imgView;
     LinearLayout layout;
     Item i;
@@ -72,6 +74,8 @@ public class DetailsActivity extends AppCompatActivity
         addressText = (TextView) findViewById(R.id.address);
         imgView = (ImageView) findViewById(R.id.image);
         layout = (LinearLayout) findViewById(R.id.infoLayout);
+        favoritesButton = (CardView) findViewById(R.id.addFavoritesButtonDetails);
+        planningButton = (CardView) findViewById(R.id.addPlanningButtonDetails);
 
         JSONParser parser = new JSONParser();
         try {
@@ -82,7 +86,7 @@ public class DetailsActivity extends AppCompatActivity
         json.toString();
 
         if (json.toString().contains(Type.EVENT.toString())) {
-            i = new EventItem(json,this);
+            i = new EventItem(json, this);
         } else {
             if (json.toString().contains(Type.RESTAURANT.toString())) {
                 i = new RestaurantItem(json, this);
@@ -109,6 +113,9 @@ public class DetailsActivity extends AppCompatActivity
         }
         priceText.setText(i.getPrice());
         addressText.setText(i.getAddress());
+
+        favoritesButton.setOnClickListener(i);
+        planningButton.setOnClickListener(i);
 
         final String imgUrl = i.getImage();
         imgView.setImageResource(R.drawable.imgnotfound);
