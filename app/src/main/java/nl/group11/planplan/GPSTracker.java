@@ -17,9 +17,13 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class GPSTracker extends Service implements LocationListener {
 
     private final Context mContext;
+    private List<LocationAdapter> listeners = new ArrayList<>();
 
     // flag for GPS status
     boolean isGPSEnabled = false;
@@ -38,7 +42,7 @@ public class GPSTracker extends Service implements LocationListener {
     private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10; // 10 meters
 
     // The minimum time between updates in milliseconds
-    private static final long MIN_TIME_BW_UPDATES = 1000 * 5 * 1; // 1 minute
+    private static final long MIN_TIME_BW_UPDATES = 1000 * 1 * 1; // 1 second
 
     // Declaring a Location Manager
     protected LocationManager locationManager;
@@ -48,8 +52,12 @@ public class GPSTracker extends Service implements LocationListener {
         getLocation();
     }
 
-    @Nullable
     public Location getLocation() {
+        return getLocation(this);
+    }
+
+    @Nullable
+    public Location getLocation(LocationListener listener) {
         try {
             locationManager = (LocationManager) mContext
                     .getSystemService(LOCATION_SERVICE);
@@ -75,7 +83,7 @@ public class GPSTracker extends Service implements LocationListener {
                         locationManager.requestLocationUpdates(
                                 LocationManager.NETWORK_PROVIDER,
                                 MIN_TIME_BW_UPDATES,
-                                MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
+                                MIN_DISTANCE_CHANGE_FOR_UPDATES, listener);
                         Log.d("Network", "Network");
                         if (locationManager != null) {
                             location = locationManager
@@ -93,7 +101,7 @@ public class GPSTracker extends Service implements LocationListener {
                         locationManager.requestLocationUpdates(
                                 LocationManager.GPS_PROVIDER,
                                 MIN_TIME_BW_UPDATES,
-                                MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
+                                MIN_DISTANCE_CHANGE_FOR_UPDATES, listener);
                         Log.d("GPS Enabled", "GPS Enabled");
                         if (locationManager != null) {
                             location = locationManager
@@ -195,6 +203,9 @@ public class GPSTracker extends Service implements LocationListener {
 
     @Override
     public void onLocationChanged(Location location) {
+        for(LocationAdapter listener : listeners) {
+            listener.onLocation(location, this);
+        }
     }
 
     @Override
@@ -214,4 +225,15 @@ public class GPSTracker extends Service implements LocationListener {
         return null;
     }
 
+    interface LocationAdapter {
+        void onLocation(Location location, GPSTracker tracker);
+    }
+
+    public void addListener(LocationAdapter listener) {
+        listeners.add(listener);
+    }
+
+    public void removeListener(LocationAdapter listener) {
+        listeners.remove(listener);
+    }
 }

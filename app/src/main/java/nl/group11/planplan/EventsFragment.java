@@ -1,37 +1,20 @@
 package nl.group11.planplan;
 
-import android.app.Fragment;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.location.Location;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
 
 /**
  * Created by Anne on 07/03/2016.
  */
 public class EventsFragment extends android.support.v4.app.Fragment {
-
-    static String location = "51.441642,5.469722";
-    static int radius = 5;
 
     private OnFragmentInteractionListener mListener;
 
@@ -89,7 +72,7 @@ public class EventsFragment extends android.support.v4.app.Fragment {
         if (!(this instanceof EventsFragmentFav)) {
             RecyclerView recyclerView = (RecyclerView) getActivity().findViewById(R.id.eventsRecycler);
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-            recyclerView.setAdapter(new EventfulAdapter(getContext(), new EventfulDynamicSearch(location, radius)));
+            recyclerView.setAdapter(new EventfulAdapter(getContext(), new EventfulDynamicSearch(HomeActivity.location, HomeActivity.radius)));
         }
     }
 

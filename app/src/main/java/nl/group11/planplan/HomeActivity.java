@@ -36,9 +36,14 @@ public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         RestaurantsFragment.OnFragmentInteractionListener,
         EventsFragment.OnFragmentInteractionListener,
-        OtherFragment.OnFragmentInteractionListener, DynamicSearch.SearchUpdateListener, SearchDialog.SearchListener {
+        OtherFragment.OnFragmentInteractionListener, SearchDialog.SearchListener, GPSTracker.LocationAdapter {
 
     GPSTracker gps;
+    static String location = "52.370216,4.895168";
+    static int radius = 5;
+
+    ViewPagerAdapter viewPagerAdapter;
+    Snackbar noLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,10 +62,17 @@ public class HomeActivity extends AppCompatActivity
         }
 
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
-        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
-        viewPagerAdapter.addFragment(new RestaurantsFragment(), "Restaurants");
-        viewPagerAdapter.addFragment(new EventsFragment(), "Events");
-        viewPagerAdapter.addFragment(new OtherFragment(), "Other");
+        viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
+        if (!gps.canGetLocation()) { //directly add tabs and notify about location
+            viewPagerAdapter.addFragment(new RestaurantsFragment(), "Restaurants");
+            viewPagerAdapter.addFragment(new EventsFragment(), "Events");
+            viewPagerAdapter.addFragment(new OtherFragment(), "Other");
+            gps.showSettingsAlert();
+        } else {
+            gps.addListener(this);
+            noLocation = Snackbar.make(findViewById(R.id.rootLinearLayout), "Getting location...", Snackbar.LENGTH_INDEFINITE);
+            noLocation.show();
+        }
         viewPager.setAdapter(viewPagerAdapter);
         viewPager.setOffscreenPageLimit(2);
 
@@ -80,56 +92,18 @@ public class HomeActivity extends AppCompatActivity
         if (getIntent().getBooleanExtra("showDialog",false)) {
             showSearchDialog();
         }
+    }
 
-        /*
-            EVENTFUL APIHandler TESTS
-         /
-        //direct search test
-        APIHandler.queryEventful("Eindhoven", 50, 3, new APIHandler.Callback<List<EventfulEvent>>() {
-            @Override
-            public void onItem(List<EventfulEvent> results) {
-                System.out.println("printing eventful item title test");
-                for (EventfulEvent event : results) {
-                    System.out.println(event.getTitle());
-                }
-                System.out.println("end of printing test");
-            }
-        });
-
-        //dynamic search test
-        EventfulDynamicSearch dynamicSearch = new EventfulDynamicSearch("Eindhoven", 50);
-        dynamicSearch.addListener(this);
-        EventfulEvent event = dynamicSearch.get(25);
-        System.out.println("First get: " + event);
-
-        //latlong from string test
-        APIHandler.stringToLocation("Eindhoven", new APIHandler.Callback<Location>() {
-            @Override
-            public void onItem(Location result) {
-                System.out.println(APIHandler.locationToLatLngString(result));
-            }
-        });
-
-        /*
-            GOOGLEPLACES APIHandler TESTS
-         /
-        //direct search test (including location query)
-        APIHandler.stringToLocation("Eindhoven", new APIHandler.Callback<Location>() {
-            @Override
-            public void onItem(Location result) {
-                APIHandler.queryGooglePlaces(APIHandler.locationToLatLngString(result), 50000, "restaurant", new APIHandler.Callback<List<GooglePlace>>() {
-                    @Override
-                    public void onItem(List<GooglePlace> result) {
-                        System.out.println("printing googleplaces item title test");
-                        for (GooglePlace place : result) {
-                            System.out.println(place);
-                        }
-                        System.out.println("end of printing test");
-                    }
-                });
-            }
-        });
-        //*/
+    @Override
+    public void onLocation(Location location, GPSTracker tracker) {
+        tracker.removeListener(this);
+        if (noLocation.isShown()) {
+            noLocation.dismiss();
+        }
+        HomeActivity.location = APIHandler.locationToLatLngString(location);
+        viewPagerAdapter.addFragment(new RestaurantsFragment(), "Restaurants");
+        viewPagerAdapter.addFragment(new EventsFragment(), "Events");
+        viewPagerAdapter.addFragment(new OtherFragment(), "Other");
     }
 
     @Override
@@ -193,17 +167,6 @@ public class HomeActivity extends AppCompatActivity
 
     }
 
-    @Override
-    public void onUpdate(DynamicSearch self, int start, int end) {
-        System.out.println("Range from event:" + start + ", " + end);
-        if (start <= 25 && end >= 25) {
-            EventfulEvent event = ((DynamicSearch<EventfulEvent>) self).get(25);
-            System.out.println("Second get from event: " + event);
-        } else {
-            System.out.println("invalid range");
-        }
-    }
-
     void showSearchDialog() {
         FragmentTransaction trans = getFragmentManager().beginTransaction();
         SearchDialog newSearchDialog = new SearchDialog(this);
@@ -213,14 +176,16 @@ public class HomeActivity extends AppCompatActivity
 
     @Override
     public void onSearch(String location, int radius) {
+
+        HomeActivity.location = location;
+        HomeActivity.radius = radius;
+
         //update event view
         RecyclerView eventsView = (RecyclerView) findViewById(R.id.eventsRecycler);
         if (eventsView != null) {
             eventsView.setLayoutManager(new LinearLayoutManager(this));
             eventsView.setAdapter(new EventfulAdapter(this, new EventfulDynamicSearch(location, radius)));
         }
-        EventsFragment.location = location;
-        EventsFragment.radius = radius;
 
         //update restaurant view
         final RecyclerView restaurantView = (RecyclerView) findViewById(R.id.restaurantsRecycler);
@@ -229,18 +194,12 @@ public class HomeActivity extends AppCompatActivity
             restaurantView.setAdapter(new GooglePlacesAdapter(this, location, radius * 1000, "restaurant"));
         }
 
-        RestaurantsFragment.location = location;
-        RestaurantsFragment.radius = radius;
-
         //update other view
         final RecyclerView otherView = (RecyclerView) findViewById(R.id.otherRecycler);
         if (otherView != null) {
             otherView.setLayoutManager(new LinearLayoutManager(this));
             otherView.setAdapter(new GooglePlacesAdapter(this, location, radius * 1000, "night_club"));
         }
-
-        OtherFragment.location = location;
-        OtherFragment.radius = radius;
     }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {
@@ -264,6 +223,7 @@ public class HomeActivity extends AppCompatActivity
         public void addFragment(Fragment fragment, String title) {
             mFragmentList.add(fragment);
             mFragmentTitleList.add(title);
+            notifyDataSetChanged();
         }
 
         @Override

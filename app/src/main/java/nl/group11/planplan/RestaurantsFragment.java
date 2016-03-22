@@ -23,9 +23,6 @@ import android.widget.TextView;
  */
 public class RestaurantsFragment extends android.support.v4.app.Fragment {
 
-    static String location = "51.441642,5.469722";
-    static int radius = 5;
-
     private OnFragmentInteractionListener mListener;
 
     /**
@@ -82,7 +79,7 @@ public class RestaurantsFragment extends android.support.v4.app.Fragment {
         if (!(this instanceof RestaurantsFragmentFav)) {
             final RecyclerView recyclerView = (RecyclerView) getActivity().findViewById(R.id.restaurantsRecycler);
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-            recyclerView.setAdapter(new GooglePlacesAdapter(getContext(), location, radius * 1000, "restaurant"));
+            recyclerView.setAdapter(new GooglePlacesAdapter(getContext(), HomeActivity.location, HomeActivity.radius * 1000, "restaurant"));
         }
     }
 

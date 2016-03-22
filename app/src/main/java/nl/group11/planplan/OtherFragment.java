@@ -31,9 +31,6 @@ import java.util.List;
  */
 public class OtherFragment extends android.support.v4.app.Fragment {
 
-    static String location = "51.441642,5.469722";
-    static int radius = 5;
-
     private OnFragmentInteractionListener mListener;
 
     /**
@@ -90,8 +87,7 @@ public class OtherFragment extends android.support.v4.app.Fragment {
         if (!(this instanceof OtherFragmentFav)) {
             final RecyclerView recyclerView = (RecyclerView) getActivity().findViewById(R.id.otherRecycler);
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-            recyclerView.setAdapter(new GooglePlacesAdapter(getContext(), location, radius * 1000, "night_club"));
-
+            recyclerView.setAdapter(new GooglePlacesAdapter(getContext(), HomeActivity.location, HomeActivity.radius * 1000, "night_club"));
         }
     }
 
