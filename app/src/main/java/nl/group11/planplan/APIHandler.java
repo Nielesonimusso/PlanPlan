@@ -269,7 +269,18 @@ public class APIHandler {
 
                 for(DataSnapshot key : dataSnapshot.getChildren()) {
                     JSONObject json = new JSONObject();
-                    json.put(key.get)
+                    json.put("id", key.child(Data.ID.toString()));
+                    json.put("title", key.child(Data.TITLE.toString()));
+                    json.put("type", key.child(Data.TYPE.toString()));
+                    json.put("price", key.child(Data.PRICE.toString()));
+                    json.put("start_time", key.child(Data.STARTTIME.toString()));
+                    json.put("stop_time", key.child(Data.ENDTIME.toString()));
+                    json.put("user_start_time", key.child(Data.USERSTARTTIME.toString()));
+                    json.put("user_end_time", key.child(Data.USERENDTIME.toString()));
+                    json.put("image", key.child(Data.IMAGE.toString()));
+                    json.put("description", key.child(Data.DESCRIPTION.toString()));
+                    json.put("venue_address", key.child(Data.ADDRESS.toString()));
+                    itemMap.put(key.child(Data.ID.toString())
                 }
             }
 

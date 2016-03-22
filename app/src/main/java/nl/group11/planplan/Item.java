@@ -40,7 +40,8 @@ abstract public class Item implements View.OnClickListener{
         firebase = new Firebase("https://planplan.firebaseio.com/");
     }
     public Item(JSONObject json, Context c){
-
+        context = c;
+        firebase = new Firebase("https://planplan.firebaseio.com/");
     }
 
     /**
