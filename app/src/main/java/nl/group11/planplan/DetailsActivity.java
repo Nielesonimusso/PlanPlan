@@ -114,8 +114,17 @@ public class DetailsActivity extends AppCompatActivity
         priceText.setText(i.getPrice());
         addressText.setText(i.getAddress());
 
-        favoritesButton.setOnClickListener(i);
-        planningButton.setOnClickListener(i);
+        if(i.hasPassed()) {
+            favoritesButton.setOnClickListener(null);
+            planningButton.setOnClickListener(null);
+            favoritesButton.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorGrayedOut));
+            planningButton.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorGrayedOut));
+        } else {
+            favoritesButton.setOnClickListener(i);
+            planningButton.setOnClickListener(i);
+            favoritesButton.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.cardview_light_background));
+            planningButton.setCardBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.cardview_light_background));
+        }
 
         final String imgUrl = i.getImage();
         imgView.setImageResource(R.drawable.imgnotfound);
