@@ -80,7 +80,7 @@ public class EventItem extends Item {
     @Override
     public boolean hasPassed() {
         Calendar calendar = Calendar.getInstance(); //calendar gives current system time.
-        return event.getStartTime().before(calendar.getTime());
+        return event.getStopTime().before(calendar.getTime());
     }
 
     @Override
