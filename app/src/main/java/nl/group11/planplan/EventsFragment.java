@@ -14,9 +14,10 @@ import android.view.ViewGroup;
 /**
  * Created by Anne on 07/03/2016.
  */
-public class EventsFragment extends android.support.v4.app.Fragment {
+public class EventsFragment extends android.support.v4.app.Fragment implements SingleItemUpdateListener {
 
     private OnFragmentInteractionListener mListener;
+    EventfulAdapter adapter;
 
     /**
      * Use this factory method to create a new instance of
@@ -72,7 +73,8 @@ public class EventsFragment extends android.support.v4.app.Fragment {
         if (!(this instanceof EventsFragmentFav)) {
             RecyclerView recyclerView = (RecyclerView) getActivity().findViewById(R.id.eventsRecycler);
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-            recyclerView.setAdapter(new EventfulAdapter(getContext(), new EventfulDynamicSearch(HomeActivity.location, HomeActivity.radius)));
+            adapter = new EventfulAdapter(getActivity(), new EventfulDynamicSearch(HomeActivity.location, HomeActivity.radius));
+            recyclerView.setAdapter(adapter);
         }
     }
 
@@ -91,6 +93,11 @@ public class EventsFragment extends android.support.v4.app.Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void singleItemUpdated(String ID) {
+        adapter.notifyItemChanged(adapter.posOfID(ID));
     }
 
     /**

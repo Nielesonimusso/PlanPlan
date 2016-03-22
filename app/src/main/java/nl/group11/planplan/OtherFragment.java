@@ -29,9 +29,10 @@ import java.util.List;
 /**
  * Created by Anne on 07/03/2016.
  */
-public class OtherFragment extends android.support.v4.app.Fragment {
+public class OtherFragment extends android.support.v4.app.Fragment implements SingleItemUpdateListener {
 
     private OnFragmentInteractionListener mListener;
+    GooglePlacesAdapter night_club;
 
     /**
      * Use this factory method to create a new instance of
@@ -87,7 +88,8 @@ public class OtherFragment extends android.support.v4.app.Fragment {
         if (!(this instanceof OtherFragmentFav)) {
             final RecyclerView recyclerView = (RecyclerView) getActivity().findViewById(R.id.otherRecycler);
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-            recyclerView.setAdapter(new GooglePlacesAdapter(getContext(), HomeActivity.location, HomeActivity.radius * 1000, "night_club"));
+            night_club = new GooglePlacesAdapter(getActivity(), HomeActivity.location, HomeActivity.radius * 1000, "night_club");
+            recyclerView.setAdapter(night_club);
         }
     }
 
@@ -106,6 +108,11 @@ public class OtherFragment extends android.support.v4.app.Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void singleItemUpdated(String ID) {
+        night_club.notifyItemChanged(night_club.posOfID(ID));
     }
 
     /**

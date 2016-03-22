@@ -24,11 +24,13 @@ public class GooglePlacesAdapter extends RecyclerView.Adapter<GooglePlacesAdapte
     List<GooglePlace> places;
     ImageCache imageCache;
     String type;
+    Context context;
 
     GooglePlacesAdapter(Context context, String location, int radius, String type) {
         imageCache = new ImageCache(context);
         places = new ArrayList<>();
         this.type = type;
+        this.context = context;
         performQuery(location, radius);
     }
 
@@ -49,9 +51,22 @@ public class GooglePlacesAdapter extends RecyclerView.Adapter<GooglePlacesAdapte
         return new ViewHolder(cardView);
     }
 
+    public int posOfID(String ID) {
+        for (int i = 0; i < places.size(); i++) {
+            if (places.get(i).getID().equals(ID)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         GooglePlace place = position < places.size() ? places.get(position) : null;
+        buildView(holder, place);
+    }
+
+    private void buildView(final ViewHolder holder, GooglePlace place) {
         if (place == null) {
             holder.title.setText("Loading...");
             holder.description.setText("");
@@ -61,9 +76,9 @@ public class GooglePlacesAdapter extends RecyclerView.Adapter<GooglePlacesAdapte
         } else {
             final GooglePlacesItem item;
             if (place.getType().equals(Type.RESTAURANT)) {
-                item = new RestaurantItem(holder.cardView.getContext(), place);
+                item = new RestaurantItem(context, place);
             } else {
-                item = new OtherItem(holder.cardView.getContext(), place);
+                item = new OtherItem(context, place);
             }
             holder.buttons.setVisibility(View.VISIBLE);
             holder.title.setText(item.getTitle());

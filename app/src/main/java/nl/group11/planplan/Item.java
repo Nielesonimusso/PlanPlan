@@ -2,6 +2,7 @@ package nl.group11.planplan;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.AppCompatTextView;
@@ -128,7 +129,7 @@ abstract public class Item implements View.OnClickListener{
                 System.out.println("Clicked item with title " + getTitle());
                 Intent intent = new Intent(v.getContext(), DetailsActivity.class);
                 intent.putExtra("json",toJSON().toString());
-                v.getContext().startActivity(intent);
+                ((Activity) v.getContext()).startActivityForResult(intent, 1);
                 break;
             case "addPlanning":
                 System.out.println("Clicked planning button of item " + getTitle());
@@ -239,13 +240,8 @@ abstract public class Item implements View.OnClickListener{
         });
     }
 
-    public void checkInFavorites(boolean updateButtons) {
-        databaseGeneric("favorites", false, new APIHandler.Callback<Boolean>() {
-            @Override
-            public void onItem(Boolean result) {
-
-            }
-        });
+    public void checkInFavorites(APIHandler.Callback<Boolean> callback) {
+        databaseGeneric("favorites", false, callback);
     }
 
     public void checkInPlanning() {

@@ -414,4 +414,13 @@ class EventfulDynamicSearch extends DynamicSearch<EventfulEvent> {
             }
         });
     }
+
+    public int posOfID(String id) {
+        for (Map.Entry<Integer, EventfulEvent> event : searchCache.entrySet()) {
+            if (event.getValue().getID().equals(id)) {
+                return event.getKey();
+            }
+        }
+        return -1;
+    }
 }

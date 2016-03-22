@@ -26,11 +26,12 @@ public class EventfulAdapter extends RecyclerView.Adapter<EventfulAdapter.ViewHo
     EventfulDynamicSearch searchSource;
     ImageCache imageCache;
     SimpleDateFormat df;
+    Context context;
 
     EventfulAdapter(Context context, EventfulDynamicSearch search) {
         searchSource = search;
         searchSource.addListener(this);
-
+        this.context = context;
         imageCache = new ImageCache(context);
         df = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
     }
@@ -41,10 +42,12 @@ public class EventfulAdapter extends RecyclerView.Adapter<EventfulAdapter.ViewHo
         return new ViewHolder(cardView);
     }
 
-    @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
-        EventfulEvent event = searchSource.get(position);
-        final EventItem item = new EventItem(holder.cardView.getContext(), event);
+    public int posOfID(String ID) {
+        return searchSource.posOfID(ID);
+    }
+
+    protected void buildView(final ViewHolder holder, EventfulEvent event) {
+        final EventItem item = new EventItem(context, event);
         if (event == null) {
             holder.title.setText("Loading...");
             holder.description.setVisibility(View.GONE);
@@ -90,12 +93,23 @@ public class EventfulAdapter extends RecyclerView.Adapter<EventfulAdapter.ViewHo
                 holder.planningButton.setOnClickListener(item);
                 holder.favoritesButton.setOnClickListener(item);
             }
-            /*
-            if (item.checkItemInFavorites()) {
-                holder.favoritesButtonLabel.setText("Remove from favorites");
-            }
-            */
+            item.checkInFavorites(new APIHandler.Callback<Boolean>() {
+                @Override
+                public void onItem(Boolean result) {
+                    if (result) {
+                        ((TextView) holder.favoritesButton.getChildAt(0)).setText("Remove from favorites");
+                    } else {
+                        ((TextView) holder.favoritesButton.getChildAt(0)).setText("Add to favorites");
+                    }
+                }
+            });
         }
+    }
+
+    @Override
+    public void onBindViewHolder(final ViewHolder holder, int position) {
+        EventfulEvent event = searchSource.get(position);
+        buildView(holder, event);
     }
 
     @Override

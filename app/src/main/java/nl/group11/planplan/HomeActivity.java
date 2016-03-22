@@ -43,6 +43,7 @@ public class HomeActivity extends AppCompatActivity
     static int radius = 5;
 
     ViewPagerAdapter viewPagerAdapter;
+    ViewPager viewPager;
     Snackbar noLocation;
 
     @Override
@@ -61,7 +62,7 @@ public class HomeActivity extends AppCompatActivity
                     R.color.colorPrimaryDark));
         }
 
-        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
+        viewPager = (ViewPager) findViewById(R.id.viewpager);
         viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
         if (!gps.canGetLocation()) { //directly add tabs and notify about location
             viewPagerAdapter.addFragment(new RestaurantsFragment(), "Restaurants");
@@ -202,6 +203,14 @@ public class HomeActivity extends AppCompatActivity
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        String changedID = data.getExtras().getString("item");
+        SingleItemUpdateListener fragment = (SingleItemUpdateListener) viewPagerAdapter.getItem(viewPager.getCurrentItem());
+        fragment.singleItemUpdated(changedID);
+    }
+
     class ViewPagerAdapter extends FragmentPagerAdapter {
         private final List<Fragment> mFragmentList = new ArrayList<>();
         private final List<String> mFragmentTitleList = new ArrayList<>();
@@ -231,5 +240,4 @@ public class HomeActivity extends AppCompatActivity
             return mFragmentTitleList.get(position);
         }
     }
-
 }

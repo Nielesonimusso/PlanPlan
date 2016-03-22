@@ -21,9 +21,10 @@ import android.widget.TextView;
 /**
  * Created by Anne on 07/03/2016.
  */
-public class RestaurantsFragment extends android.support.v4.app.Fragment {
+public class RestaurantsFragment extends android.support.v4.app.Fragment implements SingleItemUpdateListener{
 
     private OnFragmentInteractionListener mListener;
+    GooglePlacesAdapter restaurant;
 
     /**
      * Use this factory method to create a new instance of
@@ -79,7 +80,8 @@ public class RestaurantsFragment extends android.support.v4.app.Fragment {
         if (!(this instanceof RestaurantsFragmentFav)) {
             final RecyclerView recyclerView = (RecyclerView) getActivity().findViewById(R.id.restaurantsRecycler);
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-            recyclerView.setAdapter(new GooglePlacesAdapter(getContext(), HomeActivity.location, HomeActivity.radius * 1000, "restaurant"));
+            restaurant = new GooglePlacesAdapter(getActivity(), HomeActivity.location, HomeActivity.radius * 1000, "restaurant");
+            recyclerView.setAdapter(restaurant);
         }
     }
 
@@ -98,6 +100,12 @@ public class RestaurantsFragment extends android.support.v4.app.Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void singleItemUpdated(String ID) {
+        System.out.println("Request for update on ID " + ID + " with pos " + restaurant.posOfID(ID));
+        restaurant.notifyItemChanged(restaurant.posOfID(ID));
     }
 
     /**

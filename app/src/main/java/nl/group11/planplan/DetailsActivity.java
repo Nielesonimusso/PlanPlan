@@ -141,6 +141,17 @@ public class DetailsActivity extends AppCompatActivity
                 }
             }
         }.execute();
+
+        i.checkInFavorites(new APIHandler.Callback<Boolean>() {
+            @Override
+            public void onItem(Boolean result) {
+                if (result) {
+                    ((TextView) favoritesButton.getChildAt(0)).setText("Remove from favorites");
+                } else {
+                    ((TextView) favoritesButton.getChildAt(0)).setText("Add to favorites");
+                }
+            }
+        });
     }
 
     @Override
@@ -149,7 +160,11 @@ public class DetailsActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            //super.onBackPressed();
+            Intent intent = new Intent();
+            intent.putExtra("item",i.getID());
+            setResult(RESULT_OK, intent);
+            finish();
         }
     }
 
