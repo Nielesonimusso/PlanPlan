@@ -243,25 +243,25 @@ public class APIHandler {
         return accounts[0].name.replace('.', '*');//replace dots with stars to prevent dots in firebase key
     }
 
-    /*public static void getDatabaseFavorites(Enum type, Firebase firebase, Context context, APIHandler.Callback<Map<String,Item>> callback) {
+    public static void getDatabaseFavorites(Enum type, Firebase firebase, Context context, APIHandler.Callback<Map<String,Item>> callback) {
         Firebase ref;
         String account;
 
         account = APIHandler.getAccount(context);
         ref = firebase.child(account).child("favorites").child(type.toString());
-        getDatabase(ref,callback);
+        getDatabase(ref, context, callback);
     }
 
-    public static void getDatabasePlanning(Enum type, Firebase firebase, Context context, APIHandler.Callback<Map<String,Item>> callback) {
+    public static void getDatabasePlanning(Enum type, Firebase firebase, final Context context, final APIHandler.Callback<Map<String,Item>> callback) {
         Firebase ref;
         String account;
 
         account = APIHandler.getAccount(context);
         ref = firebase.child(account).child("planning");
-        getDatabase(ref,callback);
+        getDatabase(ref, context, callback);
     }
 
-    private static void getDatabase(Firebase ref, APIHandler.Callback<Map<String,Item>> callback) {
+    private static void getDatabase(Firebase ref, final Context context, final APIHandler.Callback<Map<String,Item>> callback) {
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -269,27 +269,43 @@ public class APIHandler {
 
                 for(DataSnapshot key : dataSnapshot.getChildren()) {
                     JSONObject json = new JSONObject();
-                    json.put("id", key.child(Data.ID.toString()));
-                    json.put("title", key.child(Data.TITLE.toString()));
-                    json.put("type", key.child(Data.TYPE.toString()));
-                    json.put("price", key.child(Data.PRICE.toString()));
-                    json.put("start_time", key.child(Data.STARTTIME.toString()));
-                    json.put("stop_time", key.child(Data.ENDTIME.toString()));
-                    json.put("user_start_time", key.child(Data.USERSTARTTIME.toString()));
-                    json.put("user_end_time", key.child(Data.USERENDTIME.toString()));
-                    json.put("image", key.child(Data.IMAGE.toString()));
-                    json.put("description", key.child(Data.DESCRIPTION.toString()));
-                    json.put("venue_address", key.child(Data.ADDRESS.toString()));
-                    itemMap.put(key.child(Data.ID.toString())
+                    String type = (String) key.child(Data.TYPE.toString()).getValue();
+                    json.put("id", (String) key.child(Data.ID.toString()).getValue());
+                    json.put("title", (String) key.child(Data.TITLE.toString()).getValue());
+                    json.put("type", type);
+                    json.put("price", (String)  key.child(Data.PRICE.toString()).getValue());
+                    json.put("start_time", (String) key.child(Data.STARTTIME.toString()).getValue());
+                    json.put("stop_time", (String) key.child(Data.ENDTIME.toString()).getValue());
+                    json.put("user_start_time", (String) key.child(Data.USERSTARTTIME.toString()).getValue());
+                    json.put("user_end_time", (String) key.child(Data.USERENDTIME.toString()).getValue());
+                    json.put("image", (String) key.child(Data.IMAGE.toString()).getValue());
+                    json.put("description", (String) key.child(Data.DESCRIPTION.toString()).getValue());
+                    json.put("venue_address", (String) key.child(Data.ADDRESS.toString()).getValue());
+
+                    Item item;
+                    if (type.equals(Type.EVENT.toString())) {
+                        item = new EventItem(json, context);
+                    } else if (type.equals(Type.RESTAURANT)) {
+                        item = new RestaurantItem(json, context);
+                    } else {
+                        item = new OtherItem(json, context);
+                    }
+
+                    if (item.hasPassed()) {
+                        key.getRef().removeValue();
+                    } else {
+                        itemMap.put((String) key.child(Data.ID.toString()).getValue(), item);
+                    }
                 }
+                callback.onItem(itemMap);
             }
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
-
+                firebaseError.toException().printStackTrace();
             }
         });
-    }*/
+    }
 }
 
 abstract class DynamicSearch<T> {
