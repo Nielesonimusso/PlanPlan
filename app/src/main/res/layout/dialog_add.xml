@@ -1,19 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-    <LinearLayout
-        android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center">
+
+    <TextView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp">
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="20dp"
-            android:layout_marginLeft="20dp"
-            android:layout_weight="5"
-            android:id="@+id/starttime"
-            android:hint="Enter start time "/>
-    </LinearLayout>
-</LinearLayout>
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="10dp"
+        android:layout_weight="6"
+        android:textAppearance="?android:attr/textAppearanceMediumInverse"
+        android:textColor="@color/colorBlack"
+        android:id="@+id/dateText"
+        android:text="Date: " />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="70dp"
+        android:layout_alignBaseline="@+id/dateText"
+        android:layout_toRightOf="@+id/dateText"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Pick date..."
+        android:id="@+id/date"
+        android:layout_gravity="center_horizontal" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_weight="6"
+        android:layout_below="@+id/dateText"
+        android:textAppearance="?android:attr/textAppearanceMediumInverse"
+        android:textColor="@color/colorBlack"
+        android:id="@+id/startTimeText"
+        android:text="Start time: " />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/startTimeText"
+        android:layout_toRightOf="@+id/startTimeText"
+        android:layout_alignLeft="@+id/date"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Pick start time..."
+        android:id="@+id/startTime"
+        android:layout_gravity="center_horizontal"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_weight="6"
+        android:layout_below="@+id/startTimeText"
+        android:textAppearance="?android:attr/textAppearanceMediumInverse"
+        android:textColor="@color/colorBlack"
+        android:id="@+id/durationText"
+        android:text="Duration: " />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/durationText"
+        android:layout_toRightOf="@+id/durationText"
+        android:layout_alignLeft="@+id/date"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Duration..."
+        android:id="@+id/duration"
+        android:layout_gravity="center_horizontal" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_weight="6"
+        android:layout_below="@+id/durationText"
+        android:textAppearance="?android:attr/textAppearanceMediumInverse"
+        android:textColor="@color/colorBlack"
+        android:id="@+id/endTimeText"
+        android:text="End time: " />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/endTimeText"
+        android:layout_toRightOf="@+id/endTimeText"
+        android:layout_alignLeft="@+id/date"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Pick end time..."
+        android:id="@+id/endTime"
+        android:layout_gravity="center_horizontal" />
+</RelativeLayout>

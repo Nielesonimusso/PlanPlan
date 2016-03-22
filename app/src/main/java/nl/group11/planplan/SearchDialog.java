@@ -25,7 +25,6 @@ import java.util.List;
 @SuppressLint("ValidFragment")
 public class SearchDialog extends DialogFragment {
 
-
     EditText searchBar;
     Spinner optionsSpinner;
     CheckBox optionsCheckbox;

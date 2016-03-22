@@ -135,6 +135,11 @@ public class HomeActivity extends AppCompatActivity
             //show search fragment
             showSearchDialog();
         }
+        // TODO: finish testing add dialog, then remove this statement!
+        if (id == R.id.action_add) {
+            // show add fragment
+            showAddDialog();
+        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -172,6 +177,12 @@ public class HomeActivity extends AppCompatActivity
         SearchDialog newSearchDialog = new SearchDialog(this);
         newSearchDialog.setGPS(gps);
         newSearchDialog.show(trans, "search");
+    }
+
+    void showAddDialog() {
+        FragmentTransaction trans = getFragmentManager().beginTransaction();
+        AddDialog newAddDialog = new AddDialog();
+        newAddDialog.show(trans, "search");
     }
 
     @Override
