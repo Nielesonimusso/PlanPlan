@@ -1,11 +1,8 @@
 package nl.group11.planplan;
 
-import android.accounts.Account;
-import android.accounts.AccountManager;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.AppCompatTextView;
-import android.telecom.Call;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -17,14 +14,12 @@ import com.firebase.client.ValueEventListener;
 
 import org.json.simple.JSONObject;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.Map;
 
 /**
  * Created by s140442 on 07/03/2016.
  */
-abstract public class Item implements View.OnClickListener{
+abstract public class Item implements View.OnClickListener, Comparable<Item> {
     Date userStartTime, userEndTime;
     Firebase firebase;
     Context context;
@@ -321,4 +316,7 @@ abstract public class Item implements View.OnClickListener{
 
     abstract public JSONObject toJSON();
 
+    public int compareTo(Item item) {
+        return getStartTime().compareTo(item.getStartTime());
+    }
 }

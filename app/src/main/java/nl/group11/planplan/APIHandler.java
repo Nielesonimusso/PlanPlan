@@ -24,6 +24,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -32,6 +33,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -243,7 +245,7 @@ public class APIHandler {
         return accounts[0].name.replace('.', '*');//replace dots with stars to prevent dots in firebase key
     }
 
-    public static void getDatabaseFavorites(Enum type, Firebase firebase, Context context, APIHandler.Callback<Map<String,Item>> callback) {
+    public static void getDatabaseFavorites(Enum type, Firebase firebase, Context context, APIHandler.Callback<ArrayList<Item>> callback) {
         Firebase ref;
         String account;
 
@@ -252,7 +254,7 @@ public class APIHandler {
         getDatabase(ref, context, callback);
     }
 
-    public static void getDatabasePlanning(Firebase firebase, final Context context, final APIHandler.Callback<Map<String,Item>> callback) {
+    public static void getDatabasePlanning(Firebase firebase, final Context context, final APIHandler.Callback<ArrayList<Item>> callback) {
         Firebase ref;
         String account;
 
@@ -261,11 +263,11 @@ public class APIHandler {
         getDatabase(ref, context, callback);
     }
 
-    private static void getDatabase(Firebase ref, final Context context, final APIHandler.Callback<Map<String,Item>> callback) {
+    private static void getDatabase(Firebase ref, final Context context, final APIHandler.Callback<ArrayList<Item>> callback) {
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Map<String,Item> itemMap = new HashMap<String, Item>();
+                ArrayList<Item> itemList = new ArrayList<Item>();
 
                 for(DataSnapshot key : dataSnapshot.getChildren()) {
                     JSONObject json = new JSONObject();
@@ -294,10 +296,11 @@ public class APIHandler {
                     if (item.hasPassed()) {
                         key.getRef().removeValue();
                     } else {
-                        itemMap.put((String) key.child(Data.ID.toString()).getValue(), item);
+                        itemList.add(item);
                     }
                 }
-                callback.onItem(itemMap);
+                Collections.sort(itemList, new ItemComparator());
+                callback.onItem(itemList);
             }
 
             @Override
