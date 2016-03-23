@@ -3,9 +3,12 @@ package nl.group11.planplan;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -21,7 +24,11 @@ public class AddDialog extends DialogFragment {
     TextView startTime;
     TextView duration;
     TextView endTime;
+    Button dateButton;
+    Button startTimeButton;
+    Button endTimeButton;
     RelativeLayout addLayout;
+    final AddDialog addDialog = this;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -45,15 +52,47 @@ public class AddDialog extends DialogFragment {
                 })
                 .setView(addLayout);
         referenceUIElements();
+        addButtonListeners();
         return builder.create();
     }
 
     /* Sets references to UI elements. */
     public void referenceUIElements() {
         date = (TextView)(addLayout.getChildAt(1));
-        startTime = (TextView)(addLayout.getChildAt(3));
-        duration = (TextView)(addLayout.getChildAt(5));
+        dateButton = (Button) (addLayout.getChildAt(2));
+        startTime = (TextView)(addLayout.getChildAt(4));
+        startTimeButton = (Button) (addLayout.getChildAt(5));
         endTime = (TextView)(addLayout.getChildAt(7));
+        endTimeButton = (Button) (addLayout.getChildAt(8));
+        duration = (TextView)(addLayout.getChildAt(11));
+    }
+
+    /* Adds listeners for Change buttons. */
+    private void addButtonListeners() {
+        dateButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // Open date picker
+                FragmentTransaction trans = getFragmentManager().beginTransaction();
+                DatePickerDialog datePicker = new DatePickerDialog();
+                datePicker.setAddDialog(addDialog);
+                datePicker.show(trans, "datepicker");
+            }
+        });
+        startTimeButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // Open start time picker
+            }
+        });
+        endTimeButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // Open end time picker
+            }
+        });
+    }
+
+    public void setDate(int day, int month, int year) {
+        date.setText("" + Integer.toString(day) + "-" + Integer.toString(month) + "-" +
+                Integer.toString(year));
     }
 
 }

@@ -9,83 +9,117 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="20dp"
         android:layout_weight="6"
         android:textAppearance="?android:attr/textAppearanceMediumInverse"
         android:textColor="@color/colorBlack"
         android:id="@+id/dateText"
-        android:text="Date: " />
+        android:text="Date " />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="70dp"
+        android:layout_marginLeft="45dp"
         android:layout_alignBaseline="@+id/dateText"
         android:layout_toRightOf="@+id/dateText"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Pick date..."
+        android:textAppearance="?android:attr/textAppearanceMediumInverse"
+        android:textColor="@color/colorBlack"
+        android:text="23/03/2016"
         android:id="@+id/date"
         android:layout_gravity="center_horizontal" />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:backgroundTint="@color/colorPrimary"
+        android:textColor="#ffffff"
+        android:text="Change"
+        android:id="@+id/buttonDate"
+        android:layout_alignBaseline="@+id/date"
+        android:layout_toRightOf="@+id/date" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="20dp"
         android:layout_weight="6"
         android:layout_below="@+id/dateText"
         android:textAppearance="?android:attr/textAppearanceMediumInverse"
         android:textColor="@color/colorBlack"
         android:id="@+id/startTimeText"
-        android:text="Start time: " />
+        android:text="Start time " />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/startTimeText"
         android:layout_toRightOf="@+id/startTimeText"
         android:layout_alignLeft="@+id/date"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Pick start time..."
+        android:textAppearance="?android:attr/textAppearanceMediumInverse"
+        android:textColor="@color/colorBlack"
+        android:text="12:30"
         android:id="@+id/startTime"
         android:layout_gravity="center_horizontal"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/colorPrimary"
+        android:textColor="#ffffff"
+        android:text="Change"
+        android:id="@+id/buttonStartTime"
+        android:layout_alignLeft="@+id/buttonDate"
+        android:layout_alignBaseline="@+id/startTime"
+        android:layout_toRightOf="@+id/startTime" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
         android:layout_weight="6"
+        android:layout_marginBottom="20dp"
         android:layout_below="@+id/startTimeText"
         android:textAppearance="?android:attr/textAppearanceMediumInverse"
         android:textColor="@color/colorBlack"
-        android:id="@+id/durationText"
-        android:text="Duration: " />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/durationText"
-        android:layout_toRightOf="@+id/durationText"
-        android:layout_alignLeft="@+id/date"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Duration..."
-        android:id="@+id/duration"
-        android:layout_gravity="center_horizontal" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:layout_weight="6"
-        android:layout_below="@+id/durationText"
-        android:textAppearance="?android:attr/textAppearanceMediumInverse"
-        android:textColor="@color/colorBlack"
         android:id="@+id/endTimeText"
-        android:text="End time: " />
+        android:text="End time " />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/endTimeText"
         android:layout_toRightOf="@+id/endTimeText"
         android:layout_alignLeft="@+id/date"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Pick end time..."
+        android:textAppearance="?android:attr/textAppearanceMediumInverse"
+        android:textColor="@color/colorBlack"
+        android:text="15:30"
         android:id="@+id/endTime"
         android:layout_gravity="center_horizontal" />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/colorPrimary"
+        android:textColor="#ffffff"
+        android:text="Change"
+        android:id="@+id/buttonEndTime"
+        android:layout_alignLeft="@+id/buttonDate"
+        android:layout_alignBaseline="@+id/endTime"
+        android:layout_toRightOf="@+id/endTime" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="6"
+        android:layout_below="@+id/endTimeText"
+        android:textAppearance="?android:attr/textAppearanceMediumInverse"
+        android:textColor="@color/colorBlack"
+        android:id="@+id/durationText"
+        android:text="Duration " />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/durationText"
+        android:layout_toRightOf="@+id/durationText"
+        android:layout_alignLeft="@+id/date"
+        android:textAppearance="?android:attr/textAppearanceMediumInverse"
+        android:textColor="@color/colorBlack"
+        android:text="03:00"
+        android:id="@+id/duration"
+        android:layout_gravity="center_horizontal" />
+
 </RelativeLayout>
