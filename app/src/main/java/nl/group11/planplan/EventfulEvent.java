@@ -24,7 +24,7 @@ class EventfulEvent {
         Object title = data.get("title");
 
         if(title == null) {
-           return "No title available";//TODO verander naar wat Niels begeert.
+           return "No title available";
         }
         return title.toString();
     }
@@ -32,7 +32,7 @@ class EventfulEvent {
         Object idString = data.get("id");
 
         if (idString == null) {
-            return "dit kan helemaal niet"; //TODO verander naar wat Niels begeert.
+            return "dit kan helemaal niet";
         }
         return idString.toString();
     }
@@ -72,7 +72,7 @@ class EventfulEvent {
         if (userStartTime != null) {
             return new Date(Long.parseLong(userStartTime.toString()));
         }
-        return new Date(Long.parseLong(data.get("start_time").toString())); //TODO verander naar wat Niels begeert.
+        return new Date(Long.parseLong(data.get("start_time").toString()));
     }
 
 
@@ -85,7 +85,7 @@ class EventfulEvent {
             }
             return new Date(Long.parseLong(data.get("stop_time").toString()));
         }
-        return getStartTime();//TODO verander naar wat niels begeert.
+        return getStartTime();
 
     }
 
