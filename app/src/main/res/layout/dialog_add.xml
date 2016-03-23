@@ -13,18 +13,18 @@
         android:layout_weight="6"
         android:textAppearance="?android:attr/textAppearanceMediumInverse"
         android:textColor="@color/colorBlack"
-        android:id="@+id/dateText"
-        android:text="Date " />
+        android:id="@+id/startDateText"
+        android:text="Start date " />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="45dp"
-        android:layout_alignBaseline="@+id/dateText"
-        android:layout_toRightOf="@+id/dateText"
+        android:layout_marginLeft="15dp"
+        android:layout_alignBaseline="@+id/startDateText"
+        android:layout_toRightOf="@+id/startDateText"
         android:textAppearance="?android:attr/textAppearanceMediumInverse"
         android:textColor="@color/colorBlack"
-        android:text="23/03/2016"
-        android:id="@+id/date"
+        android:text="00-00-0000"
+        android:id="@+id/startDate"
         android:layout_gravity="center_horizontal" />
     <Button
         android:layout_width="wrap_content"
@@ -33,16 +33,16 @@
         android:backgroundTint="@color/colorPrimary"
         android:textColor="#ffffff"
         android:text="Change"
-        android:id="@+id/buttonDate"
-        android:layout_alignBaseline="@+id/date"
-        android:layout_toRightOf="@+id/date" />
+        android:id="@+id/buttonStartDate"
+        android:layout_alignBaseline="@+id/startDate"
+        android:layout_toRightOf="@+id/startDate" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
         android:layout_weight="6"
-        android:layout_below="@+id/dateText"
+        android:layout_below="@+id/startDateText"
         android:textAppearance="?android:attr/textAppearanceMediumInverse"
         android:textColor="@color/colorBlack"
         android:id="@+id/startTimeText"
@@ -52,10 +52,10 @@
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/startTimeText"
         android:layout_toRightOf="@+id/startTimeText"
-        android:layout_alignLeft="@+id/date"
+        android:layout_alignLeft="@+id/startDate"
         android:textAppearance="?android:attr/textAppearanceMediumInverse"
         android:textColor="@color/colorBlack"
-        android:text="12:30"
+        android:text="00:00"
         android:id="@+id/startTime"
         android:layout_gravity="center_horizontal"/>
     <Button
@@ -65,16 +65,48 @@
         android:textColor="#ffffff"
         android:text="Change"
         android:id="@+id/buttonStartTime"
-        android:layout_alignLeft="@+id/buttonDate"
+        android:layout_alignLeft="@+id/buttonStartDate"
         android:layout_alignBaseline="@+id/startTime"
         android:layout_toRightOf="@+id/startTime" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/startTimeText"
+        android:layout_marginBottom="20dp"
+        android:layout_weight="6"
+        android:textAppearance="?android:attr/textAppearanceMediumInverse"
+        android:textColor="@color/colorBlack"
+        android:id="@+id/endDateText"
+        android:text="End date " />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/endDateText"
+        android:layout_toRightOf="@+id/endDateText"
+        android:layout_alignLeft="@+id/startDate"
+        android:textAppearance="?android:attr/textAppearanceMediumInverse"
+        android:textColor="@color/colorBlack"
+        android:text="00-00-0000"
+        android:id="@+id/endDate"
+        android:layout_gravity="center_horizontal" />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/colorPrimary"
+        android:textColor="#ffffff"
+        android:text="Change"
+        android:id="@+id/buttonEndDate"
+        android:layout_alignLeft="@+id/buttonStartDate"
+        android:layout_alignBaseline="@+id/endDate"
+        android:layout_toRightOf="@+id/endDate" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_weight="6"
         android:layout_marginBottom="20dp"
-        android:layout_below="@+id/startTimeText"
+        android:layout_below="@+id/endDateText"
         android:textAppearance="?android:attr/textAppearanceMediumInverse"
         android:textColor="@color/colorBlack"
         android:id="@+id/endTimeText"
@@ -84,10 +116,10 @@
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/endTimeText"
         android:layout_toRightOf="@+id/endTimeText"
-        android:layout_alignLeft="@+id/date"
+        android:layout_alignLeft="@+id/startDate"
         android:textAppearance="?android:attr/textAppearanceMediumInverse"
         android:textColor="@color/colorBlack"
-        android:text="15:30"
+        android:text="23:59"
         android:id="@+id/endTime"
         android:layout_gravity="center_horizontal" />
     <Button
@@ -97,7 +129,7 @@
         android:textColor="#ffffff"
         android:text="Change"
         android:id="@+id/buttonEndTime"
-        android:layout_alignLeft="@+id/buttonDate"
+        android:layout_alignLeft="@+id/buttonStartDate"
         android:layout_alignBaseline="@+id/endTime"
         android:layout_toRightOf="@+id/endTime" />
 
@@ -115,10 +147,10 @@
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/durationText"
         android:layout_toRightOf="@+id/durationText"
-        android:layout_alignLeft="@+id/date"
+        android:layout_alignLeft="@+id/startDate"
         android:textAppearance="?android:attr/textAppearanceMediumInverse"
         android:textColor="@color/colorBlack"
-        android:text="03:00"
+        android:text="23:59"
         android:id="@+id/duration"
         android:layout_gravity="center_horizontal" />
 

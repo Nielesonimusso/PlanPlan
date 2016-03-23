@@ -13,6 +13,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -20,11 +21,13 @@ import java.util.List;
  */
 public class AddDialog extends DialogFragment {
 
-    TextView date;
+    TextView startDate;
     TextView startTime;
-    TextView duration;
+    TextView endDate;
     TextView endTime;
-    Button dateButton;
+    TextView duration;
+    Button startDateButton;
+    Button endDateButton;
     Button startTimeButton;
     Button endTimeButton;
     RelativeLayout addLayout;
@@ -52,35 +55,67 @@ public class AddDialog extends DialogFragment {
                 })
                 .setView(addLayout);
         referenceUIElements();
+        setDatesAndTimes();
         addButtonListeners();
         return builder.create();
     }
 
     /* Sets references to UI elements. */
     public void referenceUIElements() {
-        date = (TextView)(addLayout.getChildAt(1));
-        dateButton = (Button) (addLayout.getChildAt(2));
+        startDate = (TextView)(addLayout.getChildAt(1));
+        startDateButton = (Button) (addLayout.getChildAt(2));
         startTime = (TextView)(addLayout.getChildAt(4));
         startTimeButton = (Button) (addLayout.getChildAt(5));
-        endTime = (TextView)(addLayout.getChildAt(7));
-        endTimeButton = (Button) (addLayout.getChildAt(8));
-        duration = (TextView)(addLayout.getChildAt(11));
+        endDate = (TextView)(addLayout.getChildAt(7));
+        endDateButton = (Button) (addLayout.getChildAt(8));
+        endTime = (TextView)(addLayout.getChildAt(10));
+        endTimeButton = (Button) (addLayout.getChildAt(11));
+        duration = (TextView)(addLayout.getChildAt(13));
+    }
+
+    /* Sets the initial dates and times. */
+    private void setDatesAndTimes() {
+        // TODO: get dates and times from Item and display them
+        // Currently the present day is shown and times are hard-coded in XML
+        final Calendar c = Calendar.getInstance();
+        int y = c.get(Calendar.YEAR);
+        int m = c.get(Calendar.MONTH);
+        int d = c.get(Calendar.DAY_OF_MONTH);
+
+        // Set current date into text view
+        startDate.setText(new StringBuilder()
+                .append(d).append("-").append(m).append("-")
+                .append(y));
+        endDate.setText(new StringBuilder()
+                .append(d).append("-").append(m).append("-")
+                .append(y));
     }
 
     /* Adds listeners for Change buttons. */
     private void addButtonListeners() {
-        dateButton.setOnClickListener(new View.OnClickListener() {
+        startDateButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                // Open date picker
+                // Open start date picker
                 FragmentTransaction trans = getFragmentManager().beginTransaction();
-                DatePickerDialog datePicker = new DatePickerDialog();
-                datePicker.setAddDialog(addDialog);
-                datePicker.show(trans, "datepicker");
+                DatePickerDialog startDatePicker = new DatePickerDialog();
+                startDatePicker.setAddDialog(addDialog);
+                startDatePicker.setTextView(startDate);
+                startDatePicker.show(trans, "Start date picker");
             }
         });
         startTimeButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Open start time picker
+            }
+        });
+        endDateButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // Open end date picker
+                FragmentTransaction trans = getFragmentManager().beginTransaction();
+                DatePickerDialog endDatePicker = new DatePickerDialog();
+                endDatePicker.setAddDialog(addDialog);
+                endDatePicker.setTextView(endDate);
+                endDatePicker.show(trans, "End date picker");
             }
         });
         endTimeButton.setOnClickListener(new View.OnClickListener() {
@@ -90,9 +125,10 @@ public class AddDialog extends DialogFragment {
         });
     }
 
-    public void setDate(int day, int month, int year) {
-        date.setText("" + Integer.toString(day) + "-" + Integer.toString(month) + "-" +
+    public void setDate(TextView textView, int day, int month, int year) {
+        textView.setText("" + Integer.toString(day) + "-" + Integer.toString(month) + "-" +
                 Integer.toString(year));
+        // TODO: update duration text view
     }
 
 }
