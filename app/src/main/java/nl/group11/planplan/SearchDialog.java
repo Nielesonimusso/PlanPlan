@@ -18,6 +18,7 @@ import android.widget.Spinner;
 import java.util.ArrayList;
 import java.util.List;
 
+//TODO finish comments
 
 /**
  * Created by s140442 on 09/03/2016.
@@ -91,19 +92,25 @@ public class SearchDialog extends DialogFragment {
         return builder.create();
     }
 
-    /* Sets references to UI elements. */
+    /**
+     * Sets references to UI elements.
+     */
     public void referenceUIElements() {
         searchBar = (EditText)((LinearLayout) layout.getChildAt(0)).getChildAt(0);
         optionsSpinner = (Spinner)((LinearLayout) layout.getChildAt(1)).getChildAt(1);
         optionsCheckbox = (CheckBox)((LinearLayout) layout.getChildAt(1)).getChildAt(3);
     }
 
-    /* Adds checkbox listener for current location checkbox. */
+    /**
+     * Adds checkbox listener for current location checkbox.
+     */
     private void addCheckBoxListener() {
         optionsCheckbox.setOnCheckedChangeListener(new checkBoxChangeListener());
     }
 
-    /* Adds the options for range. */
+    /**
+     * Adds the options for range.
+     */
     private void addOptionsView() {
         List list = new ArrayList<String>();
         list.add("5 km");
@@ -117,7 +124,8 @@ public class SearchDialog extends DialogFragment {
 
     }
 
-    /* Listener for the checkbox.
+    /**
+     * Listener for the checkbox.
      * Disables the location search bar if "current location" is enabled.
      */
     class checkBoxChangeListener implements CheckBox.OnCheckedChangeListener {

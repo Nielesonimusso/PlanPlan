@@ -17,6 +17,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 
+//TODO comments
+
 public class PlanningActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 

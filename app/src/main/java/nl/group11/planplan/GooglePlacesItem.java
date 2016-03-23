@@ -39,6 +39,10 @@ abstract public class GooglePlacesItem extends Item {
         //TODO implement method
     }
 
+    /**
+     * get price of item
+     * @return String that states the price level of the item
+     */
     @Override
     public String getPrice() {
         int pricelevel = place.getPriceLevel();
@@ -61,44 +65,80 @@ abstract public class GooglePlacesItem extends Item {
     }
 
     @Override
+    /**
+     * get item starttime.
+     * @return returns null, since Google places items don't have start times
+     */
     public Date getStartTime() {
         return null;
     }
 
+    /**
+     * get item stoptime.
+     * @return returns null, since Google places items don't have stop times
+     */
     @Override
     public Date getEndTime() {
         return null;
     }
 
+    /**
+     * get item ID
+     * @return returns item ID
+     */
     @Override
     public String getID() {
         return place.getID();
     }
 
+    /**
+     * get item title
+     * @return returns item title
+     */
     @Override
     public String getTitle() {
         return place.getName();
     }
 
+    /**
+     * get item description
+     * @return returns empty string, since Google places items don't have descriptions
+     */
     @Override
     public String getDescription() {
         return "";
     }
 
+    /**
+     * get item address
+     * @return returns string containing human-readable address of the item
+     */
     @Override
     public String getAddress() {
         return place.getAddress();
     }
 
+    /**
+     * get item image
+     * @return returns the image belonging to the item
+     */
     public String getImage() {
         return place.getImage();
     }
 
+    /**
+     * determine whether the event has passed
+     * @return returns boolean, in this case always false because Google places items don't have start/stop times
+     */
     @Override
     public boolean hasPassed() {
         return false;
     }
 
+    /**
+     * item to JSONObject to store in database
+     * @return JSONObject containing the item information.
+     */
     @Override
     public JSONObject toJSON() {
         JSONObject json = new JSONObject();

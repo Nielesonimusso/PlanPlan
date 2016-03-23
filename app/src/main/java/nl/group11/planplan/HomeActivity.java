@@ -30,6 +30,8 @@ import com.firebase.client.Firebase;
 import java.util.ArrayList;
 import java.util.List;
 
+//TODO comments
+
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         RestaurantsFragment.OnFragmentInteractionListener,
