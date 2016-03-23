@@ -105,6 +105,17 @@ public class EventfulAdapter extends RecyclerView.Adapter<EventfulAdapter.ViewHo
                     }
                 }
             });
+
+            item.checkInPlanning(new APIHandler.Callback<Boolean>() {
+                @Override
+                public void onItem(Boolean result) {
+                    if (result) {
+                        ((TextView) holder.planningButton.getChildAt(0)).setText("Remove from planning");
+                    } else {
+                        ((TextView) holder.planningButton.getChildAt(0)).setText("Add to planning");
+                    }
+                }
+            });
         }
     }
 
