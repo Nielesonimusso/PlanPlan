@@ -10,15 +10,17 @@ import java.util.Date;
  */
 class GooglePlace {
 
-    private JSONObject data;
+    private JSONObject data; //Contains query data
 
+    /**
+     * @param json JSONObject containing information to construct a GooglePlace
+     * @return GooglePlace constructed from json
+     */
     public static GooglePlace fromJSON(JSONObject json) {
         GooglePlace googlePlace = new GooglePlace();
         googlePlace.data = (JSONObject) json.clone();
         return googlePlace;
     }
-
-    //TODO: create getter/setter methods to access data
 
     public String getName() {
         Object name = data.get("name");
@@ -42,7 +44,7 @@ class GooglePlace {
                 return Integer.parseInt(data.get("price_level").toString());
             }
         }
-        return -1;
+        return -1;//If no price level available return an integer google would never return.
     }
 
     public String getAddress() {
@@ -80,7 +82,7 @@ class GooglePlace {
     public Date getUserStartTime() {
         Object userStartTime = data.get("user_start_time");
         if (userStartTime == null) {
-            return new Date();
+            return new Date(); //if no userstarttime available, return current time.
         }
         return new Date(Long.parseLong(userStartTime.toString()));
     }
@@ -88,7 +90,7 @@ class GooglePlace {
     public Date getUserStopTime() {
         Object userStopTime = data.get("user_start_time");
         if (userStopTime == null) {
-            return new Date();
+            return new Date(); //if no userstoptime available, return current time.
         }
         return new Date(Long.parseLong(userStopTime.toString()));
     }

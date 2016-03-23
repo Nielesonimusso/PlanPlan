@@ -17,11 +17,21 @@ public class EventItem extends Item {
 
     EventfulEvent event;
 
+    /**
+     * Constructs an Item from an event.
+     * @param c context in which item is created.
+     * @param event an EventfulEvent.
+     */
     public EventItem (Context c, EventfulEvent event) {
         super(c);
         this.event = event;
     }
 
+    /**
+     * Constructs an item from a jsonObject.
+     * @param json a JSONOBJECT containing all information needed to construct an event.
+     * @param c context from which item is created.
+     */
     public EventItem(JSONObject json, Context c) {
         //only for testing
         super(json, c);
@@ -77,12 +87,18 @@ public class EventItem extends Item {
         return event.getAddress();
     }
 
+    /**
+     * @return whether the stoptime of this item has passed.
+     */
     @Override
     public boolean hasPassed() {
         Calendar calendar = Calendar.getInstance(); //calendar gives current system time.
         return event.getStopTime().before(calendar.getTime());
     }
 
+    /**
+     * @return JSONObject containing all neccesary information to construct an event
+     */
     @Override
     public JSONObject toJSON() {
         JSONObject json = new JSONObject();

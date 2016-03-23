@@ -67,6 +67,8 @@ public class DetailsActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        //find UI elements
         titleText = (TextView) findViewById(R.id.title);
         dateText = (TextView) findViewById(R.id.startEndTime);
         descriptionText = (TextView) findViewById(R.id.description);
@@ -77,6 +79,7 @@ public class DetailsActivity extends AppCompatActivity
         favoritesButton = (CardView) findViewById(R.id.addFavoritesButtonDetails);
         planningButton = (CardView) findViewById(R.id.addPlanningButtonDetails);
 
+        //Get the item json from the intent
         JSONParser parser = new JSONParser();
         try {
             json = (JSONObject) parser.parse(getIntent().getStringExtra("json"));
@@ -85,6 +88,7 @@ public class DetailsActivity extends AppCompatActivity
         }
         json.toString();
 
+        //determine type of item
         if (json.toString().contains(Type.EVENT.toString())) {
             i = new EventItem(json, this);
         } else {
@@ -95,8 +99,8 @@ public class DetailsActivity extends AppCompatActivity
             }
         }
 
+        //display item
         titleText.setText(i.getTitle());
-
         setTitle(i.getTitle());
 
         if (i.getStartTime() == null || i.getEndTime() == null) {
@@ -106,6 +110,7 @@ public class DetailsActivity extends AppCompatActivity
         } else {
             dateText.setText(df.format(i.getStartTime()) + " till " + df.format(i.getEndTime()));
         }
+
         if (i.getType().equals(Type.EVENT)){
             descriptionText.setText(Html.fromHtml(i.getDescription()));
         } else {
@@ -151,6 +156,7 @@ public class DetailsActivity extends AppCompatActivity
             }
         }.execute();
 
+        //update buttons to represent state in database
         i.checkInFavorites(new APIHandler.Callback<Boolean>() {
             @Override
             public void onItem(Boolean result) {

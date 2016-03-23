@@ -12,8 +12,12 @@ import java.util.Map;
  */
 class EventfulEvent {
 
-    private JSONObject data;
+    private JSONObject data;// JSONObject containing querydata
 
+    /**
+     * @param json JSONObject containing information to construct an EventfulEvent
+     * @return EventfulEvent constructed from json
+     */
     public static EventfulEvent fromJSON(JSONObject json) {
         EventfulEvent eventfulEvent = new EventfulEvent();
         eventfulEvent.data = (JSONObject) json.clone();
@@ -46,6 +50,7 @@ class EventfulEvent {
         return (String) APIHandler.altIfNull(price, "No price information available");
     }
 
+    //Create a date object from the string received from eventful
     private Date makeDate(String dateString) {
         int year = Integer.parseInt(dateString.substring(0,4));
         int month = Integer.parseInt(dateString.substring(5,7));
@@ -53,18 +58,19 @@ class EventfulEvent {
         int hour = Integer.parseInt(dateString.substring(11,13));
         int minute = Integer.parseInt(dateString.substring(14,16));
         int second = Integer.parseInt(dateString.substring(17, 19));
-        return new DateTime(year,month,day,hour,minute,second).toDate();
+        return new DateTime(year,month,day,hour,minute,second).toDate();//DateTime because java decided to delete 90% of the functionality of Date
     }
     public Date getStartTime() {
         Object startTime = data.get("start_time");
         if (startTime != null) {
+            //If the startTime is not yet saved in timestamp format, convert it to timestamp format
             if (startTime.toString().contains("-")) {
                 Date newStart = makeDate(startTime.toString());
                 data.put("start_time", newStart.getTime());
             }
             return new Date(Long.parseLong(data.get("start_time").toString()));
         }
-        return new Date(0L);
+        return new Date(0L);//return date that would never be received from eventful
     }
 
     public Date getUserStartTime() {
@@ -72,20 +78,21 @@ class EventfulEvent {
         if (userStartTime != null) {
             return new Date(Long.parseLong(userStartTime.toString()));
         }
-        return new Date(Long.parseLong(data.get("start_time").toString()));
+        return new Date(Long.parseLong(data.get("start_time").toString())); //return standard startTime if no userstarttime available
     }
 
 
     public Date getStopTime() {
         Object stopTime = data.get("stop_time");
         if (stopTime != null) {
+            //if the stoptime is not yet saved in timestamp format, convert it to timestamp format
             if (stopTime.toString().contains("-")) {
                 Date newStop = makeDate(stopTime.toString());
                 data.put("stop_time", newStop.getTime());
             }
             return new Date(Long.parseLong(data.get("stop_time").toString()));
         }
-        return getStartTime();
+        return getStartTime(); //If no stoptime available, return starttime.
 
     }
 
@@ -94,9 +101,12 @@ class EventfulEvent {
         if (userStopTime != null) {
             return new Date(Long.parseLong(userStopTime.toString()));
         }
-        return new Date(Long.parseLong(data.get("stop_time").toString()));
+        return new Date(Long.parseLong(data.get("stop_time").toString())); //If no userstoptime available, return standard stoptime
     }
 
+    /**
+     * @return Largest image in the query result
+     */
     public String getImage() {
         JSONObject imgJSON = (JSONObject) data.get("image");
         if (imgJSON != null) {
