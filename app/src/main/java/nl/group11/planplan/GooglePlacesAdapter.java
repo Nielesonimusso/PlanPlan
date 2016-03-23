@@ -108,6 +108,16 @@ public class GooglePlacesAdapter extends RecyclerView.Adapter<GooglePlacesAdapte
                     }
                 }
             });
+            item.checkInPlanning(new APIHandler.Callback<Boolean>() {
+                @Override
+                public void onItem(Boolean result) {
+                    if (result) {
+                        ((TextView) holder.planningButton.getChildAt(0)).setText("Remove from planning");
+                    } else {
+                        ((TextView) holder.planningButton.getChildAt(0)).setText("Add to planning");
+                    }
+                }
+            });
         }
     }
 

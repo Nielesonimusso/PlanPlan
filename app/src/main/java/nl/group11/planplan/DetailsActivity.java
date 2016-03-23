@@ -161,6 +161,17 @@ public class DetailsActivity extends AppCompatActivity
                 }
             }
         });
+
+        i.checkInPlanning(new APIHandler.Callback<Boolean>() {
+            @Override
+            public void onItem(Boolean result) {
+                if (result) {
+                    ((TextView) planningButton.getChildAt(0)).setText("Remove from planning");
+                } else {
+                    ((TextView) planningButton.getChildAt(0)).setText("Add to planning");
+                }
+            }
+        });
     }
 
     @Override

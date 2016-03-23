@@ -181,6 +181,7 @@ abstract public class Item implements View.OnClickListener, Comparable<Item> {
      */
     private void addGeneric(Firebase eventRef) {
         eventRef.child(Data.ID.toString()).setValue(getID());
+        eventRef.child(Data.ID.toString()).setValue(getID());
         eventRef.child(Data.TITLE.toString()).setValue(getTitle());
         eventRef.child(Data.TYPE.toString()).setValue(getType());
         eventRef.child(Data.ADDRESS.toString()).setValue(getAddress());
@@ -239,13 +240,8 @@ abstract public class Item implements View.OnClickListener, Comparable<Item> {
         databaseGeneric("favorites", false, callback);
     }
 
-    public void checkInPlanning() {
-        databaseGeneric("planning", false, new APIHandler.Callback<Boolean>() {
-            @Override
-            public void onItem(Boolean result) {
-
-            }
-        });
+    public void checkInPlanning(APIHandler.Callback<Boolean> callback) {
+        databaseGeneric("planning", false, callback);
     }
 
     /**
