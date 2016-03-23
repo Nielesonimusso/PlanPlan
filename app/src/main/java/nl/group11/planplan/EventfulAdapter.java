@@ -33,7 +33,7 @@ public class EventfulAdapter extends RecyclerView.Adapter<EventfulAdapter.ViewHo
         searchSource.addListener(this);
         this.context = context;
         imageCache = new ImageCache(context);
-        df = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        df = new SimpleDateFormat("yyyy/MM/dd HH:mm");
     }
 
     @Override

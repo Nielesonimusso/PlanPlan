@@ -37,17 +37,17 @@ import java.text.SimpleDateFormat;
 
 public class DetailsActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-    JSONObject json;
+    JSONObject json; //holds the JSON needed to build the item to be displayed.
     TextView titleText, dateText, descriptionText, priceText, addressText;
     CardView favoritesButton, planningButton;
     ImageView imgView;
     LinearLayout layout;
-    Item i;
+    Item i; //The item to be displayed
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SimpleDateFormat df = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        SimpleDateFormat df = new SimpleDateFormat("yyyy/MM/dd HH:mm");
         setContentView(R.layout.activity_details);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
