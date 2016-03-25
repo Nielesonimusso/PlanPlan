@@ -19,7 +19,7 @@ import android.view.WindowManager;
 
 //TODO comments
 
-public class PlanningActivity extends AppCompatActivity
+public class PlanningActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     @Override

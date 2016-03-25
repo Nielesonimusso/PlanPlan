@@ -12,9 +12,14 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by Anne on 22/03/2016.
@@ -33,6 +38,13 @@ public class AddDialog extends DialogFragment {
     RelativeLayout addLayout;
     final AddDialog addDialog = this;
 
+    Date userStart; // the user-specified start date
+    Date userEnd; // the user-specified end date
+    boolean add; // whether or not to add the item to planning
+    Calendar c; // the current date
+    Calendar startCal; // the start date of the event
+    Calendar endCal; // the end date of the event
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -43,24 +55,32 @@ public class AddDialog extends DialogFragment {
                     // When the user clicks add, add item to planning
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        // TODO: add item to planning
+                        // TODO: update strings to incorporate times as well
+                        String userStartTimeString = startDate.getText().toString();
+                        String userEndTimeString = endDate.getText().toString();
+
+                        userStart = formatDate(userStartTimeString);
+                        userEnd = formatDate(userEndTimeString);
+                        add = true;
+                        //((AddDialogCallback) getApplicationContext()).onValuesSet();
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        // When the user clicks cancel, close dialog
+                        // TODO: do not add item to planning
+                        add = false;
                         dialog.cancel();
                     }
                 })
                 .setView(addLayout);
         referenceUIElements();
-        setDatesAndTimes();
+        displayDatesAndTimes();
         addButtonListeners();
         return builder.create();
     }
 
-    /* Sets references to UI elements. */
+    /** Sets references to UI elements. */
     public void referenceUIElements() {
         startDate = (TextView)(addLayout.getChildAt(1));
         startDateButton = (Button) (addLayout.getChildAt(2));
@@ -73,25 +93,69 @@ public class AddDialog extends DialogFragment {
         duration = (TextView)(addLayout.getChildAt(13));
     }
 
-    /* Sets the initial dates and times. */
-    private void setDatesAndTimes() {
-        // TODO: get dates and times from Item and display them
-        // Currently the present day is shown and times are hard-coded in XML
-        final Calendar c = Calendar.getInstance();
-        int y = c.get(Calendar.YEAR);
-        int m = c.get(Calendar.MONTH);
-        int d = c.get(Calendar.DAY_OF_MONTH);
-
-        // Set current date into text view
-        startDate.setText(new StringBuilder()
-                .append(d).append("-").append(m).append("-")
-                .append(y));
-        endDate.setText(new StringBuilder()
-                .append(d).append("-").append(m).append("-")
-                .append(y));
+    /** Sets the dates and times to contain the item's dates and times. */
+    public void setDatesAndTimes(Date start, Date end) {
+        if (start != null) {
+            startCal = dateToCalendar(start);
+        }
+        if (end != null) {
+            endCal = dateToCalendar(end);
+        }
     }
 
-    /* Adds listeners for Change buttons. */
+    /** Sets the title to contain the item name. */
+    public void setTitle(String title) {
+        // TODO: implement setTitle
+        // I don't know how to do this. This is a null object reference:
+        // this.getDialog().setTitle("Add " + title + " to planning");
+        // And this too:
+        // getDialog().setTitle("Add " + title + " to planning");
+        // And this gives OutOfMemoryError:
+        // this.setTitle("Add " + title + " to planning");
+    }
+
+    /** Displays the initial dates and times. */
+    private void displayDatesAndTimes() {
+        c = Calendar.getInstance();
+
+        if (startCal != null) {
+            // Show item start date in start date/time text view
+            putDate(startDate, startTime, startCal);
+        } else {
+            // Show current date in start date/time text view
+            putDate(startDate, startTime, c);
+        }
+
+        if (endCal != null) {
+            // Show item end date in end date/time text view
+            putDate(endDate, endTime, endCal);
+        } else {
+            // Show current date in end date/time text view
+            putDate(endDate, endTime, c);
+        }
+    }
+
+    /** Puts a Calendar's dates and times in a TextView. */
+    private void putDate(TextView dateText, TextView timeText, Calendar c) {
+        int y = c.get(Calendar.YEAR);
+        int m = c.get(Calendar.MONTH) + 1;
+        int d = c.get(Calendar.DAY_OF_MONTH);
+        int hr = c.get(Calendar.HOUR_OF_DAY);
+        int min = c.get(Calendar.MINUTE);
+        String minute = Integer.toString(min);
+        if (min < 10) {
+            // Add leading 0
+            minute = "0" + minute;
+        }
+
+        dateText.setText(new StringBuilder()
+                .append(d).append("-").append(m).append("-")
+                .append(y));
+        timeText.setText(new StringBuilder()
+                .append(hr).append(":").append(minute));
+    }
+
+    /** Adds listeners for Change buttons. */
     private void addButtonListeners() {
         startDateButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -125,10 +189,46 @@ public class AddDialog extends DialogFragment {
         });
     }
 
+    /** Displays date picked on date picker in a text view. */
     public void setDate(TextView textView, int day, int month, int year) {
         textView.setText("" + Integer.toString(day) + "-" + Integer.toString(month) + "-" +
                 Integer.toString(year));
+        updateDuration();
+    }
+
+    /** Displays time picked on time picker in a text view. */
+    public void setTime() {
+        // TODO: implement
+    }
+
+    /** Sets duration text view to end - start. */
+    public void updateDuration() {
         // TODO: update duration text view
+    }
+
+    /** Converts string in dd-M-yyy format to be a Date object. */
+    // TODO: update to incorporate time as well
+    private Date formatDate(String string) {
+        DateFormat format = new SimpleDateFormat("dd-M-yyyy", Locale.ENGLISH);
+        Date date = null;
+        try {
+            date = format.parse(string);
+            System.out.println("The parsed date is " + date);
+        } catch (ParseException e) {
+            System.out.println("Parsing date exception" + e);
+        }
+        return date;
+    }
+
+    /** Changes date to calendar (date format is deprecated). */
+    public static Calendar dateToCalendar(Date date){
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        return cal;
+    }
+
+    public interface AddDialogCallback {
+        void onValuesSet();
     }
 
 }

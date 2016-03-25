@@ -24,7 +24,7 @@ import android.view.WindowManager;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FavoritesActivity extends AppCompatActivity
+public class FavoritesActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         RestaurantsFragment.OnFragmentInteractionListener,
         EventsFragment.OnFragmentInteractionListener,

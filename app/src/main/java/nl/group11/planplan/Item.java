@@ -1,8 +1,13 @@
 package nl.group11.planplan;
 
 import android.app.Activity;
+import android.app.Application;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatTextView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -164,9 +169,11 @@ abstract public class Item implements View.OnClickListener, Comparable<Item> {
         //get account
         String id = APIHandler.getAccount(context);
 
+        //TODO: open planning dialog and set user start time and user end time...
+        showAddDialog(getStartTime(), getEndTime(), getTitle());
+
         //create a new reference at the location of the new item entry
         Firebase eventRef = firebase.child(id).child("planning").child(getID());
-
 
         //set new data
         addGeneric(eventRef);
@@ -306,10 +313,21 @@ abstract public class Item implements View.OnClickListener, Comparable<Item> {
         this.userEndTime = d;
     }
 
+    void showAddDialog(Date start, Date end, String title) {
+        Activity currentActivity = ((PlanPlan)context.getApplicationContext()).getCurrentActivity();
+        FragmentTransaction trans = currentActivity.getFragmentManager().beginTransaction();
+        AddDialog newAddDialog = new AddDialog();
+        newAddDialog.setDatesAndTimes(start, end);
+        newAddDialog.setTitle(title);
+        newAddDialog.show(trans, "search");
+    }
+
     //TODO unittest
     abstract public JSONObject toJSON();
 
     public int compareTo(Item item) {
         return getStartTime().compareTo(item.getStartTime());
     }
+
+
 }
