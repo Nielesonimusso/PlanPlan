@@ -36,6 +36,8 @@ public class EventItem extends Item {
         //only for testing
         super(json, c);
         this.event = EventfulEvent.fromJSON(json);
+        userStartTime = event.getUserStartTime();
+        userEndTime = event.getUserStopTime();
     }
 
     @Override
@@ -108,8 +110,12 @@ public class EventItem extends Item {
         json.put("price", getPrice());
         json.put("start_time", getStartTime().getTime());
         json.put("stop_time", getEndTime().getTime());
-        json.put("user_start_time", getUserStartTime());
-        json.put("user_end_time", getUserEndTime());
+        if (getUserStartTime() !=null) {
+            json.put("user_start_time", getUserStartTime().getTime());
+        }
+        if (getUserEndTime() != null) {
+            json.put("user_end_time", getUserEndTime().getTime());
+        }
         json.put("image", event.getImagesObject());
         json.put("description", getDescription());
         json.put("venue_address",getAddress());

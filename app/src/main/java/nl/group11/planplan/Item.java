@@ -33,11 +33,15 @@ abstract public class Item implements View.OnClickListener, Comparable<Item> {
      */
     public Item(Context c) {
         context = c;
-        firebase = new Firebase("https://planplan.firebaseio.com/");
     }
     public Item(JSONObject json, Context c){
         context = c;
-        firebase = new Firebase("https://planplan.firebaseio.com/");
+    }
+
+    private void setFirebase() {
+        if (firebase == null) {
+            firebase = new Firebase("https://planplan.firebaseio.com/");
+        }
     }
 
     /**
@@ -149,7 +153,7 @@ abstract public class Item implements View.OnClickListener, Comparable<Item> {
     abstract public boolean hasPassed();
 
     public void addFavorite() {
-
+        setFirebase();
         //get account
         String id = APIHandler.getAccount(context);
 
@@ -161,6 +165,7 @@ abstract public class Item implements View.OnClickListener, Comparable<Item> {
     }
 
     public void addPlanning() {
+        setFirebase();
         //get account
         String id = APIHandler.getAccount(context);
 
@@ -193,12 +198,13 @@ abstract public class Item implements View.OnClickListener, Comparable<Item> {
     }
 
     public void removeFavorite() {
-
+        setFirebase();
         String id = APIHandler.getAccount(context);
         firebase.child(id).child("favorites").child(getType().toString()).child(getID()).removeValue();
     }
 
     public void removePlanning() {
+        setFirebase();
         String id = APIHandler.getAccount(context);
         firebase.child(id).child("planning").child(getID()).removeValue();
     }
@@ -206,6 +212,7 @@ abstract public class Item implements View.OnClickListener, Comparable<Item> {
     
 
     public void addRemoveFavorites(final TextView v) {
+        setFirebase();
         databaseGeneric("favorites", true, new APIHandler.Callback<Boolean>() {
             @Override
             public void onItem(Boolean result) {
@@ -222,6 +229,7 @@ abstract public class Item implements View.OnClickListener, Comparable<Item> {
     }
 
     public void addRemovePlanning(final TextView v) {
+        setFirebase();
         databaseGeneric("planning", true, new APIHandler.Callback<Boolean>() {
             @Override
             public void onItem(Boolean result) {
@@ -237,10 +245,12 @@ abstract public class Item implements View.OnClickListener, Comparable<Item> {
     }
 
     public void checkInFavorites(APIHandler.Callback<Boolean> callback) {
+        setFirebase();
         databaseGeneric("favorites", false, callback);
     }
 
     public void checkInPlanning(APIHandler.Callback<Boolean> callback) {
+        setFirebase();
         databaseGeneric("planning", false, callback);
     }
 

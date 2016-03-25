@@ -24,6 +24,10 @@ class EventfulEvent {
         return eventfulEvent;
     }
 
+    public JSONObject toJSON() {
+        return data;
+    }
+
     public String getTitle() {
         Object title = data.get("title");
 
