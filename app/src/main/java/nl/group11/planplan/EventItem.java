@@ -1,7 +1,6 @@
 package nl.group11.planplan;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
@@ -12,7 +11,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import org.json.JSONException;
 import org.json.simple.JSONObject;
 
 import java.text.SimpleDateFormat;

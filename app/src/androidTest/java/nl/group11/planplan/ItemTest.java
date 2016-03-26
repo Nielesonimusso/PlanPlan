@@ -1,16 +1,11 @@
 package nl.group11.planplan;
 
-import android.test.AndroidTestCase;
 import android.test.InstrumentationTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
-
-import com.firebase.client.Firebase;
 
 import org.json.simple.JSONObject;
 
 import java.util.Date;
-
-import dalvik.annotation.TestTarget;
 
 /**
  * Created by s140442 on 25/03/2016.
