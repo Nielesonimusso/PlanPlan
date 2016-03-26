@@ -1,8 +1,6 @@
 package nl.group11.planplan;
 
 import android.content.Context;
-import android.content.Intent;
-import android.view.View;
 
 import org.json.simple.JSONObject;
 

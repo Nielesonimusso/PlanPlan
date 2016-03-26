@@ -4,7 +4,6 @@ import org.joda.time.DateTime;
 import org.json.simple.JSONObject;
 
 import java.util.Date;
-import java.util.Iterator;
 import java.util.Map;
 
 /**

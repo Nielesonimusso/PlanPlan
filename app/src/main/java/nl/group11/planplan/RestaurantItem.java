@@ -2,8 +2,6 @@ package nl.group11.planplan;
 
 import android.content.Context;
 
-import com.google.android.gms.location.places.Place;
-
 import org.json.simple.JSONObject;
 
 /**
