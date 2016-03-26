@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * Created by s132054 on 16-3-2016.
  */
-public class GooglePlacesAdapter extends RecyclerView.Adapter<GooglePlacesAdapter.ViewHolder> implements APIHandler.Callback<List<GooglePlace>>, SearchAdapter {
+public class GooglePlacesAdapter extends ItemAdapter<PlaceViewHolder> implements APIHandler.Callback<List<GooglePlace>>, SearchAdapter {
 
     List<GooglePlace> places;
     ImageCache imageCache;
@@ -46,11 +46,12 @@ public class GooglePlacesAdapter extends RecyclerView.Adapter<GooglePlacesAdapte
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public PlaceViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         CardView cardView = (CardView) LayoutInflater.from(parent.getContext()).inflate(R.layout.item_place, parent, false);
-        return new ViewHolder(cardView);
+        return new PlaceViewHolder(cardView);
     }
 
+    @Override
     public int posOfID(String ID) {
         for (int i = 0; i < places.size(); i++) {
             if (places.get(i).getID().equals(ID)) {
@@ -62,63 +63,15 @@ public class GooglePlacesAdapter extends RecyclerView.Adapter<GooglePlacesAdapte
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void onBindViewHolder(final PlaceViewHolder holder, int position) {
         GooglePlace place = position < places.size() ? places.get(position) : null;
-        buildView(holder, place);
-    }
-
-    private void buildView(final ViewHolder holder, GooglePlace place) {
-        if (place == null) {
-            holder.title.setText("Loading...");
-            holder.description.setText("");
-            holder.price.setText("");
-            holder.image.setImageResource(R.drawable.imgnotfound);
-            holder.buttons.setVisibility(View.GONE);
+        GooglePlacesItem item;
+        if (place.getType().equals(Type.RESTAURANT)) {
+            item = new RestaurantItem(context, place);
         } else {
-            final GooglePlacesItem item;
-            if (place.getType().equals(Type.RESTAURANT)) {
-                item = new RestaurantItem(context, place);
-            } else {
-                item = new OtherItem(context, place);
-            }
-            holder.buttons.setVisibility(View.VISIBLE);
-            holder.title.setText(item.getTitle());
-            holder.description.setText(Html.fromHtml(item.getDescription()));
-            holder.description.setMovementMethod(LinkMovementMethod.getInstance());
-            holder.price.setText(Html.fromHtml(item.getPrice()));
-            holder.imgUrl = item.getImage();
-            holder.image.setImageBitmap(imageCache.setImageFromURL(item.getImage(), new APIHandler.Callback<Bitmap>() {
-                @Override
-                public void onItem(Bitmap result) {
-                    if (holder.imgUrl != null && holder.imgUrl.equals(item.getImage())) {
-                        holder.image.setImageBitmap(result);
-                    }
-                }
-            }));
-            holder.cardView.setOnClickListener(item);
-            holder.planningButton.setOnClickListener(item);
-            holder.favoritesButton.setOnClickListener(item);
-            item.checkInFavorites(new APIHandler.Callback<Boolean>() {
-                @Override
-                public void onItem(Boolean result) {
-                    if (result) {
-                        ((TextView) holder.favoritesButton.getChildAt(0)).setText("Remove from favorites");
-                    } else {
-                        ((TextView) holder.favoritesButton.getChildAt(0)).setText("Add to favorites");
-                    }
-                }
-            });
-            item.checkInPlanning(new APIHandler.Callback<Boolean>() {
-                @Override
-                public void onItem(Boolean result) {
-                    if (result) {
-                        ((TextView) holder.planningButton.getChildAt(0)).setText("Remove from planning");
-                    } else {
-                        ((TextView) holder.planningButton.getChildAt(0)).setText("Add to planning");
-                    }
-                }
-            });
+            item = new OtherItem(context, place);
         }
+        item.buildView(holder, imageCache);
     }
 
     @Override
@@ -134,30 +87,5 @@ public class GooglePlacesAdapter extends RecyclerView.Adapter<GooglePlacesAdapte
         places.addAll(result);
         //notifyItemRangeInserted(oldSize, newLength);
         notifyDataSetChanged();
-    }
-
-    class ViewHolder extends RecyclerView.ViewHolder {
-
-        CardView cardView, planningButton, favoritesButton;
-        TextView title, description, price, planningButtonLabel, favoritesButtonLabel;
-        ImageView image;
-        String imgUrl;
-        LinearLayout buttons;
-
-        public ViewHolder(CardView cardView) {
-            super(cardView);
-            this.cardView = cardView;
-            LinearLayout texts = (LinearLayout) cardView.getChildAt(0);
-            image = (ImageView) texts.getChildAt(0);
-            title = (TextView) texts.getChildAt(1);
-            price = (TextView) texts.getChildAt(2);
-            description = (TextView) texts.getChildAt(3);
-
-            buttons = (LinearLayout) texts.getChildAt(4);
-            favoritesButton = (CardView) buttons.getChildAt(0);
-            favoritesButtonLabel = (TextView) favoritesButton.getChildAt(0);
-            planningButton = (CardView) buttons.getChildAt(2);
-            planningButtonLabel = (TextView) planningButton.getChildAt(0);
-        }
     }
 }

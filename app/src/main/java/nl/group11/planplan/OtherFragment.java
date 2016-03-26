@@ -15,7 +15,7 @@ import android.view.ViewGroup;
 public class OtherFragment extends android.support.v4.app.Fragment implements SingleItemUpdateListener {
 
     private OnFragmentInteractionListener mListener;
-    GooglePlacesAdapter adapter;
+    ItemAdapter adapter;
 
     /**
      * Use this factory method to create a new instance of
@@ -68,12 +68,14 @@ public class OtherFragment extends android.support.v4.app.Fragment implements Si
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        final RecyclerView recyclerView = (RecyclerView) getActivity().findViewById(R.id.otherRecycler);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         if (!(this instanceof OtherFragmentFav)) {
-            final RecyclerView recyclerView = (RecyclerView) getActivity().findViewById(R.id.otherRecycler);
-            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
             adapter = new GooglePlacesAdapter(getActivity(), HomeActivity.location, HomeActivity.radius * 1000, "night_club");
-            recyclerView.setAdapter(adapter);
+        } else {
+            adapter = new FirebaseAdapter(getActivity(), Type.OTHER);
         }
+        recyclerView.setAdapter(adapter);
     }
 
     @Override

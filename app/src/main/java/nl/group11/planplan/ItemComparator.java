@@ -16,6 +16,14 @@ public class ItemComparator implements Comparator<Item> {
      */
     @Override
     public int compare(Item lhs, Item rhs) {
-        return (lhs).compareTo(rhs);
+        if (lhs == null && rhs == null) {
+            return 0;
+        } else if (lhs == null) {
+            return -1;
+        } else if (rhs == null) {
+            return 1;
+        } else {
+            return (lhs).compareTo(rhs);
+        }
     }
 }

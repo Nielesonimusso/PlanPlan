@@ -3,7 +3,9 @@ package nl.group11.planplan;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatTextView;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -32,9 +34,6 @@ abstract public class Item implements View.OnClickListener, Comparable<Item> {
      * type
      */
     public Item(Context c) {
-        context = c;
-    }
-    public Item(JSONObject json, Context c){
         context = c;
     }
 
@@ -185,7 +184,8 @@ abstract public class Item implements View.OnClickListener, Comparable<Item> {
      *                 where the data has to be added.
      */
     private void addGeneric(Firebase eventRef) {
-        eventRef.child(Data.ID.toString()).setValue(getID());
+        eventRef.setValue(toJSON());
+        /*
         eventRef.child(Data.ID.toString()).setValue(getID());
         eventRef.child(Data.TITLE.toString()).setValue(getTitle());
         eventRef.child(Data.TYPE.toString()).setValue(getType());
@@ -195,6 +195,7 @@ abstract public class Item implements View.OnClickListener, Comparable<Item> {
         eventRef.child(Data.ENDTIME.toString()).setValue(getEndTime());
         eventRef.child(Data.IMAGE.toString()).setValue(getImage());
         eventRef.child(Data.PRICE.toString()).setValue(getPrice());
+        */
     }
 
     public void removeFavorite() {
@@ -216,13 +217,18 @@ abstract public class Item implements View.OnClickListener, Comparable<Item> {
         databaseGeneric("favorites", true, new APIHandler.Callback<Boolean>() {
             @Override
             public void onItem(Boolean result) {
-                if (v != null) {
-                    if (result) {
-                        v.setText("Add to favorites");
-                    } else {
-                        v.setText("Remove from favorites");
+                databaseGeneric("favorites", false, new APIHandler.Callback<Boolean>() {
+                    @Override
+                    public void onItem(Boolean result) {
+                        if (v != null) {
+                            if (result) {
+                                v.setText("Remove from favorites");
+                            } else {
+                                v.setText("Add to favorites");
+                            }
+                        }
                     }
-                }
+                });
             }
         });
 
@@ -233,13 +239,18 @@ abstract public class Item implements View.OnClickListener, Comparable<Item> {
         databaseGeneric("planning", true, new APIHandler.Callback<Boolean>() {
             @Override
             public void onItem(Boolean result) {
-                if (v != null) {
-                    if (result) {
-                        v.setText("Add to planning");
-                    } else {
-                        v.setText("Remove from planning");
+                databaseGeneric("planning", false, new APIHandler.Callback<Boolean>() {
+                    @Override
+                    public void onItem(Boolean result) {
+                        if (v != null) {
+                            if (result) {
+                                v.setText("Remove from planning");
+                            } else {
+                                v.setText("Add to planning");
+                            }
+                        }
                     }
-                }
+                });
             }
         });
     }
@@ -279,9 +290,8 @@ abstract public class Item implements View.OnClickListener, Comparable<Item> {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 //check whether the item exists
-                inGeneric[0] = dataSnapshot.child(Data.ID.toString()).exists();
+                inGeneric[0] = dataSnapshot.exists();
                 System.out.println("in database: getItem: " + inGeneric[0] + " - " + dataSnapshot.child(Data.ID.toString()));
-                callback.onItem(inGeneric[0]);
 
                 //add if add
                 if (add) {
@@ -299,6 +309,8 @@ abstract public class Item implements View.OnClickListener, Comparable<Item> {
                         }
                     }
                 }
+
+                callback.onItem(inGeneric[0]);
             }
 
             @Override
@@ -319,7 +331,9 @@ abstract public class Item implements View.OnClickListener, Comparable<Item> {
     //TODO unittest
     abstract public JSONObject toJSON();
 
+    abstract void buildView(RecyclerView.ViewHolder holder, ImageCache imageCache);
+
     public int compareTo(Item item) {
-        return getStartTime().compareTo(item.getStartTime());
+        return getTitle().compareTo(item.getTitle());
     }
 }

@@ -12,6 +12,7 @@ import android.text.format.DateUtils;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
+import com.firebase.client.GenericTypeIndicator;
 import com.firebase.client.ValueEventListener;
 
 import org.joda.time.DateTime;
@@ -269,30 +270,8 @@ public class APIHandler {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 ArrayList<Item> itemList = new ArrayList<Item>();
 
-                for(DataSnapshot key : dataSnapshot.getChildren()) {
-                    JSONObject json = new JSONObject();
-                    String type = (String) key.child(Data.TYPE.toString()).getValue();
-                    json.put("id", (String) key.child(Data.ID.toString()).getValue());
-                    json.put("title", (String) key.child(Data.TITLE.toString()).getValue());
-                    json.put("type", type);
-                    json.put("price", (String)  key.child(Data.PRICE.toString()).getValue());
-                    json.put("start_time", (String) key.child(Data.STARTTIME.toString()).getValue());
-                    json.put("stop_time", (String) key.child(Data.ENDTIME.toString()).getValue());
-                    json.put("user_start_time", (String) key.child(Data.USERSTARTTIME.toString()).getValue());
-                    json.put("user_end_time", (String) key.child(Data.USERENDTIME.toString()).getValue());
-                    json.put("image", (String) key.child(Data.IMAGE.toString()).getValue());
-                    json.put("description", (String) key.child(Data.DESCRIPTION.toString()).getValue());
-                    json.put("venue_address", (String) key.child(Data.ADDRESS.toString()).getValue());
-
-                    Item item;
-                    if (type.equals(Type.EVENT.toString())) {
-                        item = new EventItem(json, context);
-                    } else if (type.equals(Type.RESTAURANT)) {
-                        item = new RestaurantItem(json, context);
-                    } else {
-                        item = new OtherItem(json, context);
-                    }
-
+                for (DataSnapshot key : dataSnapshot.getChildren()) {
+                    Item item = snapshotToItem(key, context);
                     if (item.hasPassed()) {
                         key.getRef().removeValue();
                     } else {
@@ -308,6 +287,37 @@ public class APIHandler {
                 firebaseError.toException().printStackTrace();
             }
         });
+    }
+
+    public static Item snapshotToItem(DataSnapshot snapshot, Context context) {
+        GenericTypeIndicator<Map<String, Object>> t = new GenericTypeIndicator<Map<String, Object>>() {};
+        JSONObject json = new JSONObject(snapshot.getValue(t));
+        /*
+        String type = (String) snapshot.child(Data.TYPE.toString()).getValue();
+        json.put("id", (String) snapshot.child(Data.ID.toString()).getValue());
+        json.put("title", (String) snapshot.child(Data.TITLE.toString()).getValue());
+        json.put("type", type);
+        json.put("price", (String) snapshot.child(Data.PRICE.toString()).getValue());
+        json.put("start_time", String.valueOf(snapshot.child(Data.STARTTIME.toString()).getValue()));
+        json.put("stop_time", String.valueOf(snapshot.child(Data.ENDTIME.toString()).getValue()));
+        json.put("user_start_time", (String) snapshot.child(Data.USERSTARTTIME.toString()).getValue());
+        json.put("user_end_time", (String) snapshot.child(Data.USERENDTIME.toString()).getValue());
+        json.put("image", (String) snapshot.child(Data.IMAGE.toString()).getValue());
+        json.put("description", (String) snapshot.child(Data.DESCRIPTION.toString()).getValue());
+        json.put("venue_address", (String) snapshot.child(Data.ADDRESS.toString()).getValue());
+        */
+        System.out.println(json.toJSONString());
+
+        Item item;
+        String type = json.get("type").toString();
+        if (type.equals(Type.EVENT.toString())) {
+            item = new EventItem(json, context);
+        } else if (type.equals(Type.RESTAURANT.toString())) {
+            item = new RestaurantItem(json, context);
+        } else {
+            item = new OtherItem(json, context);
+        }
+        return item;
     }
 }
 

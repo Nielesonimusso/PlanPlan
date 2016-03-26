@@ -25,7 +25,10 @@ class GooglePlace {
     public String getName() {
         Object name = data.get("name");
         if (name == null) {
-            return "No title available";
+            name = data.get("title");
+            if (name == null) { //HOTFIX for proper saving to Firebase
+                return "No title available";
+            }
         }
         return name.toString();
     }
@@ -74,7 +77,10 @@ class GooglePlace {
     public String getImage() {
         Object image = data.get("icon");
         if (image == null) {
-            return null;
+            image = data.get("image");
+            if (image == null) { //HOTFIX for proper saving to Firebase
+                return null;
+            }
         }
         return image.toString();
     }

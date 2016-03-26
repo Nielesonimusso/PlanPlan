@@ -112,8 +112,9 @@ class EventfulEvent {
      * @return Largest image in the query result
      */
     public String getImage() {
-        JSONObject imgJSON = (JSONObject) data.get("image");
-        if (imgJSON != null) {
+        //System.out.println(data.get("image").getClass());
+        if (data.get("image") instanceof Map) {
+            Map<String, Object> imgJSON = (Map<String, Object>) data.get("image");
             //System.out.println("getting image url for event " + getTitle());
             //System.out.println(imgJSON.toJSONString());
             String biggestUrl = "";
@@ -125,13 +126,15 @@ class EventfulEvent {
                 if (entry.getKey().equals("url")) {
                     biggestUrl = Integer.valueOf(imgJSON.get("width").toString()) > biggestDim ? entry.getValue().toString() : biggestUrl;
                     biggestDim = Math.max(biggestDim, Integer.valueOf(imgJSON.get("width").toString()));
-                } else if (entry.getValue() instanceof JSONObject) {
-                    JSONObject imgRef = (JSONObject) entry.getValue();
+                } else if (entry.getValue() instanceof Map) {
+                    Map<String, Object> imgRef = (Map<String, Object>) entry.getValue();
                     biggestUrl = Integer.valueOf(imgRef.get("width").toString()) > biggestDim ? imgRef.get("url").toString() : biggestUrl;
                     biggestDim = Math.max(biggestDim, Integer.valueOf(imgRef.get("width").toString()));
                 }
             }
             return biggestUrl;
+        } else if (data.get("image") instanceof String) { //HOTFIX for proper saving to Firebase
+            return data.get("image").toString();
         } else {
             return null;
         }

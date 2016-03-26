@@ -17,7 +17,7 @@ import android.view.ViewGroup;
 public class EventsFragment extends android.support.v4.app.Fragment implements SingleItemUpdateListener {
 
     private OnFragmentInteractionListener mListener;
-    EventfulAdapter adapter;
+    ItemAdapter adapter;
 
     /**
      * Use this factory method to create a new instance of
@@ -69,12 +69,14 @@ public class EventsFragment extends android.support.v4.app.Fragment implements S
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        RecyclerView recyclerView = (RecyclerView) getActivity().findViewById(R.id.eventsRecycler);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         if (!(this instanceof EventsFragmentFav)) {
-            RecyclerView recyclerView = (RecyclerView) getActivity().findViewById(R.id.eventsRecycler);
-            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
             adapter = new EventfulAdapter(getActivity(), new EventfulDynamicSearch(HomeActivity.location, HomeActivity.radius));
-            recyclerView.setAdapter(adapter);
+        } else {
+            adapter = new FirebaseAdapter(getActivity(), Type.EVENT);
         }
+        recyclerView.setAdapter(adapter);
     }
 
     @Override
