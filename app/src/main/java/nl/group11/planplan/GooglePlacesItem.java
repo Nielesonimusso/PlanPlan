@@ -146,8 +146,12 @@ abstract public class GooglePlacesItem extends Item {
         json.put("name", getTitle());
         json.put("type",getType().toString());
         json.put("price_level", place.getPriceLevel());
-        json.put("user_start_time", getUserStartTime().getTime());
-        json.put("user_end_time", getUserEndTime().getTime());
+        if (getUserStartTime() !=null) {
+            json.put("user_start_time", getUserStartTime().getTime());
+        }
+        if (getUserEndTime() != null) {
+            json.put("user_end_time", getUserEndTime().getTime());
+        }
         json.put("icon", getImage());
         json.put("vicinity",getAddress());
         return json;
