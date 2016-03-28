@@ -222,6 +222,8 @@ public class DetailsActivity extends AppCompatActivity
 
         if (id == R.id.nav_home) {
             // Go to home activity
+            Intent intent = new Intent(this, HomeActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_favorites) {
             // Go to favorites activity
             Intent intent = new Intent(this, FavoritesActivity.class);
