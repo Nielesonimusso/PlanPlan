@@ -1,6 +1,7 @@
 package nl.group11.planplan;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Application;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -29,6 +30,7 @@ abstract public class Item implements View.OnClickListener, Comparable<Item> {
     Date userStartTime, userEndTime;
     Firebase firebase;
     Context context;
+    boolean toAddToPlanning = true; // TODO implement callback and do not hard-code value
 
     /**
      * Extracts data from the API and saves it in this object
@@ -168,17 +170,19 @@ abstract public class Item implements View.OnClickListener, Comparable<Item> {
     public void addPlanning() {
         //get account
         String id = APIHandler.getAccount(context);
-
-        //TODO: open planning dialog and set user start time and user end time...
+        // open add dialog with start time, end time, and title set
         showAddDialog(getStartTime(), getEndTime(), getTitle());
 
-        //create a new reference at the location of the new item entry
-        Firebase eventRef = firebase.child(id).child("planning").child(getID());
+        // Only add to planning if user pressed OK with valid values
+        if (toAddToPlanning) {
+            //create a new reference at the location of the new item entry
+            Firebase eventRef = firebase.child(id).child("planning").child(getID());
 
-        //set new data
-        addGeneric(eventRef);
-        eventRef.child(Data.USERSTARTTIME.toString()).setValue(getUserStartTime());
-        eventRef.child(Data.USERENDTIME.toString()).setValue(getUserEndTime());
+            //set new data
+            addGeneric(eventRef);
+            eventRef.child(Data.USERSTARTTIME.toString()).setValue(getUserStartTime());
+            eventRef.child(Data.USERENDTIME.toString()).setValue(getUserEndTime());
+        }
     }
 
     /**
@@ -200,7 +204,6 @@ abstract public class Item implements View.OnClickListener, Comparable<Item> {
     }
 
     public void removeFavorite() {
-
         String id = APIHandler.getAccount(context);
         firebase.child(id).child("favorites").child(getType().toString()).child(getID()).removeValue();
     }
@@ -209,8 +212,6 @@ abstract public class Item implements View.OnClickListener, Comparable<Item> {
         String id = APIHandler.getAccount(context);
         firebase.child(id).child("planning").child(getID()).removeValue();
     }
-
-    
 
     public void addRemoveFavorites(final TextView v) {
         databaseGeneric("favorites", true, new APIHandler.Callback<Boolean>() {
@@ -320,6 +321,15 @@ abstract public class Item implements View.OnClickListener, Comparable<Item> {
         newAddDialog.setDatesAndTimes(start, end);
         newAddDialog.setTitle(title);
         newAddDialog.show(trans, "search");
+        /* Iets met een callback dat niet werkt :)
+        newAddDialog.setDialogResult(new AddDialog.DialogResult() {
+            public void finish(Date startResult, Date endResult, boolean toAdd) {
+                userStartTime = startResult;
+                userEndTime = endResult;
+                toAddToPlanning = toAdd;
+            }
+        });
+        */
     }
 
     //TODO unittest

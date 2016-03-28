@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -38,6 +39,9 @@ public class AddDialog extends DialogFragment {
     Button endTimeButton;
     RelativeLayout addLayout;
     final AddDialog addDialog = this;
+    Dialog dialog;
+
+    DialogResult dialogResult; // callback
 
     Date userStart; // the user-specified start date
     Date userEnd; // the user-specified end date
@@ -49,28 +53,54 @@ public class AddDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        LayoutInflater li = getActivity().getLayoutInflater();;
-        addLayout = (RelativeLayout) li.inflate(R.layout.dialog_add, null);
+        LayoutInflater inflater = LayoutInflater.from(getActivity());
+        //LayoutInflater li = getActivity().getLayoutInflater();;
+        addLayout = (RelativeLayout) inflater.inflate(R.layout.dialog_add, null);
         builder.setTitle("Add to planning (test)")
                 .setPositiveButton("Add", new DialogInterface.OnClickListener() {
-                    // When the user clicks add, add item to planning
+                    // When the user clicks add, validate input and add item to planning
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        // TODO: update strings to incorporate times as well
-                        String userStartTimeString = startDate.getText().toString();
-                        String userEndTimeString = endDate.getText().toString();
 
-                        userStart = formatDate(userStartTimeString);
-                        userEnd = formatDate(userEndTimeString);
-                        add = true;
-                        //((AddDialogCallback) getApplicationContext()).onValuesSet();
+                        String userStartDateString = startDate.getText().toString();
+                        String userEndDateString = endDate.getText().toString();
+                        String userStartTimeString = startTime.getText().toString();
+                        String userEndTimeString = endTime.getText().toString();
+                        String userStartString = userStartDateString + " " + userStartTimeString;
+                        String userEndString = userEndDateString + " " + userEndTimeString;
+
+                        userStart = formatDate(userStartString);
+                        userEnd = formatDate(userEndString);
+
+                        if (userEnd.before(userStart)) {
+                            // The end date is after the start date; invalid, do not add to planning
+                            add = false;
+                            CharSequence warning = "Not added to planning. The end date and time " +
+                                    "must be after the start date and time.";
+                            Toast.makeText(getActivity(), warning, Toast.LENGTH_LONG).show();
+                            // This closes the fragment. Tried to fix this by adding a custom
+                            // button listener and leaving this blank, but getButton(int)
+                            // cannot be resolved... I don't know why. TODO don't close fragment.
+                            dialog.cancel();
+                        } else {
+                            // Valid dates. Add to planning
+                            add = true;
+                        }
+                        // TODO add item to planning. This callback stuff isn't working
+                        if (dialogResult != null) {
+                            dialogResult.finish(userStart, userEnd, add);
+                        }
                     }
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        // TODO: do not add item to planning
+                        // Do not add item to planning
                         add = false;
+                        // TODO don't add item to planning. This callback stuff isn't working
+                        if (dialogResult != null) {
+                            dialogResult.finish(userStart, userEnd, add);
+                        }
                         dialog.cancel();
                     }
                 })
@@ -78,7 +108,8 @@ public class AddDialog extends DialogFragment {
         referenceUIElements();
         displayDatesAndTimes();
         addButtonListeners();
-        return builder.create();
+        dialog = builder.create();
+        return dialog;
     }
 
     /** Sets references to UI elements. */
@@ -213,10 +244,10 @@ public class AddDialog extends DialogFragment {
         // TODO: update duration text view
     }
 
-    /** Converts string in dd-M-yyy format to be a Date object. */
+    /** Converts string in dd-M-yyyy hh:mm format to be a Date object. */
     // TODO: update to incorporate time as well
     private Date formatDate(String string) {
-        DateFormat format = new SimpleDateFormat("dd-M-yyyy", Locale.ENGLISH);
+        DateFormat format = new SimpleDateFormat("dd-M-yyyy HH:mm", Locale.ENGLISH);
         Date date = null;
         try {
             date = format.parse(string);
@@ -234,8 +265,12 @@ public class AddDialog extends DialogFragment {
         return cal;
     }
 
-    public interface AddDialogCallback {
-        void onValuesSet();
+    /* Iets met een callback dat niet werkt :) Zie ook Item class setDialogResult */
+    public void setDialogResult(DialogResult dr) {
+        dialogResult = dr;
+    }
+    public interface DialogResult {
+        void finish(Date startResult, Date endResult, boolean toAdd);
     }
 
 }
