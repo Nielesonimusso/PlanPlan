@@ -267,7 +267,6 @@ public class APIHandler {
                         itemList.add(item);
                     }
                 }
-                Collections.sort(itemList, new ItemComparator());
                 callback.onItem(itemList);
             }
 

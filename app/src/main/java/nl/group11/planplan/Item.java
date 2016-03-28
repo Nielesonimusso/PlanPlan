@@ -173,8 +173,6 @@ abstract public class Item implements View.OnClickListener, Comparable<Item> {
 
         //set new data
         addGeneric(eventRef);
-        eventRef.child(Data.USERSTARTTIME.toString()).setValue(getUserStartTime());
-        eventRef.child(Data.USERENDTIME.toString()).setValue(getUserEndTime());
     }
 
     /**
@@ -333,6 +331,6 @@ abstract public class Item implements View.OnClickListener, Comparable<Item> {
     abstract void buildView(RecyclerView.ViewHolder holder, ImageCache imageCache);
 
     public int compareTo(Item item) {
-        return getTitle().compareTo(item.getTitle());
+        return getUserStartTime().compareTo(item.getUserStartTime());
     }
 }
