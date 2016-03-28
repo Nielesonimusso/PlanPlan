@@ -6,4 +6,5 @@
     <color name="colorAccent">#ffb6cf</color>
     <color name="colorBlack">#000000</color>
     <color name="colorGrayedOut">#CCCCCC</color>
+    <color name="colorAccentDark">#99264D</color>
 </resources>
