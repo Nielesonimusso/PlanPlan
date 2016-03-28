@@ -172,6 +172,7 @@ abstract public class GooglePlacesItem extends Item {
         } else {
             holder.buttons.setVisibility(View.VISIBLE);
             holder.title.setText(this.getTitle());
+            holder.time.setText("Mo-Fri 09:00-22:00");
             holder.description.setText(Html.fromHtml(this.getDescription()));
             holder.description.setMovementMethod(LinkMovementMethod.getInstance());
             holder.price.setText(Html.fromHtml(this.getPrice()));
@@ -215,7 +216,7 @@ abstract public class GooglePlacesItem extends Item {
 class PlaceViewHolder extends RecyclerView.ViewHolder {
 
     CardView cardView, planningButton, favoritesButton;
-    TextView title, description, price, planningButtonLabel, favoritesButtonLabel;
+    TextView title, time, description, price, planningButtonLabel, favoritesButtonLabel;
     ImageView image;
     String imgUrl;
     LinearLayout buttons;
@@ -226,10 +227,11 @@ class PlaceViewHolder extends RecyclerView.ViewHolder {
         LinearLayout texts = (LinearLayout) cardView.getChildAt(0);
         image = (ImageView) texts.getChildAt(0);
         title = (TextView) texts.getChildAt(1);
-        price = (TextView) texts.getChildAt(2);
-        description = (TextView) texts.getChildAt(3);
+        time = (TextView) texts.getChildAt(2);
+        price = (TextView) texts.getChildAt(3);
+        description = (TextView) texts.getChildAt(4);
 
-        buttons = (LinearLayout) texts.getChildAt(4);
+        buttons = (LinearLayout) texts.getChildAt(5);
         favoritesButton = (CardView) buttons.getChildAt(0);
         favoritesButtonLabel = (TextView) favoritesButton.getChildAt(0);
         planningButton = (CardView) buttons.getChildAt(2);

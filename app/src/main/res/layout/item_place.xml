@@ -25,7 +25,14 @@
             android:layout_margin="10dp"
             android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large"
             android:text="title"/>
-
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
+            android:textAppearance="@android:style/TextAppearance.DeviceDefault.Small"
+            android:textStyle="italic"
+            android:text="time" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
