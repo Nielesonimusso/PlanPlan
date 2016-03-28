@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,9 +28,9 @@ import java.util.Locale;
 public class AddDialog extends DialogFragment {
 
     TextView startDate;
-    TextView startTime;
+    public static TextView startTime;
     TextView endDate;
-    TextView endTime;
+    public static TextView endTime;
     TextView duration;
     Button startDateButton;
     Button endDateButton;
@@ -170,6 +171,9 @@ public class AddDialog extends DialogFragment {
         startTimeButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Open start time picker
+                TimePickerDialog.changeStartTime = Boolean.TRUE;
+                Intent intent = new Intent(getActivity().getApplicationContext(), TimePickerDialog.class);
+                startActivity(intent);
             }
         });
         endDateButton.setOnClickListener(new View.OnClickListener() {
@@ -185,6 +189,9 @@ public class AddDialog extends DialogFragment {
         endTimeButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Open end time picker
+                TimePickerDialog.changeStartTime = Boolean.FALSE;
+                Intent intent = new Intent(getActivity().getApplicationContext(), TimePickerDialog.class);
+                startActivity(intent);
             }
         });
     }
