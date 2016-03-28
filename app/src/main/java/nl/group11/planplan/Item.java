@@ -30,6 +30,7 @@ abstract public class Item implements View.OnClickListener, Comparable<Item> {
     Date userStartTime, userEndTime;
     Firebase firebase;
     Context context;
+    AddDialog newAddDialog;
     boolean toAddToPlanning = true; // TODO implement callback and do not hard-code value
 
     /**
@@ -168,21 +169,14 @@ abstract public class Item implements View.OnClickListener, Comparable<Item> {
     }
 
     public void addPlanning() {
-        //get account
         String id = APIHandler.getAccount(context);
-        // open add dialog with start time, end time, and title set
-        showAddDialog(getStartTime(), getEndTime(), getTitle());
+        //create a new reference at the location of the new item entry
+        Firebase eventRef = firebase.child(id).child("planning").child(getID());
 
-        // Only add to planning if user pressed OK with valid values
-        if (toAddToPlanning) {
-            //create a new reference at the location of the new item entry
-            Firebase eventRef = firebase.child(id).child("planning").child(getID());
-
-            //set new data
-            addGeneric(eventRef);
-            eventRef.child(Data.USERSTARTTIME.toString()).setValue(getUserStartTime());
-            eventRef.child(Data.USERENDTIME.toString()).setValue(getUserEndTime());
-        }
+        //set new data
+        addGeneric(eventRef);
+        eventRef.child(Data.USERSTARTTIME.toString()).setValue(getUserStartTime());
+        eventRef.child(Data.USERENDTIME.toString()).setValue(getUserEndTime());
     }
 
     /**
@@ -230,15 +224,46 @@ abstract public class Item implements View.OnClickListener, Comparable<Item> {
     }
 
     public void addRemovePlanning(final TextView v) {
-        databaseGeneric("planning", true, new APIHandler.Callback<Boolean>() {
+        checkInPlanning(new APIHandler.Callback<Boolean>() {
             @Override
             public void onItem(Boolean result) {
-                if (v != null) {
-                    if (result) {
-                        v.setText("Add to planning");
-                    } else {
-                        v.setText("Remove from planning");
-                    }
+                if (!result) {
+                    showAddDialog(getStartTime(), getEndTime(), getTitle());
+                    newAddDialog.setDialogResult(new AddDialog.DialogResult() {
+
+                        @Override
+                        public void finish(Date startResult, Date endResult, boolean toAdd) {
+                            userStartTime = startResult;
+                            userEndTime = endResult;
+                            if (toAdd) {
+                                databaseGeneric("planning", true, new APIHandler.Callback<Boolean>() {
+                                    @Override
+                                    public void onItem(Boolean result) {
+                                        if (v != null) {
+                                            if (result) {
+                                                v.setText("Add to planning");
+                                            } else {
+                                                v.setText("Remove from planning");
+                                            }
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                    });
+                } else {
+                    databaseGeneric("planning", true, new APIHandler.Callback<Boolean>() {
+                        @Override
+                        public void onItem(Boolean result) {
+                            if (v != null) {
+                                if (result) {
+                                    v.setText("Add to planning");
+                                } else {
+                                    v.setText("Remove from planning");
+                                }
+                            }
+                        }
+                    });
                 }
             }
         });
@@ -317,19 +342,12 @@ abstract public class Item implements View.OnClickListener, Comparable<Item> {
     void showAddDialog(Date start, Date end, String title) {
         Activity currentActivity = ((PlanPlan)context.getApplicationContext()).getCurrentActivity();
         FragmentTransaction trans = currentActivity.getFragmentManager().beginTransaction();
-        AddDialog newAddDialog = new AddDialog();
+        newAddDialog = new AddDialog();
         newAddDialog.setDatesAndTimes(start, end);
         newAddDialog.setTitle(title);
         newAddDialog.show(trans, "search");
-        /* Iets met een callback dat niet werkt :)
-        newAddDialog.setDialogResult(new AddDialog.DialogResult() {
-            public void finish(Date startResult, Date endResult, boolean toAdd) {
-                userStartTime = startResult;
-                userEndTime = endResult;
-                toAddToPlanning = toAdd;
-            }
-        });
-        */
+
+
     }
 
     //TODO unittest
