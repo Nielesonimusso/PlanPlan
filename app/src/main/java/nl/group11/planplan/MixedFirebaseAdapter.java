@@ -76,6 +76,7 @@ public class MixedFirebaseAdapter extends ItemAdapter<RecyclerView.ViewHolder> i
 
     @Override
     public void onItem(ArrayList<Item> result) {
+        Collections.sort(result, new ItemComparator());
         cache = result;
         notifyDataSetChanged();
     }

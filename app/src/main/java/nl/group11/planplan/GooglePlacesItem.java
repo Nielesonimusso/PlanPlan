@@ -30,8 +30,8 @@ abstract public class GooglePlacesItem extends Item {
         //only for testing
         super(c);
         this.place = GooglePlace.fromJSON(json);
-        userStartTime = place.getUserStartTime();
-        userEndTime = place.getUserStopTime();
+        setUserStartTime(place.getUserStartTime());
+        setUserEndTime(place.getUserStopTime());
     }
 
     @Override
