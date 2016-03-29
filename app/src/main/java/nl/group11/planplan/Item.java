@@ -31,7 +31,6 @@ abstract public class Item implements View.OnClickListener, Comparable<Item> {
     Firebase firebase;
     Context context;
     AddDialog newAddDialog;
-    boolean toAddToPlanning = true; // TODO implement callback and do not hard-code value
 
     /**
      * Extracts data from the API and saves it in this object
