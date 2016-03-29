@@ -5,7 +5,6 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,10 +16,8 @@ import android.widget.Toast;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 /**
@@ -29,9 +26,9 @@ import java.util.Locale;
 public class AddDialog extends DialogFragment {
 
     TextView startDate;
-    public static TextView startTime;
+    public TextView startTime;
     TextView endDate;
-    public static TextView endTime;
+    public TextView endTime;
     TextView duration;
     Button startDateButton;
     Button endDateButton;
@@ -198,7 +195,7 @@ public class AddDialog extends DialogFragment {
             public void onClick(View v) {
                 // Open start date picker
                 FragmentTransaction trans = getFragmentManager().beginTransaction();
-                DatePickerDialog startDatePicker = new DatePickerDialog();
+                DatePickerFragment startDatePicker = new DatePickerFragment();
                 startDatePicker.setAddDialog(addDialog);
                 startDatePicker.setTextView(startDate);
                 startDatePicker.show(trans, "Start date picker");
@@ -207,16 +204,18 @@ public class AddDialog extends DialogFragment {
         startTimeButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Open start time picker
-                TimePickerDialog.changeStartTime = Boolean.TRUE;
-                Intent intent = new Intent(getActivity().getApplicationContext(), TimePickerDialog.class);
-                startActivity(intent);
+                FragmentTransaction trans = getFragmentManager().beginTransaction();
+                TimePickerFragment startTimePicker = new TimePickerFragment();
+                startTimePicker.setAddDialog(addDialog);
+                startTimePicker.setTextView(startTime);
+                startTimePicker.show(trans, "Start time picker");
             }
         });
         endDateButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Open end date picker
                 FragmentTransaction trans = getFragmentManager().beginTransaction();
-                DatePickerDialog endDatePicker = new DatePickerDialog();
+                DatePickerFragment endDatePicker = new DatePickerFragment();
                 endDatePicker.setAddDialog(addDialog);
                 endDatePicker.setTextView(endDate);
                 endDatePicker.show(trans, "End date picker");
@@ -225,9 +224,11 @@ public class AddDialog extends DialogFragment {
         endTimeButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Open end time picker
-                TimePickerDialog.changeStartTime = Boolean.FALSE;
-                Intent intent = new Intent(getActivity().getApplicationContext(), TimePickerDialog.class);
-                startActivity(intent);
+                FragmentTransaction trans = getFragmentManager().beginTransaction();
+                TimePickerFragment startTimePicker = new TimePickerFragment();
+                startTimePicker.setAddDialog(addDialog);
+                startTimePicker.setTextView(endTime);
+                startTimePicker.show(trans, "End time picker");
             }
         });
     }
@@ -237,6 +238,12 @@ public class AddDialog extends DialogFragment {
         textView.setText("" + Integer.toString(day) + "-" + Integer.toString(month) + "-" +
                 Integer.toString(year));
         updateDuration();
+    }
+
+    public void setTime(TextView textView, int hour, int min) {
+        String hourStr = hour < 10 ? "0" + hour : String.valueOf(hour);
+        String minStr = min < 10 ? "0" + min : String.valueOf(min);
+        textView.setText(hourStr + ":" + minStr);
     }
 
     /** Sets duration text view to end - start. */

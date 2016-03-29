@@ -45,7 +45,7 @@
             android:label="Details"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
-        android:name=".TimePickerDialog"
+        android:name=".TimePickerFragment"
         android:label="Pick your time"
         android:theme="@android:style/Theme.Dialog"></activity>
     </application>
