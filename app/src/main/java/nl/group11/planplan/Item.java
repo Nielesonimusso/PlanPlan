@@ -1,8 +1,14 @@
 package nl.group11.planplan;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Application;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -25,6 +31,7 @@ abstract public class Item implements View.OnClickListener, Comparable<Item> {
     Date userStartTime, userEndTime;
     Firebase firebase;
     Context context;
+    AddDialog newAddDialog;
 
     /**
      * Extracts data from the API and saves it in this object
@@ -166,10 +173,8 @@ abstract public class Item implements View.OnClickListener, Comparable<Item> {
         setFirebase();
         //get account
         String id = APIHandler.getAccount(context);
-
         //create a new reference at the location of the new item entry
         Firebase eventRef = firebase.child(id).child("planning").child(getID());
-
 
         //set new data
         addGeneric(eventRef);
@@ -207,8 +212,6 @@ abstract public class Item implements View.OnClickListener, Comparable<Item> {
         firebase.child(id).child("planning").child(getID()).removeValue();
     }
 
-    
-
     public void addRemoveFavorites(final TextView v) {
         setFirebase();
         databaseGeneric("favorites", true, new APIHandler.Callback<Boolean>() {
@@ -234,20 +237,47 @@ abstract public class Item implements View.OnClickListener, Comparable<Item> {
     public void addRemovePlanning(final TextView v) {
         setFirebase();
         databaseGeneric("planning", true, new APIHandler.Callback<Boolean>() {
+        checkInPlanning(new APIHandler.Callback<Boolean>() {
             @Override
             public void onItem(Boolean result) {
-                databaseGeneric("planning", false, new APIHandler.Callback<Boolean>() {
-                    @Override
-                    public void onItem(Boolean result) {
-                        if (v != null) {
-                            if (result) {
-                                v.setText("Remove from planning");
-                            } else {
-                                v.setText("Add to planning");
+                if (!result) {
+                    showAddDialog(getStartTime(), getEndTime(), getTitle());
+                    newAddDialog.setDialogResult(new AddDialog.DialogResult() {
+
+                        @Override
+                        public void finish(Date startResult, Date endResult, boolean toAdd) {
+                            userStartTime = startResult;
+                            userEndTime = endResult;
+                            if (toAdd) {
+                                databaseGeneric("planning", true, new APIHandler.Callback<Boolean>() {
+                                    @Override
+                                    public void onItem(Boolean result) {
+                                        if (v != null) {
+                                            if (result) {
+                                                v.setText("Add to planning");
+                                            } else {
+                                                v.setText("Remove from planning");
+                                            }
+                                        }
+                                    }
+                                });
                             }
                         }
-                    }
-                });
+                    });
+                } else {
+                    databaseGeneric("planning", true, new APIHandler.Callback<Boolean>() {
+                        @Override
+                        public void onItem(Boolean result) {
+                            if (v != null) {
+                                if (result) {
+                                    v.setText("Add to planning");
+                                } else {
+                                    v.setText("Remove from planning");
+                                }
+                            }
+                        }
+                    });
+                }
             }
         });
     }
@@ -325,6 +355,17 @@ abstract public class Item implements View.OnClickListener, Comparable<Item> {
         this.userEndTime = d;
     }
 
+    void showAddDialog(Date start, Date end, String title) {
+        Activity currentActivity = ((PlanPlan)context.getApplicationContext()).getCurrentActivity();
+        FragmentTransaction trans = currentActivity.getFragmentManager().beginTransaction();
+        newAddDialog = new AddDialog();
+        newAddDialog.setDatesAndTimes(start, end);
+        newAddDialog.setTitle(title);
+        newAddDialog.show(trans, "search");
+
+
+    }
+
     //TODO unittest
     abstract public JSONObject toJSON();
 
@@ -333,4 +374,6 @@ abstract public class Item implements View.OnClickListener, Comparable<Item> {
     public int compareTo(Item item) {
         return getUserStartTime().compareTo(item.getUserStartTime());
     }
+
+
 }

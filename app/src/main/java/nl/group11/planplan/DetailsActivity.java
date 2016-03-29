@@ -29,7 +29,7 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 
 
-public class DetailsActivity extends AppCompatActivity
+public class DetailsActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     JSONObject json; //holds the JSON needed to build the item to be displayed.
     TextView titleText, dateText, descriptionText, priceText, addressText;
