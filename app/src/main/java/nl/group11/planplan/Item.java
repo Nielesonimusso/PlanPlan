@@ -236,7 +236,6 @@ abstract public class Item implements View.OnClickListener, Comparable<Item> {
 
     public void addRemovePlanning(final TextView v) {
         setFirebase();
-        databaseGeneric("planning", true, new APIHandler.Callback<Boolean>() {
         checkInPlanning(new APIHandler.Callback<Boolean>() {
             @Override
             public void onItem(Boolean result) {
