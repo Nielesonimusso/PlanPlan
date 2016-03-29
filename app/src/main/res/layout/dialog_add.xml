@@ -55,7 +55,7 @@
         android:layout_alignLeft="@+id/startDate"
         android:textAppearance="?android:attr/textAppearanceMediumInverse"
         android:textColor="@color/colorBlack"
-        android:text="00:00"
+        android:text="00 : 00"
         android:id="@+id/startTime"
         android:layout_gravity="center_horizontal"/>
     <Button
@@ -119,7 +119,7 @@
         android:layout_alignLeft="@+id/startDate"
         android:textAppearance="?android:attr/textAppearanceMediumInverse"
         android:textColor="@color/colorBlack"
-        android:text="23:59"
+        android:text="23 : 59"
         android:id="@+id/endTime"
         android:layout_gravity="center_horizontal" />
     <Button
@@ -150,7 +150,7 @@
         android:layout_alignLeft="@+id/startDate"
         android:textAppearance="?android:attr/textAppearanceMediumInverse"
         android:textColor="@color/colorBlack"
-        android:text="23:59"
+        android:text="23 : 59"
         android:id="@+id/duration"
         android:layout_gravity="center_horizontal" />
 

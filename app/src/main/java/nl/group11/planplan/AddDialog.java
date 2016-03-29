@@ -105,10 +105,10 @@ public class AddDialog extends DialogFragment {
         startTimeButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Open start time picker
+                //setting the boolean to true as an indication that we are changing the start time
                 TimePickerDialog.changeStartTime = Boolean.TRUE;
                 Intent intent = new Intent(getActivity().getApplicationContext(), TimePickerDialog.class);
                 startActivity(intent);
-
             }
         });
         endDateButton.setOnClickListener(new View.OnClickListener() {
@@ -124,6 +124,7 @@ public class AddDialog extends DialogFragment {
         endTimeButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Open end time picker
+                //setting the boolean to false as an indication that we are not changing the start time but the stop time
                 TimePickerDialog.changeStartTime = Boolean.FALSE;
                 Intent intent = new Intent(getActivity().getApplicationContext(), TimePickerDialog.class);
                 startActivity(intent);
