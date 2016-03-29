@@ -139,8 +139,8 @@ class EventfulEvent {
         }
     }
 
-    public JSONObject getImagesObject() {
-        return (JSONObject) data.get("image");
+    public Map getImagesObject() {
+        return (Map) data.get("image");
     }
 
     public String getAddress() {
