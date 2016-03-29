@@ -173,18 +173,23 @@ public class AddDialog extends DialogFragment {
         int m = c.get(Calendar.MONTH) + 1;
         int d = c.get(Calendar.DAY_OF_MONTH);
         int hr = c.get(Calendar.HOUR_OF_DAY);
+        String hour = Integer.toString(hr);
         int min = c.get(Calendar.MINUTE);
         String minute = Integer.toString(min);
         if (min < 10) {
             // Add leading 0
             minute = "0" + minute;
         }
+        if (hr < 10) {
+            // Add leading 0
+            hour = "0" + hour;
+        }
 
         dateText.setText(new StringBuilder()
                 .append(d).append("-").append(m).append("-")
                 .append(y));
         timeText.setText(new StringBuilder()
-                .append(hr).append(":").append(minute));
+                .append(hour).append(":").append(minute));
     }
 
     /** Adds listeners for Change buttons. */
@@ -232,11 +237,6 @@ public class AddDialog extends DialogFragment {
         textView.setText("" + Integer.toString(day) + "-" + Integer.toString(month) + "-" +
                 Integer.toString(year));
         updateDuration();
-    }
-
-    /** Displays time picked on time picker in a text view. */
-    public void setTime() {
-        // TODO: implement
     }
 
     /** Sets duration text view to end - start. */
