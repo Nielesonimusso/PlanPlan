@@ -55,24 +55,24 @@ public class TimePickerDialog extends Activity {
                         if(changeStartTime) {
                             //a bunch of if statements to ensure the right time format is used
                             if(hour<10 && min<10) {
-                                AddDialog.startTime.setText(new StringBuilder().append("0"+hour).append(" : ").append("0"+min)); //niet mainview maar dialog_add
+                                AddDialog.startTime.setText(new StringBuilder().append("0"+hour).append(":").append("0"+min)); //niet mainview maar dialog_add
                             }else if(hour<10 && min>=10){
-                                AddDialog.startTime.setText(new StringBuilder().append("0"+hour).append(" : ").append(min));
+                                AddDialog.startTime.setText(new StringBuilder().append("0"+hour).append(":").append(min));
                             }else if(hour>=10 && min<10){
-                                AddDialog.startTime.setText(new StringBuilder().append(hour).append(" : ").append("0"+min));
+                                AddDialog.startTime.setText(new StringBuilder().append(hour).append(":").append("0"+min));
                             }else{
-                                AddDialog.startTime.setText(new StringBuilder().append(hour).append(" : ").append(min));
+                                AddDialog.startTime.setText(new StringBuilder().append(hour).append(":").append(min));
                             }
                         }else{
                             //a bunch of if statements to ensure the right time format is used
                             if(hour<10 && min<10) {
-                                AddDialog.endTime.setText(new StringBuilder().append("0"+hour).append(" : ").append("0"+min)); //niet mainview maar dialog_add
+                                AddDialog.endTime.setText(new StringBuilder().append("0"+hour).append(":").append("0"+min)); //niet mainview maar dialog_add
                             }else if(hour<10 && min>=10){
-                                AddDialog.endTime.setText(new StringBuilder().append("0"+hour).append(" : ").append(min));
+                                AddDialog.endTime.setText(new StringBuilder().append("0"+hour).append(":").append(min));
                             }else if(hour>=10 && min<10){
-                                AddDialog.endTime.setText(new StringBuilder().append(hour).append(" : ").append("0"+min));
+                                AddDialog.endTime.setText(new StringBuilder().append(hour).append(":").append("0"+min));
                             }else{
-                                AddDialog.endTime.setText(new StringBuilder().append(hour).append(" : ").append(min));
+                                AddDialog.endTime.setText(new StringBuilder().append(hour).append(":").append(min));
                             }
                         }
                         finish();
