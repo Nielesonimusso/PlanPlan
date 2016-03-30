@@ -66,7 +66,7 @@ public class FirebaseAdapter extends ItemAdapter<RecyclerView.ViewHolder> implem
             item = cache.get(position);
         }
         System.out.println("Adapter type: " + type + " | Item type: " + item.getType());
-        item.buildView(holder, imageCache);
+        item.buildView(holder, imageCache, false);
     }
 
     @Override

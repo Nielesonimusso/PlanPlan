@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import org.json.simple.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -158,11 +159,12 @@ abstract public class GooglePlacesItem extends Item {
     }
 
     @Override
-    public void buildView(final RecyclerView.ViewHolder holder, ImageCache imageCache) {
-        buildView((PlaceViewHolder) holder, imageCache);
+    public void buildView(final RecyclerView.ViewHolder holder, ImageCache imageCache, boolean inplanning) {
+        buildView((PlaceViewHolder) holder, imageCache, inplanning);
     }
 
-    public void buildView(final PlaceViewHolder holder, ImageCache imageCache) {
+    public void buildView(final PlaceViewHolder holder, ImageCache imageCache, boolean inplanning) {
+        holder.time.setVisibility(View.GONE); //hide time always
         if (place == null) {
             holder.title.setText("Loading...");
             holder.description.setText("");
@@ -172,9 +174,19 @@ abstract public class GooglePlacesItem extends Item {
         } else {
             holder.buttons.setVisibility(View.VISIBLE);
             holder.title.setText(this.getTitle());
-            holder.time.setText("Mo-Fri 09:00-22:00");
             holder.description.setText(Html.fromHtml(this.getDescription()));
             holder.description.setMovementMethod(LinkMovementMethod.getInstance());
+            if (inplanning) {
+                SimpleDateFormat df = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+                holder.time.setVisibility(View.VISIBLE);
+                if (this.getUserStartTime() == null || this.getUserEndTime() == null) {
+                    holder.time.setVisibility(View.GONE);
+                } else if (this.getUserStartTime().equals(this.getUserEndTime())) {
+                    holder.time.setText(df.format(this.getUserStartTime()));
+                } else {
+                    holder.time.setText(df.format(this.getUserStartTime()) + " till " + df.format(this.getUserEndTime()));
+                }
+            }
             holder.price.setText(Html.fromHtml(this.getPrice()));
             holder.imgUrl = this.getImage();
             holder.image.setImageBitmap(imageCache.setImageFromURL(this.getImage(), new APIHandler.Callback<Bitmap>() {

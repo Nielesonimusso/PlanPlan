@@ -119,7 +119,7 @@ public class AddDialog extends DialogFragment {
         endDateButton = (Button) (addLayout.getChildAt(8));
         endTime = (TextView)(addLayout.getChildAt(10));
         endTimeButton = (Button) (addLayout.getChildAt(11));
-        duration = (TextView)(addLayout.getChildAt(13));
+        //duration = (TextView)(addLayout.getChildAt(13));
     }
 
     /** Sets the dates and times to contain the item's dates and times. */

@@ -368,7 +368,7 @@ abstract public class Item implements View.OnClickListener, Comparable<Item> {
     //TODO unittest
     abstract public JSONObject toJSON();
 
-    abstract void buildView(RecyclerView.ViewHolder holder, ImageCache imageCache);
+    abstract void buildView(RecyclerView.ViewHolder holder, ImageCache imageCache, boolean inplanning);
 
     public int compareTo(Item item) {
         return getUserStartTime().compareTo(item.getUserStartTime());

@@ -63,7 +63,7 @@ public class GooglePlacesAdapter extends ItemAdapter<PlaceViewHolder> implements
         } else {
             item = new OtherItem(context, place);
         }
-        item.buildView(holder, imageCache);
+        item.buildView(holder, imageCache, false);
     }
 
     @Override

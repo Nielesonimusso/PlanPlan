@@ -130,11 +130,11 @@ public class EventItem extends Item {
     }
 
     @Override
-    public void buildView(final RecyclerView.ViewHolder holder, ImageCache imageCache) {
-        buildView((EventViewHolder) holder, imageCache);
+    public void buildView(final RecyclerView.ViewHolder holder, ImageCache imageCache, boolean inplanning) {
+        buildView((EventViewHolder) holder, imageCache, inplanning);
     }
 
-    public void buildView(final EventViewHolder holder, ImageCache imageCache) {
+    public void buildView(final EventViewHolder holder, ImageCache imageCache, boolean inplanning) {
         SimpleDateFormat df = new SimpleDateFormat("yyyy/MM/dd HH:mm");
         if (event == null) {
             holder.title.setText("Loading...");
@@ -149,12 +149,22 @@ public class EventItem extends Item {
             holder.description.setVisibility(View.VISIBLE);
             holder.description.setText(Html.fromHtml(this.getDescription()));
             holder.time.setVisibility(View.VISIBLE);
-            if (this.getStartTime() == null || this.getEndTime() == null) {
-                holder.time.setVisibility(View.GONE);
-            } else if (this.getStartTime().equals(this.getEndTime())) {
-                holder.time.setText(df.format(this.getStartTime()));
+            if (inplanning) {
+                if (this.getUserStartTime() == null || this.getUserEndTime() == null) {
+                    holder.time.setVisibility(View.GONE);
+                } else if (this.getUserStartTime().equals(this.getUserEndTime())) {
+                    holder.time.setText(df.format(this.getUserStartTime()));
+                } else {
+                    holder.time.setText(df.format(this.getUserStartTime()) + " till " + df.format(this.getUserEndTime()));
+                }
             } else {
-                holder.time.setText(df.format(this.getStartTime()) + " till " + df.format(this.getEndTime()));
+                if (this.getStartTime() == null || this.getEndTime() == null) {
+                    holder.time.setVisibility(View.GONE);
+                } else if (this.getStartTime().equals(this.getEndTime())) {
+                    holder.time.setText(df.format(this.getStartTime()));
+                } else {
+                    holder.time.setText(df.format(this.getStartTime()) + " till " + df.format(this.getEndTime()));
+                }
             }
             holder.price.setVisibility(View.VISIBLE);
             holder.price.setText(Html.fromHtml(this.getPrice()));

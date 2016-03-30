@@ -66,7 +66,7 @@ public class MixedFirebaseAdapter extends ItemAdapter<RecyclerView.ViewHolder> i
         } else {
             item = cache.get(position);
         }
-        item.buildView(holder, imageCache);
+        item.buildView(holder, imageCache, true);
     }
 
     @Override

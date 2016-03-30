@@ -38,7 +38,7 @@ public class EventfulAdapter extends ItemAdapter<EventViewHolder> implements Dyn
     public void onBindViewHolder(final EventViewHolder holder, int position) {
         EventfulEvent event = searchSource.get(position);
         EventItem item = new EventItem(context, event);
-        item.buildView(holder, imageCache);
+        item.buildView(holder, imageCache, false);
     }
 
     @Override
