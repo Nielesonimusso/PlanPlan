@@ -22,7 +22,7 @@ public class ImageCache {
 
     ImageCache(Context context) {
         int ram = (int) (Runtime.getRuntime().maxMemory() / 1024);
-        int maxSize = ram / 8;
+        int maxSize = ram / 32;
         cache = new LruCache<String, Bitmap>(maxSize) {
             @Override
             protected int sizeOf(String key, Bitmap value) {
