@@ -254,7 +254,7 @@ public class AddDialog extends DialogFragment {
     /** Converts string in dd-M-yyyy hh:mm format to be a Date object. */
     // TODO: update to incorporate time as well
     private Date formatDate(String string) {
-        DateFormat format = new SimpleDateFormat("dd-M-yyyy HH:mm", Locale.ENGLISH);
+        DateFormat format = new SimpleDateFormat("dd-MM-yyyy HH:mm", Locale.ENGLISH);
         Date date = null;
         try {
             date = format.parse(string);
