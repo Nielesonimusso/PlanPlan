@@ -41,10 +41,12 @@ abstract public class Item implements View.OnClickListener, Comparable<Item> {
      */
     public Item(Context c) {
         context = c;
+        Firebase.setAndroidContext(c);
     }
 
     private void setFirebase() {
         if (firebase == null) {
+            Firebase.setAndroidContext(context);
             firebase = new Firebase("https://planplan.firebaseio.com/");
         }
     }

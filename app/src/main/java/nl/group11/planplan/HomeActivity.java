@@ -217,9 +217,12 @@ public class HomeActivity extends BaseActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        String changedID = data.getExtras().getString("item");
-        SingleItemUpdateListener fragment = (SingleItemUpdateListener) viewPagerAdapter.getItem(viewPager.getCurrentItem());
-        fragment.singleItemUpdated(changedID);
+        if (data != null) {
+            String changedID = data.getExtras().getString("item");
+
+            SingleItemUpdateListener fragment = (SingleItemUpdateListener) viewPagerAdapter.getItem(viewPager.getCurrentItem());
+            fragment.singleItemUpdated(changedID);
+        }
     }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {

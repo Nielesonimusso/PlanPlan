@@ -22,6 +22,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.firebase.client.Firebase;
+
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
@@ -151,6 +153,7 @@ public class DetailsActivity extends BaseActivity
         }.execute();
 
         //update buttons to represent state in database
+        Firebase.setAndroidContext(getApplicationContext());
         i.checkInFavorites(new APIHandler.Callback<Boolean>() {
             @Override
             public void onItem(Boolean result) {
