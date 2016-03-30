@@ -78,6 +78,7 @@ class EventfulEvent {
 
     public Date getUserStartTime() {
         Object userStartTime = data.get("user_start_time");
+        System.out.println(userStartTime + " doet heel stom");
         if (userStartTime != null) {
             return new Date(Long.parseLong(userStartTime.toString()));
         }
@@ -100,7 +101,9 @@ class EventfulEvent {
     }
 
     public Date getUserStopTime() {
-        Object userStopTime = data.get("user_stop_time");
+        Object userStopTime = data.get("user_end_time");
+        System.out.println(userStopTime + " doet ook heel stom");
+
         if (userStopTime != null) {
             return new Date(Long.parseLong(userStopTime.toString()));
         }
