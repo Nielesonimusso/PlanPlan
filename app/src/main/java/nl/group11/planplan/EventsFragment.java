@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 /**
  * Created by Anne on 07/03/2016.
  */
-public class EventsFragment extends android.support.v4.app.Fragment implements SingleItemUpdateListener {
+public class EventsFragment extends android.support.v4.app.Fragment implements AdapterFragment {
 
     private OnFragmentInteractionListener mListener;
     ItemAdapter adapter;
@@ -95,8 +95,8 @@ public class EventsFragment extends android.support.v4.app.Fragment implements S
     }
 
     @Override
-    public void singleItemUpdated(String ID) {
-        adapter.notifyItemChanged(adapter.posOfID(ID));
+    public ItemAdapter getAdapter() {
+        return adapter;
     }
 
     /**

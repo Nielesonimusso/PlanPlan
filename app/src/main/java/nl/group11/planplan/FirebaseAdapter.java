@@ -28,7 +28,7 @@ public class FirebaseAdapter extends ItemAdapter<RecyclerView.ViewHolder> implem
     FirebaseAdapter(Context context, Type type) {
         cache = new ArrayList<>();
         this.context = context;
-        imageCache = new ImageCache(context);
+        imageCache = ImageCache.getInstance();
         endpoint = new Firebase("https://planplan.firebaseio.com/");
         endpoint.child(APIHandler.getAccount(context)).child("favorites").child(type.toString()).addValueEventListener(this);
         APIHandler.getDatabaseFavorites(type, endpoint, context, this);

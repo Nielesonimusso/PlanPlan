@@ -1,6 +1,7 @@
 package nl.group11.planplan;
 
 import android.app.FragmentTransaction;
+import android.app.usage.UsageEvents;
 import android.content.Intent;
 import android.location.Location;
 import android.net.Uri;
@@ -53,6 +54,7 @@ public class HomeActivity extends BaseActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Firebase.setAndroidContext(this);
+        ImageCache.initInstance(this);
         setContentView(R.layout.activity_home);
         gps = new GPSTracker(this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -98,6 +100,11 @@ public class HomeActivity extends BaseActivity
         if (getIntent().getBooleanExtra("showDialog",false)) {
             showSearchDialog();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 
     @Override
@@ -217,11 +224,14 @@ public class HomeActivity extends BaseActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        ItemAdapter adapter = ((AdapterFragment) viewPagerAdapter.getItem(viewPager.getCurrentItem())).getAdapter();
         if (data != null) {
             String changedID = data.getExtras().getString("item");
-
-            SingleItemUpdateListener fragment = (SingleItemUpdateListener) viewPagerAdapter.getItem(viewPager.getCurrentItem());
-            fragment.singleItemUpdated(changedID);
+            System.out.println("Resultdata is not null: " + changedID);
+            adapter.notifyItemChanged(adapter.posOfID(changedID));
+        } else {
+            System.out.println("Resultdata is null; updating whole dataview");
+            adapter.notifyDataSetChanged();
         }
     }
 

@@ -18,7 +18,7 @@ public class EventfulAdapter extends ItemAdapter<EventViewHolder> implements Dyn
         searchSource = search;
         searchSource.addListener(this);
         this.context = context;
-        imageCache = new ImageCache(context);
+        imageCache = ImageCache.getInstance();
     }
 
     @Override
@@ -30,7 +30,7 @@ public class EventfulAdapter extends ItemAdapter<EventViewHolder> implements Dyn
     @Override
     public int posOfID(String ID) {
         int result = searchSource.posOfID(ID);
-        System.out.println("Request for update on ID " + ID + " with pos " + result);
+        System.out.println("Request for pos of ID " + ID + " with pos " + result);
         return result;
     }
 

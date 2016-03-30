@@ -19,7 +19,7 @@ public class GooglePlacesAdapter extends ItemAdapter<PlaceViewHolder> implements
     Context context;
 
     GooglePlacesAdapter(Context context, String location, int radius, String type) {
-        imageCache = new ImageCache(context);
+        imageCache = ImageCache.getInstance();
         places = new ArrayList<>();
         this.type = type;
         this.context = context;

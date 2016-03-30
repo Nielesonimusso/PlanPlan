@@ -15,14 +15,27 @@ import java.net.URL;
 /**
  * Created by s132054 on 15-3-2016.
  */
-public class ImageCache {
+abstract public class ImageCache {
 
     LruCache<String, Bitmap> cache;
     Bitmap fallback;
 
+    static ImageCache instance;
+
+    static void initInstance(Context context) {
+        if (instance == null) {
+            instance = new ImageCache(context) {
+            };
+        }
+    }
+
+    static ImageCache getInstance() {
+        return instance;
+    }
+
     ImageCache(Context context) {
         int ram = (int) (Runtime.getRuntime().maxMemory() / 1024);
-        int maxSize = ram / 32;
+        int maxSize = ram / 8;
         cache = new LruCache<String, Bitmap>(maxSize) {
             @Override
             protected int sizeOf(String key, Bitmap value) {

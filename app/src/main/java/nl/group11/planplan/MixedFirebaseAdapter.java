@@ -28,7 +28,7 @@ public class MixedFirebaseAdapter extends ItemAdapter<RecyclerView.ViewHolder> i
     MixedFirebaseAdapter(Context context) {
         cache = new ArrayList<>();
         this.context = context;
-        imageCache = new ImageCache(context);
+        imageCache = ImageCache.getInstance();
         endpoint = new Firebase("https://planplan.firebaseio.com/");
         endpoint.child(APIHandler.getAccount(context)).child("planning").addValueEventListener(this);
         APIHandler.getDatabasePlanning(endpoint, context, this);
