@@ -94,7 +94,7 @@ class GooglePlace {
     }
 
     public Date getUserStopTime() {
-        Object userStopTime = data.get("user_start_time");
+        Object userStopTime = data.get("user_end_time");
         if (userStopTime == null) {
             return new Date(); //if no userstoptime available, return current time.
         }
