@@ -72,9 +72,9 @@ public class HomeActivity extends BaseActivity
         if (!gps.canGetLocation()) { //directly add tabs and notify about location
             restaurantsFragment = new RestaurantsFragment();
             viewPagerAdapter.addFragment(restaurantsFragment, "Restaurants");
-            EventsFragment eventsFragment = new EventsFragment();
+            eventsFragment = new EventsFragment();
             viewPagerAdapter.addFragment(eventsFragment, "Events");
-            OtherFragment otherFragment = new OtherFragment();
+            otherFragment = new OtherFragment();
             viewPagerAdapter.addFragment(otherFragment, "Other");
             gps.showSettingsAlert();
         } else {
