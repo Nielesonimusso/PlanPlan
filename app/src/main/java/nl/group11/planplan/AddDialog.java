@@ -53,7 +53,7 @@ public class AddDialog extends DialogFragment {
         LayoutInflater inflater = LayoutInflater.from(getActivity());
         //LayoutInflater li = getActivity().getLayoutInflater();;
         addLayout = (RelativeLayout) inflater.inflate(R.layout.dialog_add, null);
-        builder.setTitle("Add to planning (test)")
+        builder.setTitle("Add to planning")
                 .setPositiveButton("Add", new DialogInterface.OnClickListener() {
                     // When the user clicks add, validate input and add item to planning
                     @Override
