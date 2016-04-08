@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 public class RestaurantsFragment extends android.support.v4.app.Fragment implements AdapterFragment{
 
     private OnFragmentInteractionListener mListener;
+    //adapter used to display items in RecyclerView
     ItemAdapter adapter;
 
     /**

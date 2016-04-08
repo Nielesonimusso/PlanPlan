@@ -19,6 +19,8 @@ import java.util.Date;
 
 /**
  * Created by s140442 on 07/03/2016.
+ *
+ * container of EventfulEvent, including extra functionality
  */
 public class EventItem extends Item {
 
@@ -169,7 +171,7 @@ public class EventItem extends Item {
             holder.price.setVisibility(View.VISIBLE);
             holder.price.setText(Html.fromHtml(this.getPrice()));
             holder.imgUrl = this.getImage();
-            holder.image.setImageBitmap(imageCache.setImageFromURL(this.getImage(), new APIHandler.Callback<Bitmap>() {
+            holder.image.setImageBitmap(imageCache.getImageFromURL(this.getImage(), new APIHandler.Callback<Bitmap>() {
                 @Override
                 public void onItem(Bitmap result) {
                     if (holder.imgUrl != null && holder.imgUrl.equals(EventItem.this.getImage())) {

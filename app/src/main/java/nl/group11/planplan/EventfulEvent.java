@@ -8,10 +8,12 @@ import java.util.Map;
 
 /**
  * Created by s132054 on 16-3-2016.
+ *
+ * Representation of an event from Eventful API
  */
 class EventfulEvent {
 
-    private JSONObject data;// JSONObject containing querydata
+    private JSONObject data; // JSONObject containing information of event
 
     /**
      * @param json JSONObject containing information to construct an EventfulEvent

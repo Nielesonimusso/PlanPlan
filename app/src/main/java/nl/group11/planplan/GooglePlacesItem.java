@@ -189,7 +189,7 @@ abstract public class GooglePlacesItem extends Item {
             }
             holder.price.setText(Html.fromHtml(this.getPrice()));
             holder.imgUrl = this.getImage();
-            holder.image.setImageBitmap(imageCache.setImageFromURL(this.getImage(), new APIHandler.Callback<Bitmap>() {
+            holder.image.setImageBitmap(imageCache.getImageFromURL(this.getImage(), new APIHandler.Callback<Bitmap>() {
                 @Override
                 public void onItem(Bitmap result) {
                     if (holder.imgUrl != null && holder.imgUrl.equals(GooglePlacesItem.this.getImage())) {

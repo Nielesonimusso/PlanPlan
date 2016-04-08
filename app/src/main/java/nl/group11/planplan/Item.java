@@ -189,7 +189,7 @@ abstract public class Item implements View.OnClickListener, Comparable<Item> {
      */
     private void addGeneric(Firebase eventRef) {
         eventRef.setValue(toJSON());
-        /*
+        /* old method, caused too many updates
         eventRef.child(Data.ID.toString()).setValue(getID());
         eventRef.child(Data.TITLE.toString()).setValue(getTitle());
         eventRef.child(Data.TYPE.toString()).setValue(getType());
@@ -356,6 +356,13 @@ abstract public class Item implements View.OnClickListener, Comparable<Item> {
         this.userEndTime = d;
     }
 
+    /**
+     * show dialog for adding this item to the user's planning
+     *
+     * @param start initial start date for dialog
+     * @param end initial end date for dialog
+     * @param title title of dialog
+     */
     void showAddDialog(Date start, Date end, String title) {
         Activity currentActivity = ((PlanPlan)context.getApplicationContext()).getCurrentActivity();
         FragmentTransaction trans = currentActivity.getFragmentManager().beginTransaction();
@@ -370,8 +377,22 @@ abstract public class Item implements View.OnClickListener, Comparable<Item> {
     //TODO unittest
     abstract public JSONObject toJSON();
 
+    /**
+     * fill ViewHolder with information from this particular item
+     *
+     * @param holder the ViewHolder to fill
+     * @param imageCache ImageCache to get images from
+     * @param inplanning whether the ViewHolder is going to be displayed in the planning activity,
+     *                   or in another activity
+     */
     abstract void buildView(RecyclerView.ViewHolder holder, ImageCache imageCache, boolean inplanning);
 
+    /**
+     * compares this item's start time with the start time of {@code item}.
+     *
+     * @param item the item to compare this item to
+     * @return see {@link #compareTo(Object)}
+     */
     public int compareTo(Item item) {
         return getUserStartTime().compareTo(item.getUserStartTime());
     }

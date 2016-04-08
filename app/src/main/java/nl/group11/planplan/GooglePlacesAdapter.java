@@ -10,31 +10,23 @@ import java.util.List;
 
 /**
  * Created by s132054 on 16-3-2016.
+ *
+ * ItemAdapter for GooglePlaceItems (see {@link ItemAdapter})
  */
-public class GooglePlacesAdapter extends ItemAdapter<PlaceViewHolder> implements APIHandler.Callback<List<GooglePlace>>, SearchAdapter {
+public class GooglePlacesAdapter extends ItemAdapter<PlaceViewHolder> implements APIHandler.Callback<List<GooglePlace>> {
 
     List<GooglePlace> places;
-    ImageCache imageCache;
     String type;
-    Context context;
 
     GooglePlacesAdapter(Context context, String location, int radius, String type) {
-        imageCache = ImageCache.getInstance();
+        super(context);
         places = new ArrayList<>();
         this.type = type;
-        this.context = context;
         performQuery(location, radius);
     }
 
     public void performQuery(String location, int radius) {
         APIHandler.queryGooglePlaces(location, radius, type, this);
-    }
-
-    @Override
-    public void updateSearch(String location, int radius) {
-        places = new ArrayList<>();
-        notifyDataSetChanged();
-        performQuery(location, radius);
     }
 
     @Override

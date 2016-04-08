@@ -17,18 +17,17 @@ import java.util.List;
 
 /**
  * Created by s132054 on 25-3-2016.
+ *
+ * ItemAdapter for mixed items from Firebase (both EventItem and GooglePlaceItem) (see {@link ItemAdapter})
  */
 public class MixedFirebaseAdapter extends ItemAdapter<RecyclerView.ViewHolder> implements APIHandler.Callback<ArrayList<Item>>, ValueEventListener {
 
     List<Item> cache;
-    ImageCache imageCache;
     Firebase endpoint;
-    Context context;
 
     MixedFirebaseAdapter(Context context) {
+        super(context);
         cache = new ArrayList<>();
-        this.context = context;
-        imageCache = ImageCache.getInstance();
         endpoint = new Firebase("https://planplan.firebaseio.com/");
         endpoint.child(APIHandler.getAccount(context)).child("planning").addValueEventListener(this);
         APIHandler.getDatabasePlanning(endpoint, context, this);

@@ -7,18 +7,18 @@ import android.view.ViewGroup;
 
 /**
  * Created by s132054 on 14-3-2016.
+ *
+ * ItemAdapter for EventItems (see {@link ItemAdapter})
  */
-public class EventfulAdapter extends ItemAdapter<EventViewHolder> implements DynamicSearch.SearchUpdateListener, SearchAdapter {
+public class EventfulAdapter extends ItemAdapter<EventViewHolder> implements DynamicSearch.SearchUpdateListener {
 
+    //dynamic source of EventEvents
     EventfulDynamicSearch searchSource;
-    ImageCache imageCache;
-    Context context;
 
     EventfulAdapter(Context context, EventfulDynamicSearch search) {
+        super(context);
         searchSource = search;
         searchSource.addListener(this);
-        this.context = context;
-        imageCache = ImageCache.getInstance();
     }
 
     @Override
@@ -53,12 +53,5 @@ public class EventfulAdapter extends ItemAdapter<EventViewHolder> implements Dyn
         notifyItemRangeInserted(start + 1, count - 1);
         */
         notifyDataSetChanged();
-    }
-
-    @Override
-    public void updateSearch(String location, int radius) {
-        searchSource.location = location;
-        searchSource.radius = radius;
-        searchSource.reset();
     }
 }

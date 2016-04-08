@@ -14,14 +14,24 @@ import java.net.URL;
 
 /**
  * Created by s132054 on 15-3-2016.
+ *
+ * Singleton Cache for images; makes displaying images that come from the internet more efficient
  */
 abstract public class ImageCache {
 
+    //internal image cache
     LruCache<String, Bitmap> cache;
+    //fallback image, used when an image cannot be found in the cache
     Bitmap fallback;
 
+    //singleton instance
     static ImageCache instance;
 
+    /**
+     * singleton instance initializer; should be called before {@link #getInstance()} is called
+     *
+     * @param context context used to initialize singleton instance
+     */
     static void initInstance(Context context) {
         if (instance == null) {
             instance = new ImageCache(context) {
@@ -45,7 +55,16 @@ abstract public class ImageCache {
         fallback = BitmapFactory.decodeResource(context.getResources(), R.drawable.imgnotfound);
     }
 
-    public Bitmap setImageFromURL(final String url, final APIHandler.Callback<Bitmap> callback) {
+    /**
+     * returns an image, given an image url. Images are cached, so that future requests do not
+     * generate more internet requests
+     *
+     * @param url the url of the image to be fetched
+     * @param callback callback that can be used to notify the image requestor that their image is
+     *                 ready
+     * @return the image belonging to {@code url} when it is in cache, otherwise {@link #fallback}
+     */
+    public Bitmap getImageFromURL(final String url, final APIHandler.Callback<Bitmap> callback) {
         if (url == null) {
             return fallback;
         } else if (cache.get(url) != null) { //use bitmap from cache

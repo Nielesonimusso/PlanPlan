@@ -16,19 +16,18 @@ import java.util.List;
 
 /**
  * Created by s132054 on 25-3-2016.
+ *
+ * ItemAdapter for items from Firebase (either EventItem or GooglePlaceItem) (see {@link ItemAdapter})
  */
 public class FirebaseAdapter extends ItemAdapter<RecyclerView.ViewHolder> implements APIHandler.Callback<ArrayList<Item>>, ValueEventListener {
 
     List<Item> cache;
-    ImageCache imageCache;
     Firebase endpoint;
     Type type;
-    Context context;
 
     FirebaseAdapter(Context context, Type type) {
+        super(context);
         cache = new ArrayList<>();
-        this.context = context;
-        imageCache = ImageCache.getInstance();
         endpoint = new Firebase("https://planplan.firebaseio.com/");
         endpoint.child(APIHandler.getAccount(context)).child("favorites").child(type.toString()).addValueEventListener(this);
         APIHandler.getDatabaseFavorites(type, endpoint, context, this);
